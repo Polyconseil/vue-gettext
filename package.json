@@ -3,6 +3,13 @@
   "version": "0.0.1",
   "description": "Translate your Vue.js applications with gettext",
   "main": "dist/vue-gettext.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Polyconseil/vue-gettext"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
   "scripts": {
     "build": "node build/build.js",
     "serve-example": "webpack-dev-server --inline --hot --config example/webpack.conf.js",
