@@ -91,10 +91,10 @@ This will automatically be translated. For instance, in French, it might read *B
 
 You can use some Vue instance methods attached to `Vue.prototype`:
 
-- `$gettext`: `this.$gettext(msgid)
-- `$ngettext`: `this.$ngettext(msgid, plural, n)
-- `$pgettext`: `this.$pgettext(context, msgid)
-- `$npgettext`: `this.$npgettext(context, msgid, plural, n)
+- `$gettext`: `this.$gettext(msgid)`
+- `$ngettext`: `this.$ngettext(msgid, plural, n)`
+- `$pgettext`: `this.$pgettext(context, msgid)`
+- `$npgettext`: `this.$npgettext(context, msgid, plural, n)`
 
 ## Extracting strings
 
