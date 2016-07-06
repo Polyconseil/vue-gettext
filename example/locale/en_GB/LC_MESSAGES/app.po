@@ -1,0 +1,38 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-07-06 11:30+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: easygettext\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Good bye!"
+msgstr "Good bye!"
+
+msgid "Hello!"
+msgstr "Hello!"
+
+msgid "Plural"
+msgstr "Plural"
+
+msgid "Select your language:"
+msgstr "Select your language:"
+
+msgid "Singular"
+msgstr "Singular"
+
+msgid "{{ n }} bar"
+msgid_plural "{{ n }} bars"
+msgstr[0] "{{ n }} bar en_GB"
+msgstr[1] "{{ n }} bars en_GB"
+
+msgid "{{ n }} foo"
+msgid_plural "{{ n }} foos"
+msgstr[0] "{{ n }} foo en_GB"
+msgstr[1] "{{ n }} foos en_GB"

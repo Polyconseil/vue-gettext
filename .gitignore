@@ -1,0 +1,13 @@
+/.tmp/
+/node_modules/
+
+npm-debug.log
+manifest.json
+*.DS_Store
+*.pot
+*~
+.*.swp
+.*.pid
+*.mo
+
+.tm_properties
