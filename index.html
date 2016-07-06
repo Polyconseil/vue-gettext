@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>vue-gettext demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/kube/3.0.2/css/kube.min.css" type="text/css">
+    <style type="text/css">
+      #app {
+        padding: 30px;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/momentjs/2.14.1/moment-with-locales.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/vue/1.0.24/vue.js"></script>
+    <script src="vue-gettext.js"></script>
+  </head>
+  <body>
+
+    <div id="app">
+
+      <p><a href="https://github.com/Polyconseil/vue-gettext">vue-gettext</a> demo</p>
+
+      <hr>
+
+      <h1>
+        <get-text>Hello!</get-text>
+      </h1>
+
+      <language-select></language-select>
+
+      <hr>
+
+      <plural></plural>
+
+      <hr>
+
+      <moment-filter></moment-filter>
+
+      <hr>
+
+      <alert></alert>
+
+    </div>
+
+    <script src="demo.js"></script>
+  </body>
+</html>
