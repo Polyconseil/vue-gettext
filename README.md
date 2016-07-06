@@ -1,3 +1,5 @@
+> **Demo**: [https://polyconseil.github.io/vue-gettext/](https://polyconseil.github.io/vue-gettext/)
+
 > Beta state, use at your own risk. Waiting for some feedback from the community and/or code review by experienced Vue.js developers :)
 
 ---
