@@ -11,6 +11,8 @@ export default {
 
   getTranslationIndex: function (languageCode, n) {
 
+    n = Number.isNaN(parseInt(n)) ? 1 : parseInt(n)  // Fallback to singular.
+
     // Extract the ISO 639 two-letter language code since this function
     // is mostly based on two-letter codes, see:
     // https://www.gnu.org/savannah-checkouts/gnu/gettext/manual/html_node/Locale-Names.html

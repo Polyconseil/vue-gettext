@@ -41,7 +41,7 @@ export default {
   ],
   computed: {
     translation: function () {
-      let n = this.isPlural ? parseInt(this.translateN) : 1
+      let n = this.isPlural ? this.translateN : 1
       let translation = translate.getTranslation(this.msgid, n, this.translateContext, this.$language.current)
       return this.$parent.$interpolate(translation)
     },
