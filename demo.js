@@ -145,7 +145,7 @@ var Alert = Vue.extend({
       return window.alert(msg)
     },
     alertPlural (n) {
-      var msg = this.$ngettext('{{ n }} foo', '{{ n }} foos', parseInt(n))
+      var msg = this.$ngettext('{{ n }} foo', '{{ n }} foos', n)
       msg = this.$interpolate(msg)
       return window.alert(msg)
     },
