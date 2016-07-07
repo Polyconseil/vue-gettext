@@ -39,8 +39,10 @@ Vue.use(GetTextPlugin, {translations: translations})
 
 There are a number of options you can use to configure the `vue-gettext` plugin:
 
-- `availableLanguages`: `{Object}` an object that represents the list of the available languages for the app and whose keys are [local names](http://www.localeplanet.com/icu/) (either a language specification of the form `ll` or a combined language and country specification of the form `ll_CC`) the parameter names are  and whose values are [language names](http://docs.translatehouse.org/projects/localization-guide/en/latest/l10n/languagenames.html)
-- `defaultLanguage`: `{String}` the [local name](http://www.localeplanet.com/icu/) of the current language
+- `availableLanguages`: `{Object}` an object that represents the list of the available languages for the app:
+    - whose keys are [**local names**](http://www.localeplanet.com/icu/) (either a language specification of the form `ll` or a combined language and country specification of the form `ll_CC`)
+    - and whose values are [**language names**](http://docs.translatehouse.org/projects/localization-guide/en/latest/l10n/languagenames.html)
+- `defaultLanguage`: `{String}` the [**local name**](http://www.localeplanet.com/icu/) of the current language
 - `languageVmMixin`: `{Object}` a mixin that will be passed to the main `languageVm` instance that can be used, for example, to add custom computed properties
 - `translations`: `{Object}` a JSON file of the application's translations
 
