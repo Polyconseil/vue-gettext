@@ -39,6 +39,11 @@ import translations from 'dist/translations.json'
 Vue.use(GetTextPlugin, {translations: translations})
 ```
 
+A `languageVm` instance will be injected into every component as `this.$language` and exposes the following properties:
+
+- `$language.available`: an object that represents the list of the available languages (see the `availableLanguages` config option)
+- `$language.current`: the current language (see the `defaultLanguage` config option)
+
 ## Configuration
 
 There are a number of options you can use to configure the `vue-gettext` plugin:
@@ -47,7 +52,7 @@ There are a number of options you can use to configure the `vue-gettext` plugin:
     - whose keys are [**local names**](http://www.localeplanet.com/icu/), e.g. `en_US` (either a language specification of the form `ll` or a combined language and country specification of the form `ll_CC`)
     - and whose values are [**language names**](http://docs.translatehouse.org/projects/localization-guide/en/latest/l10n/languagenames.html), e.g. `English (United States)`
 - `defaultLanguage`: `{String}` the [**local name**](http://www.localeplanet.com/icu/) of the current language, e.g. `en_US`
-- `languageVmMixin`: `{Object}` a mixin that will be passed to the main `languageVm` instance that can be used, for example, to add custom computed properties
+- `languageVmMixin`: `{Object}` a mixin that will be passed to the main `languageVm` instance (exposed as `$language`) that can be used, for example, to add custom computed properties
 - `translations`: `{Object}` a JSON file of the application's translations
 
 You can see a configuration example in the `example/index.js` file.
