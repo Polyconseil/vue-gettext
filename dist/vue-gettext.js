@@ -1,5 +1,5 @@
 /*!
- * vue-gettext v0.0.1
+ * vue-gettext v0.0.2
  * (c) 2016 Polyconseil
  * Released under the MIT License.
  */
@@ -41,6 +41,8 @@
   var plurals = {
 
     getTranslationIndex: function getTranslationIndex(languageCode, n) {
+
+      n = Number.isNaN(parseInt(n)) ? 1 : parseInt(n); // Fallback to singular.
 
       // Extract the ISO 639 two-letter language code since this function
       // is mostly based on two-letter codes, see:
@@ -323,7 +325,7 @@
     'translateN', 'translatePlural', 'translateContext', 'translateComment'],
     computed: {
       translation: function translation() {
-        var n = this.isPlural ? parseInt(this.translateN) : 1;
+        var n = this.isPlural ? this.translateN : 1;
         var translation = translate.getTranslation(this.msgid, n, this.translateContext, this.$language.current);
         return this.$parent.$interpolate(translation);
       }
