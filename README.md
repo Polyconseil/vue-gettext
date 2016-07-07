@@ -14,15 +14,11 @@ Translate your [Vue.js](http://vuejs.org) applications with [gettext](https://en
 
 Here's how `vue-gettext` works at a high level:
 
-1) Write your application as usual, in English.
-
-2) Annotate the strings that should be translated.
-
-3) Use [`easygettext`](https://github.com/Polyconseil/easygettext#gettext-extract) and some [GNU `gettext` utilities](https://www.gnu.org/software/gettext/manual/gettext.html) to extract those annotated strings to GetText Portable Object (`.po`) files.
-
-4) Once translated, use [`easygettext`](https://github.com/Polyconseil/easygettext#gettext-compile) to embed the translations back into your application.
-
-5) Let the magic of the `vue-gettext` plugin happens.
+1. Write your application as usual, in English.
+2. Annotate the strings that should be translated.
+3. Use [`easygettext`](https://github.com/Polyconseil/easygettext#gettext-extract) and some [GNU `gettext` utilities](https://www.gnu.org/software/gettext/manual/gettext.html) to extract those annotated strings to GetText Portable Object (`.po`) files.
+4. Once translated, use [`easygettext`](https://github.com/Polyconseil/easygettext#gettext-compile) to embed the translations back into your application.
+5. Let the magic of the `vue-gettext` plugin happens.
 
 ## Installation
 
