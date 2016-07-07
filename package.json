@@ -13,7 +13,8 @@
   "scripts": {
     "build": "node build/build.js",
     "serve-example": "webpack-dev-server --inline --hot --config example/webpack.conf.js",
-    "test": "./node_modules/karma/bin/karma start build/karma.config.js"
+    "test": "./node_modules/karma/bin/karma start build/karma.config.js",
+    "version": "npm run build && git add -A dist"
   },
   "author": "",
   "license": "MIT",
