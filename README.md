@@ -1,4 +1,6 @@
-> Beta state, use at your own risk. Waiting for some feedback from the community and/or code review by experienced Vue.js developers :)
+> Beta state.
+
+> Works great with Vue.js 1.x. Still trying to figure a way of making it works with Vue.js 2.x.
 
 ---
 
