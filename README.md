@@ -165,6 +165,7 @@ You can see the result in the `example/locale/translations.json`.
 
 This plugin was inspired by:
 
+- [`systematic`](https://github.com/Polyconseil/systematic) for Makefile and extraction of translatable strings.
 - [`angular-gettext`](https://angular-gettext.rocketeer.be)
 - [`vue-i18n`](https://github.com/kazupon/vue-i18n)
 
