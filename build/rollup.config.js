@@ -1,7 +1,7 @@
 const buble = require('rollup-plugin-buble')
 const commonjs = require('rollup-plugin-commonjs')
 const nodeResolve = require('rollup-plugin-node-resolve')
-const version = require('../package.json').version
+const version = process.env.VERSION || require('../package.json').version
 
 
 module.exports = {

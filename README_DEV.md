@@ -2,6 +2,10 @@
 
 ## Implementation notes
 
+### Version number
+
+I changed the plugin version number to 2.x to match Vue.js 2.0 version.
+
 ### New component tag name
 
 By popular demand, `<get-text>` has been renamed `<translate>`.
