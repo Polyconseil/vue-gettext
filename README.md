@@ -1,79 +1,266 @@
-> Beta state.
-
-> Works great with Vue.js 1.x. Still trying to figure a way of making it works with Vue.js 2.x.
-
----
-
 # vue-gettext
 
-Translate your [Vue.js](http://vuejs.org) applications with [gettext](https://en.wikipedia.org/wiki/Gettext).
+> This is vue-gettext 2.0 which works only with Vue 2.0.
 
-## Demo
+Translate [Vue.js](http://vuejs.org) applications with
+[gettext](https://en.wikipedia.org/wiki/Gettext).
 
 [Live demo](https://polyconseil.github.io/vue-gettext/).
 
-## Introduction
+# How to upgrade from vue-gettext 1.0
+
+- rename your `<get-text>` components to `<translate>`
+
+- inside your `<translate>` components, change the "Mustache" syntax `{{ }}`
+    to `%{` and `}`
+
+# Introduction
+
+`vue-gettext` is a plugin to translate Vue.js applications with
+[`gettext`](http://www.labri.fr/perso/fleury/posts/programming/a-quick-gettext-tutorial.html).
+It relies on the [GNU gettext toolset](https://www.gnu.org/software/gettext/manual/index.html)
+and [`easygettext`](https://github.com/Polyconseil/easygettext).
 
 Here's how `vue-gettext` works at a high level:
 
-1. Write your application as usual, in English.
-2. Annotate the strings that should be translated.
-3. Use [`easygettext`](https://github.com/Polyconseil/easygettext#gettext-extract) and some [GNU `gettext` utilities](https://www.gnu.org/software/gettext/manual/gettext.html) to extract those annotated strings to gettext Portable Object (`.po`) files.
-4. Once translated, use [`easygettext`](https://github.com/Polyconseil/easygettext#gettext-compile) to embed the translations back into your application.
-5. Let the magic of the `vue-gettext` plugin happens.
+1. **Annotating strings**: to make a Vue.js app translatable, you have to
+    annotate the strings you want to translate in your JavaScript code and/or
+    templates.
 
-## Installation
+2. **Extracting strings**: once strings are annotated, you have to run
+    extraction tools
+    ([`gettext-extract`](https://github.com/Polyconseil/easygettext#gettext-extract)
+    and some GNU gettext utilities) to run over a Vue.js app source tree and
+    pulls out all strings marked for translation to create a message file. A
+    message file is just a plain-text file with a `.po` file extension,
+    representing a single language, that contains all available translation
+    strings as keys and how they should be represented in the given language.
+
+3. **Translating message files**: a translator needs to fill out the translations
+    of each generated `.po` files.
+
+4. **Compiling translations**: once all message files have been translated, use
+    [`gettext-compile`](https://github.com/Polyconseil/easygettext#gettext-compile)
+    to make the translated `.po` files usable in a Vue app. This will basically
+    merge all translated `.po` files into a unique `.json` translation file.
+
+5. **Dynamically render translated strings to the DOM**: `vue-gettext`
+    currently uses a custom component for this.
+
+What does `vue-gettext` provide?
+
+- a custom component to annotate strings in templates and dynamically render
+    translated strings to the DOM
+
+- a set of methods to annotate strings in JavaScript code and translate them
+
+- a `language` ViewModel exposed to every Vue instances that you can use to:
+
+  - get all available languages (defined at configuration time)
+
+  - get or set the current language (*initially* defined at configuration time)
+
+  - access whatever you passed to the plugin mixin (defined at configuration time)
+
+- a global and reactive `language` property added to `Vue.config` you can use
+    to get or set the current language *outside* of Vue instances
+
+What does `vue-gettext` depend on?
+
+- [`easygettext`'s `gettext-extract`](https://github.com/Polyconseil/easygettext#gettext-extract)
+    to extract annotated strings from template files and produce a `.pot`
+    (Portable Object Template) file.
+
+- [`xgettext`](https://www.gnu.org/software/gettext/manual/html_node/xgettext-Invocation.html#xgettext-Invocation),
+    [`msgmerge`](https://www.gnu.org/software/gettext/manual/html_node/msgmerge-Invocation.html#msgmerge-Invocation),
+    [`msginit`](https://www.gnu.org/software/gettext/manual/html_node/msginit-Invocation.html#msginit-Invocation),
+    [`msgattrib`](https://www.gnu.org/software/gettext/manual/html_node/msgattrib-Invocation.html#msgattrib-Invocation)
+    to extract annotated strings from JavaScript files and generate `.po`
+    files for each available language.
+
+- [`easygettext`'s `gettext-compile`](https://github.com/Polyconseil/easygettext#gettext-compile)
+    to produce the sanitized JSON version of a `.po` file.
+
+Those tools should be integrated in your build process.
+We'll show you examples later.
+
+# Installation
+
+## NPM
 
 ```javascript
 npm install vue-gettext
 ```
 
-## Usage
+## Basic installation
 
-With modules:
+Basic installation with ES6 modules:
 
 ```javascript
 // ES6
 import Vue from 'vue'
 import GetTextPlugin from 'vue-gettext'
-import translations from 'dist/translations.json'
+import translations from './path/to/translations.json'
 
 Vue.use(GetTextPlugin, {translations: translations})
 ```
-
-A `languageVm` instance will be injected into every component as `this.$language` and exposes the following properties:
-
-- `$language.available`: an object that represents the list of the available
-  languages (see the `availableLanguages` config option)
-- `$language.current`: the current language (see the `defaultLanguage` config
-  option)
 
 ## Configuration
 
 There are a number of options you can use to configure the `vue-gettext` plugin:
 
-- `availableLanguages`: `{Object}` an object that represents the list of the available languages for the app:
+- `availableLanguages {Object}`:
 
-    - whose keys are [**local names**](http://www.localeplanet.com/icu/), e.g. `en_US` (either a language specification of the form `ll` or a combined language and country specification of the form `ll_CC`)
-    - and whose values are [**language names**](http://docs.translatehouse.org/projects/localization-guide/en/latest/l10n/languagenames.html), e.g. `English (United States)`
+    An object that represents the list of the available languages for the app:
 
-- `defaultLanguage`: `{String}` the [**local name**](http://www.localeplanet.com/icu/) of the current language, e.g. `en_US`
-- `languageVmMixin`: `{Object}` a mixin that will be passed to the main `languageVm` instance (exposed as `$language`) that can be used, for example, to add custom computed properties
-- `translations`: `{Object}` a JSON file of the application's translations
+    - whose keys are [**local names**](http://www.localeplanet.com/icu/), e.g. `en` or `en_US`:
 
-You can see a configuration example in the `example/index.js` file.
+        - either an
+          [ISO 639](https://www.gnu.org/software/gettext/manual/html_node/Language-Codes.html#Language-Codes)
+          two-letter language code lowercase of the form `ll`
 
-## Annotating strings
+        - or a combined ISO 639 two-letter language code lowercase and
+          [ISO 3166](https://www.gnu.org/software/gettext/manual/html_node/Country-Codes.html#Country-Codes)
+          two-letter country code uppercase of the form `ll_CC`
 
-### 1) In templates (`.html` or `.vue` files)
+    - and whose values are
+      [**language names**](http://docs.translatehouse.org/projects/localization-guide/en/latest/l10n/languagenames.html)
+      used for the display in UI, e.g. `English (United States)`.
 
-Strings are marked as translatable in your templates using the `get-text` component:
+    It's exposed in all Vue instances as `vm.$language.available`
+
+- `defaultLanguage {String}`:
+
+    The [**local name**](http://www.localeplanet.com/icu/) of the default
+    language, e.g. `en_US`. This will be the current active language.
+
+    It's exposed in all Vue instances as `vm.$language.current`
+
+- `languageVmMixin {Object}`:
+
+    A [**mixin**](https://vuejs.org/v2/guide/mixins.html#Option-Merging)
+    that will be passed to the main `languageVm` instance (exposed as
+    `$language`) that can be used, for example, to add custom computed
+    properties.
+
+- `translations {Object}`:
+
+    The JSON file of the application's translations (produced by
+    `gettext-compile`)
+
+    It's exposed as a Vue global property as `Vue.$translations`, just in case.
+
+Example:
+
+```javascript
+// ES6
+import Vue from 'vue'
+import GetTextPlugin from 'vue-gettext'
+import translations from './path/to/translations.json'
+
+Vue.use(GetTextPlugin, {
+  availableLanguages: {
+    en_GB: 'British English',
+    en_US: 'American English',
+    es_US: 'Español',
+    fr_FR: 'Français',
+    it_IT: 'Italiano',
+  },
+  defaultLanguage: 'fr_FR',
+  languageVmMixin: {
+    computed: {
+      currentKebabCase: function () {
+        return this.current.toLowerCase().replace('_', '-')
+      },
+    },
+  },
+  translations: translations,
+})
+```
+
+## `vm.$language`
+
+After the plugin initialization, a `languageVm` Vue instance is injected
+into every component as `vm.$language`.
+
+It exposes the following properties:
+
+- `vm.$language.available`: an object that represents the list of the available
+  languages (defined at configuration time)
+
+- `vm.$language.current`: the current language (defined at configuration time)
+
+- whatever you passed to the plugin mixin
+
+You can use `vm.$language.current` and `vm.$language.available` to e.g. easily
+build a language switch component with a single template:
+
+```html
+<template>
+  <div>
+    <select name="language" v-model="$language.current">
+      <option v-for="(language, key) in $language.available" :value="key">{{ language }}</option>
+    </select>
+  </div>
+</template>
+```
+
+## `Vue.config.language`
+
+After the plugin initialization, a global and reactive `language` property is
+added to `Vue.config` that you can use to get or set the current language
+outside of Vue instances.
+
+```javascript
+> Vue.config.language
+'en_GB'
+> Vue.config.language = 'fr_FR'
+```
+
+You can use `Vue.config.language` to e.g. configure a third party plugin in a
+filter:
+
+```javascript
+import moment from 'moment'
+import Vue from 'vue'
+
+const dateFormat = function (value, formatString) {
+  moment.locale(Vue.config.language)
+  return moment(value).format(arguments.length > 1 ? formatString : 'dddd D MMMM HH:mm:ss')
+}
+```
+
+# Workflow
+
+1. Annotate your strings
+
+2. Extract translations (`make makemessages`)
+
+3. Translate message files
+
+4. Compile translations (`make translations`)
+
+```
+   Annotate    |       Extract        |              Translate                 |        Compile
+--------------------------------------------------------------------------------------------------------
+component.js
+component.vue ---> /tmp/template.pot ---> app/locale/fr_FR/LC_MESSAGES/app.po ---> app/translations.json
+template.html
+```
+
+## 1) Annotating strings
+
+### In templates (`.html` or `.vue` files)
+
+Strings are marked as translatable in your templates using the `get-text`
+component:
 
 ```html
 <get-text>Hello!</get-text>
 ```
 
-This will automatically be translated. For instance, in French, it might read *Bonjour !*.
+This will automatically be translated. For instance, in French, it might
+read *Bonjour !*.
 
 #### Singular
 
@@ -83,14 +270,18 @@ This will automatically be translated. For instance, in French, it might read *B
 
 #### Interpolation support
 
+Since [interpolation inside attributes are deprecated](https://vuejs.org/v2/guide/syntax.html#Attributes)
+in Vue 2, we have to use another set of delimiters. Instead of the
+"Mustache" syntax (double curly braces), we use `%{` and `}`:
+
 ```html
-<get-text>Hello {{ name }}</get-text>
+<get-text>Hello %{ name }</get-text>
 ```
 
-#### Plurals
+#### Plural
 
 ```html
-<get-text :translate-n="count" translate-plural="{{ count }} cars">{{ count }} car</get-text>
+<get-text :translate-n="count" translate-plural="%{ count } cars">%{ count } car</get-text>
 ```
 
 #### Context
@@ -105,67 +296,127 @@ This will automatically be translated. For instance, in French, it might read *B
 <get-text translate-comment="My comment for translators">Foo</get-text>
 ```
 
-### 2) In JavaScript code (`.js` or `.vue` files)
+### In JavaScript code (`.js` or `.vue` files)
 
-Strings are marked as translatable in your Vue instances JavaScript code using methods attached to `Vue.prototype`:
+Strings are marked as translatable in your Vue instances JavaScript code using
+methods attached to `Vue.prototype`.
 
-- `$gettext`: `this.$gettext(msgid)`
-- `$ngettext`: `this.$ngettext(msgid, plural, n)`
-- `$pgettext`: `this.$pgettext(context, msgid)`
-- `$npgettext`: `this.$npgettext(context, msgid, plural, n)`
+#### Singular
 
-## Extracting strings
+```javascript
+vm.$gettext(msgid)
+```
 
-This should be a step in your build process and this can be done in several ways.
+#### Plural
+
+```javascript
+vm.$ngettext(msgid, plural, n)
+```
+
+#### Context
+
+```javascript
+vm.$pgettext(context, msgid)
+```
+
+#### Context + Plural
+
+```javascript
+vm.$npgettext(context, msgid, plural, n)
+```
+#### Interpolation support
+
+You can use interpolation in your JavaScript using another method attached to
+`Vue.prototype`: `vm.$gettextInterpolate`.
+
+```javascript
+...
+methods: {
+  alertPlural (n) {
+    let translated = this.$ngettext('%{ n } foo', '%{ n } foos', n)
+    let interpolated = this.$gettextInterpolate(translated, {n: n})
+    return window.alert(interpolated)
+  },
+},
+...
+```
+
+`vm.$gettextInterpolate` dynamically populates a translation string with a
+given context object.
+
+## 2) Extracting strings
+
+This should be a step in your build process and this can be done in several
+ways.
 
 Here are the things we must do:
 
-1. extracting annotated strings from templates (`.html` and/or `.vue` files) via [`easygettext`](https://github.com/Polyconseil/easygettext#gettext-extract)
-2. extracting annotated strings from JavaScript code (`.js` and/or `.vue` files) via [`xgettext`](https://www.gnu.org/savannah-checkouts/gnu/gettext/manual/html_node/xgettext-Invocation.html)
-3. create a main `.pot` template based on the extracted strings
-4. create editable [`.po` files](https://www.gnu.org/savannah-checkouts/gnu/gettext/manual/html_node/PO-Files.html) for each available language
+1. extracting annotated strings from templates (`.html` and/or `.vue` files),
 
-To give you an example, I included a `Makefile` with a `makemessages` target which is [the copy of a part](https://github.com/Polyconseil/systematic/blob/866d5a7b44b5926b7033271bbb2969d9d2a3dc9b/mk/main.mk#L167-L183) of Systematic (our ES6 toolchain).
+2. extracting annotated strings from JavaScript code (`.js` and/or `.vue` files),
 
-It's built on the foundation of [`easygettext`](https://github.com/Polyconseil/easygettext#gettext-extract) and some [GNU `gettext` utilities](https://www.gnu.org/software/gettext/manual/gettext.html) (namely [`xgettext`](https://www.gnu.org/savannah-checkouts/gnu/gettext/manual/html_node/xgettext-Invocation.html), [`msgmerge`](https://www.gnu.org/software/gettext/manual/html_node/msgmerge-Invocation.html), [`msginit`](https://www.gnu.org/software/gettext/manual/html_node/msginit-Invocation.html) and [`msgattrib`](https://www.gnu.org/software/gettext/manual/html_node/msgattrib-Invocation.html)).
+3. creating a main `.pot` template based on the extracted strings,
 
-This will basically create a main `.pot` template, then create `.po` files for each available language.
+4. creating editable `.po` files for each available language.
 
-You can see the result in the `example/locale/` directory.
+You'll need to install [`easygettext`](https://github.com/Polyconseil/easygettext)
+and use `gettext-extract` to extract annotated strings from template files and
+produce a `.pot` file.
 
-## Translating your strings into different languages
+You'll also need some GNU gettext utilities, namely `xgettext`, `msgmerge`,
+`msginit` and `msgattrib` to extract annotated strings from JavaScript files
+and generate `.po` files.
 
-The translator needs to fill out the translations of each `.po` files.
+We use a `Makefile` with a `makemessages` target to automate this step.
+To give you an example, I included a `Makefile` with a `makemessages`
+target in this project that you can include in your build process.
+
+Extracting strings and generating `.po` files becomes as easy as running:
+
+```shell
+make makemessages
+```
+
+## 3) Translating message files
+
+The translator needs to fill out the translations of each generated `.po`
+files.
 
 This can be done by you or outsourced to other firms or individuals since
-GetText Portable Object (`.po`) files are the industry standard for multilingual
-websites.
+`.po` files are the industry standard for multilingual websites.
 
 There is also a wide range of translation tools available in the gettext
 ecosystem. Some of them are listed on
 [Wikipedia](https://en.wikipedia.org/wiki/Gettext#See_also).
 
-## Compiling translations
+## 4) Compiling translations
 
-This step focuses on making the translated `.po` files usable in your Vue.js app.
+This step focuses on making the translated `.po` files usable in your
+Vue.js app.
 
-Once translated, use
+Once translated, install `easygettext` and use
 [`gettext-compile`](https://github.com/Polyconseil/easygettext#gettext-compile)
-to embed the translated `.po` files back into your application.
+to merge all translated `.po` files into a unique `.json` translation file.
 
-This will basically merge all translated `.po` files into a unique `.json`
-translation file.
+Embed the `.json` translation file back into your application. This is
+done only one time at `vue-gettext` configuration time.
 
-Again, this should be a step in your build process. To give you an example, I
-included a `Makefile` with a `translations` target that is doing just that.
+We use a `Makefile` with a `translations` target to automate this step.
 
-You can see the result in the `example/locale/translations.json`.
+Compiling translations becomes as easy as running:
+
+```shell
+make translations
+```
+
+Look at the included `Makefile` for an example.
 
 ## Credits
 
 This plugin was inspired by:
 
-- [`systematic`](https://github.com/Polyconseil/systematic) for Makefile and extraction of translatable strings.
+- [`systematic`](https://github.com/Polyconseil/systematic) for Makefile and
+    extraction of translatable strings.
 - [`angular-gettext`](https://angular-gettext.rocketeer.be)
 - [`vue-i18n`](https://github.com/kazupon/vue-i18n)
 

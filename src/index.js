@@ -1,21 +1,23 @@
+import Component from './component'
 import Config from './config'
-import GetTextComponent from './component'
+import interpolate from './interpolate'
 import Override from './override'
 import translate from './translate'
 
+
 var defaultConfig = {
   availableLanguages: { en_US: 'English' },
-  defaultLanguage: 'en',
+  defaultLanguage: 'en_US',
   languageVmMixin: {},
   translations: null,
 }
 
 let languageVm  // Singleton.
 
-export default function (Vue, options = {}) {
+let GetTextPlugin = function (Vue, options = {}) {
 
   Object.keys(options).forEach(key => {
-    if (!Object.keys(defaultConfig).includes(key)) {
+    if (Object.keys(defaultConfig).indexOf(key) === -1) {
       throw new Error(`${key} is an invalid option for the translate plugin.`)
     }
   })
@@ -25,9 +27,6 @@ export default function (Vue, options = {}) {
   }
 
   options = Object.assign(defaultConfig, options)
-
-  // Makes translations available as a global property.
-  Vue.$translations = options.translations
 
   languageVm = new Vue({
     created: function () {
@@ -44,12 +43,18 @@ export default function (Vue, options = {}) {
 
   Config(Vue, languageVm)
 
-  // Makes <get-text> available as a global component.
-  Vue.component('get-text', GetTextComponent)
+  // Makes <translate> available as a global component.
+  Vue.component('translate', Component)
 
+  // Exposes global properties.
+  Vue.$translations = options.translations
+  // Exposes instance methods.
   Vue.prototype.$gettext = translate.gettext.bind(translate)
   Vue.prototype.$pgettext = translate.pgettext.bind(translate)
   Vue.prototype.$ngettext = translate.ngettext.bind(translate)
   Vue.prototype.$npgettext = translate.npgettext.bind(translate)
+  Vue.prototype.$gettextInterpolate = interpolate.bind(interpolate)
 
 }
+
+export default GetTextPlugin

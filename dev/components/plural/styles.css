@@ -1,0 +1,8 @@
+@import '../../styles/variables.css';
+
+
+:local(.title) {
+
+  color: var(--color-blue);
+
+}

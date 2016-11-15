@@ -18,7 +18,13 @@ export default {
     if (!msgid) {
       return ''  // Allow empty strings.
     }
-    let translations = Vue.$translations[language]
+    // `easygettext`'s `gettext-compile` generates a JSON version of a .po file based on its `Language` field.
+    // But in this field, `ll_CC` combinations denoting a language’s main dialect are abbreviated as `ll`,
+    // for example `de` is equivalent to `de_DE` (German as spoken in Germany).
+    // See the `Language` section in https://www.gnu.org/software/gettext/manual/html_node/Header-Entry.html
+    // So try `ll_CC` first, or the `ll` abbreviation which can be three-letter sometimes:
+    // https://www.gnu.org/software/gettext/manual/html_node/Language-Codes.html#Language-Codes
+    let translations = Vue.$translations[language] || Vue.$translations[language.split('_')[0]]
     if (!translations) {
       console.warn(`No translations found for ${language}`)
       return msgid  // Returns the untranslated string.

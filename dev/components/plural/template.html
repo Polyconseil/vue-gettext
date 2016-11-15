@@ -1,0 +1,13 @@
+<div>
+  <p :class="styles.title">
+    <translate>In English, '0' (zero) is always plural.</translate>
+  </p>
+  <p>
+    <button @click="decrease()">-</button>
+    {{ n }}
+    <button @click="increase()">+</button>
+  </p>
+  <p>
+    <translate :translate-n="n" translate-plural="%{ n } books">%{ n } book</translate>
+  </p>
+</div>
