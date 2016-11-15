@@ -5,13 +5,13 @@ var translations = {
     "Plural": "Plural",
     "Select your language:": "Select your language:",
     "Singular": "Singular",
-    "{{ n }} bar": [
-      "{{ n }} bar en_GB",
-      "{{ n }} bars en_GB"
+    "%{ n } bar": [
+      "%{ n } bar en_GB",
+      "%{ n } bars en_GB"
     ],
-    "{{ n }} foo": [
-      "{{ n }} foo en_GB",
-      "{{ n }} foos en_GB"
+    "%{ n } foo": [
+      "%{ n } foo en_GB",
+      "%{ n } foos en_GB"
     ]
   },
   "fr_FR": {
@@ -20,13 +20,13 @@ var translations = {
     "Plural": "Pluriel",
     "Select your language:": "Sélectionner votre langage",
     "Singular": "Singulier",
-    "{{ n }} bar": [
-      "{{ n }} bar fr_FR",
-      "{{ n }} bars fr_FR"
+    "%{ n } bar": [
+      "%{ n } bar fr_FR",
+      "%{ n } bars fr_FR"
     ],
-    "{{ n }} foo": [
-      "{{ n }} foo fr_FR",
-      "{{ n }} foos fr_FR"
+    "%{ n } foo": [
+      "%{ n } foo fr_FR",
+      "%{ n } foos fr_FR"
     ]
   },
   "it_IT": {
@@ -35,13 +35,13 @@ var translations = {
     "Plural": "Plurale",
     "Select your language:": "Seleziona la tua lingua:",
     "Singular": "Singolare",
-    "{{ n }} bar": [
-      "{{ n }} bar it_IT",
-      "{{ n }} bars it_IT"
+    "%{ n } bar": [
+      "%{ n } bar it_IT",
+      "%{ n } bars it_IT"
     ],
-    "{{ n }} foo": [
-      "{{ n }} foo it_IT",
-      "{{ n }} foos it_IT"
+    "%{ n } foo": [
+      "%{ n } foo it_IT",
+      "%{ n } foos it_IT"
     ]
   }
 }
@@ -74,10 +74,10 @@ var LanguageSelect = Vue.extend({
   template: [
     '<div>',
       '<p>',
-        '<get-text>Select your language:</get-text>',
+        '<translate>Select your language:</translate>',
         '<br>',
         '<select name="language" v-model="$language.current">',
-          '<option v-for="language in availableLanguages" value="{{ $key }}">{{ language }}</option>',
+          '<option v-for="(language, key) in $language.available" :value="key">{{ language }}</option>',
         '</select>',
       '</p>',
     '</div>',
@@ -92,18 +92,29 @@ var LanguageSelect = Vue.extend({
 var Plural = Vue.extend({
   template: [
     '<div>',
-      '<h1>',
-        '<get-text :translate-n="n" translate-plural="{{ n }} bars">{{ n }} bar</get-text>',
-      '</h1>',
+      '<h2>',
+        '<translate :translate-n="n" translate-plural="%{ n } bars">%{ n } bar</translate>',
+      '</h2>',
       '<p>',
-        '<input v-model="n" type="text">',
+        '<button @click="decrease()">-</button> ',
+          '{{ n }} ',
+        '<button @click="increase()">+</button>',
       '</p>',
     '</div>',
   ].join(''),
   data: function () {
     return {
-      n: 1,
+      n: 0,
     }
+  },
+  methods: {
+    decrease () {
+      if (this.n === 0) return
+      this.n -= 1
+    },
+    increase () {
+      this.n += 1
+    },
   },
 })
 
@@ -126,11 +137,13 @@ var Alert = Vue.extend({
   template: [
     '<div>',
       '<p>',
-        '<button @click="alertSingular"><get-text>Singular</get-text></button>',
+        '<button @click="alertSingular"><translate>Singular</translate></button>',
       '</p>',
       '<p>',
-        '<input v-model="n" type="text">',
-        '<button @click="alertPlural(n)"><get-text>Plural</get-text></button>',
+        '<button @click="decrease()">-</button> ',
+        '{{ n }} ',
+        '<button @click="increase()">+</button> ',
+        '<button @click="alertPlural(n)"><translate>Plural</translate></button>',
       '</p>',
     '</div>',
   ].join(''),
@@ -145,9 +158,16 @@ var Alert = Vue.extend({
       return window.alert(msg)
     },
     alertPlural (n) {
-      var msg = this.$ngettext('{{ n }} foo', '{{ n }} foos', n)
-      msg = this.$interpolate(msg)
+      let msg = this.$ngettext('%{ n } foo', '%{ n } foos', n)
+      msg = this.$gettextInterpolate(msg, {n: n})
       return window.alert(msg)
+    },
+    decrease () {
+      if (this.n === 0) return
+      this.n -= 1
+    },
+    increase () {
+      this.n += 1
     },
   },
 })
