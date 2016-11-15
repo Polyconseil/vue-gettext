@@ -13,11 +13,12 @@ export default {
 
     n = Number.isNaN(parseInt(n)) ? 1 : parseInt(n)  // Fallback to singular.
 
-    // Extract the ISO 639 two-letter language code since this function
-    // is mostly based on two-letter codes, see:
-    // https://www.gnu.org/savannah-checkouts/gnu/gettext/manual/html_node/Locale-Names.html
+    // Extract the ISO 639 language code. The ISO 639 standard defines
+    // two-letter codes for many languages, and three-letter codes for
+    // more rarely used languages.
+    // https://www.gnu.org/software/gettext/manual/html_node/Language-Codes.html#Language-Codes
     if (languageCode.length > 2 && languageCode !== 'pt_BR') {
-      languageCode = languageCode.substring(0, 2)
+      languageCode = languageCode.split('_')[0]
     }
 
     switch (languageCode) {

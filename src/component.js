@@ -1,50 +1,65 @@
 import translate from './translate'
 
+
 /**
- * Translate the component content according to the current language
- *
- * Built to work with easygettext https://github.com/Polyconseil/easygettext
- *
- * Usage:
- *
- *   Singular:
- *   <get-text>Foo</get-text>
- *
- *   Interpolation support:
- *   <get-text>Hello {{ name }}</get-text>
- *
- *   Plurals:
- *   <get-text :translate-n="count" translate-plural="{{ count }} cars">{{ count }} car</get-text>
- *
- *   Context:
- *   <get-text translate-context="Verb">Foo</get-text>
- *
- *   Comment:
- *   <get-text translate-comment="My comment for translators">Foo</get-text>
+ * Translate content according to the current language.
  */
 export default {
-  name: 'get-text',
+
+  name: 'translate',
+
   created: function () {
-    this.msgid = this.$options.el.innerHTML.trim()  // Stores the raw uninterpolated string to translate.
+
+    this.msgid = ''  // Don't crash the app with an empty component, i.e.: <translate></translate>.
+    if (this.$options._renderChildren) {
+      this.msgid = this.$options._renderChildren[0].trim()  // Stores the raw uninterpolated string to translate.
+    }
+
     this.isPlural = this.translateN !== undefined && this.translatePlural !== undefined
     if (!this.isPlural && (this.translateN || this.translatePlural)) {
       throw new Error(`\`translate-n\` and \`translate-plural\` attributes must be used together: ${this.msgid}.`)
     }
+
   },
-  props: [
+
+  props: {
     // Always use v-bind for dynamically binding the `translateN` prop to data on the parent,
-    // i.e.: `:translate-n`
-    'translateN',
-    'translatePlural',
-    'translateContext',
-    'translateComment',
-  ],
-  computed: {
-    translation: function () {
-      let n = this.isPlural ? this.translateN : 1
-      let translation = translate.getTranslation(this.msgid, n, this.translateContext, this.$language.current)
-      return this.$parent.$interpolate(translation)
+    // i.e.: `:translateN`.
+    translateN: {
+      type: Number,
+      required: false,
+    },
+    translatePlural: {
+      type: String,
+      required: false,
+    },
+    translateContext: {
+      type: String,
+      required: false,
+    },
+    // `translateComment` is used exclusively by `easygettext`'s `gettext-extract`.
+    translateComment: {
+      type: String,
+      required: false,
     },
   },
-  template: '{{ translation }}',
+
+  computed: {
+    translation: function () {
+      let translation = translate.getTranslation(
+        this.msgid,
+        this.translateN,
+        this.translateContext,
+        this.$language.current
+      )
+      return this.$gettextInterpolate(translation, this.$parent.$data)
+    },
+  },
+
+  render: function (createElement) {
+    // The text must be wraped inside a root HTML element, so we use a <span>.
+    // https://github.com/vuejs/vue/blob/a4fcdb/src/compiler/parser/index.js#L209
+    return createElement('span', [this.translation])
+  },
+
 }
