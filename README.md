@@ -1,13 +1,13 @@
 # vue-gettext
 
-> This is vue-gettext 2.0 which works only with Vue 2.0.
+> This is vue-gettext 2 which works only with Vue 2.
 
 Translate [Vue.js](http://vuejs.org) applications with
 [gettext](https://en.wikipedia.org/wiki/Gettext).
 
 [Live demo](https://polyconseil.github.io/vue-gettext/).
 
-# How to upgrade from vue-gettext 1.0
+# How to upgrade from vue-gettext 1
 
 - rename your `<get-text>` components to `<translate>`
 
@@ -109,7 +109,14 @@ Vue.use(GetTextPlugin, {translations: translations})
 
 There are a number of options you can use to configure the `vue-gettext` plugin:
 
-- `availableLanguages {Object}`:
+- `translations {Object}` - required:
+
+    The JSON file of the application's translations (produced by
+    `gettext-compile`)
+
+    It's exposed as a Vue global property as `Vue.$translations`.
+
+- `availableLanguages {Object}` - optional:
 
     An object that represents the list of the available languages for the app:
 
@@ -127,28 +134,21 @@ There are a number of options you can use to configure the `vue-gettext` plugin:
       [**language names**](http://docs.translatehouse.org/projects/localization-guide/en/latest/l10n/languagenames.html)
       used for the display in UI, e.g. `English (United States)`.
 
-    It's exposed in all Vue instances as `vm.$language.available`
+    It's exposed in all Vue instances via `vm.$language.available`
 
-- `defaultLanguage {String}`:
+- `defaultLanguage {String}` - optional:
 
     The [**local name**](http://www.localeplanet.com/icu/) of the default
     language, e.g. `en_US`. This will be the current active language.
 
-    It's exposed in all Vue instances as `vm.$language.current`
+    It's exposed in all Vue instances via `vm.$language.current`
 
-- `languageVmMixin {Object}`:
+- `languageVmMixin {Object}` - optional:
 
     A [**mixin**](https://vuejs.org/v2/guide/mixins.html#Option-Merging)
-    that will be passed to the main `languageVm` instance (exposed as
+    that will be passed to the main `languageVm` instance (exposed via
     `$language`) that can be used, for example, to add custom computed
     properties.
-
-- `translations {Object}`:
-
-    The JSON file of the application's translations (produced by
-    `gettext-compile`)
-
-    It's exposed as a Vue global property as `Vue.$translations`, just in case.
 
 Example:
 
@@ -252,11 +252,11 @@ template.html
 
 ### In templates (`.html` or `.vue` files)
 
-Strings are marked as translatable in your templates using the `get-text`
+Strings are marked as translatable in your templates using the `translate`
 component:
 
 ```html
-<get-text>Hello!</get-text>
+<translate>Hello!</translate>
 ```
 
 This will automatically be translated. For instance, in French, it might
@@ -265,7 +265,7 @@ read *Bonjour !*.
 #### Singular
 
 ```html
-<get-text>Hello!</get-text>
+<translate>Hello!</translate>
 ```
 
 #### Interpolation support
@@ -275,25 +275,25 @@ in Vue 2, we have to use another set of delimiters. Instead of the
 "Mustache" syntax (double curly braces), we use `%{` and `}`:
 
 ```html
-<get-text>Hello %{ name }</get-text>
+<translate>Hello %{ name }</translate>
 ```
 
 #### Plural
 
 ```html
-<get-text :translate-n="count" translate-plural="%{ count } cars">%{ count } car</get-text>
+<translate :translate-n="count" translate-plural="%{ count } cars">%{ count } car</translate>
 ```
 
 #### Context
 
 ```html
-<get-text translate-context="Verb">Foo</get-text>
+<translate translate-context="Verb">Foo</translate>
 ```
 
 #### Comment
 
 ```html
-<get-text translate-comment="My comment for translators">Foo</get-text>
+<translate translate-comment="My comment for translators">Foo</translate>
 ```
 
 ### In JavaScript code (`.js` or `.vue` files)
