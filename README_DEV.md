@@ -164,7 +164,10 @@ other prefer [partial configurations files](https://github.com/vuejs-templates/w
 that then can be merged together using specialized tools like
 [`webpack-merge`](https://github.com/survivejs/webpack-merge).
 
-We took a different approach here: one file per environment.
+We took a different approach here: one file per environment, because we don't
+provide production environment so we just have one file for the development
+environment. The distribution build is made with Rollup (cf section 11 of this
+file).
 
 The current environment is set in an environment variable. Node.js provides the
 [`process.env` property](https://nodejs.org/api/process.html#process_process_env)
