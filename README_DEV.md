@@ -24,7 +24,7 @@ placeholders in component templates together with a custom interpolation
 function, e.g.:
 
 ```
-<get-text>Hello %{name}, I am the translation key!</get-text>
+<translate>Hello %{name}, I am the translation key!</translate>
                     ↓
 Hello %{name}, I am the translation key!
                     ↓
