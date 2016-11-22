@@ -32,7 +32,7 @@ export default {
       this.n += 1
     },
     alertPlural (n) {
-      let msg = this.$ngettext('%{ n } foo', '%{ n } foos', n)
+      let msg = this.$ngettext('%{ n } car', '%{ n } cars', n)
       msg = this.$gettextInterpolate(msg, {n: n})
       return window.alert(msg)
     },
