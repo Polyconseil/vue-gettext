@@ -1,15 +1,13 @@
 /**
- * vue-gettext v2.0.2
+ * vue-gettext v2.0.3
  * (c) 2016 Polyconseil
  * @license MIT
  */
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('vue')) :
-  typeof define === 'function' && define.amd ? define(['vue'], factory) :
-  (global.VueGettext = factory(global.Vue));
-}(this, (function (Vue) { 'use strict';
-
-Vue = 'default' in Vue ? Vue['default'] : Vue;
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+  typeof define === 'function' && define.amd ? define(['exports'], factory) :
+  (factory((global.VueGettext = global.VueGettext || {})));
+}(this, (function (exports) { 'use strict';
 
 /**
  * Plural Forms
@@ -169,7 +167,7 @@ var translate = {
   getTranslation: function (msgid, n, context, language) {
     if ( n === void 0 ) n = 1;
     if ( context === void 0 ) context = null;
-    if ( language === void 0 ) language = Vue.config.language;
+    if ( language === void 0 ) language = exports._Vue.config.language;
 
     if (!msgid) {
       return ''  // Allow empty strings.
@@ -180,7 +178,8 @@ var translate = {
     // See the `Language` section in https://www.gnu.org/software/gettext/manual/html_node/Header-Entry.html
     // So try `ll_CC` first, or the `ll` abbreviation which can be three-letter sometimes:
     // https://www.gnu.org/software/gettext/manual/html_node/Language-Codes.html#Language-Codes
-    var translations = Vue.$translations[language] || Vue.$translations[language.split('_')[0]];
+
+    var translations = exports._Vue.$translations[language] || exports._Vue.$translations[language.split('_')[0]];
     if (!translations) {
       console.warn(("No translations found for " + language));
       return msgid  // Returns the untranslated string.
@@ -320,13 +319,13 @@ var Component = {
 
 };
 
-var Config = function (Vue$$1, languageVm) {
+var Config = function (Vue, languageVm) {
 
   /*
    * Adds a `language` property to `Vue.config` and makes it reactive:
    * Vue.config.language = 'fr_FR'
    */
-  Object.defineProperty(Vue$$1.config, 'language', {
+  Object.defineProperty(Vue.config, 'language', {
     enumerable: true,
     configurable: true,
     get: function () { return languageVm.current },
@@ -365,11 +364,11 @@ var interpolate = function (msgid, context) {
   return interpolated
 };
 
-var Override = function (Vue$$1, languageVm) {
+var Override = function (Vue, languageVm) {
 
   // Override the main init sequence. This is called for every instance.
-  var init = Vue$$1.prototype._init;
-  Vue$$1.prototype._init = function (options) {
+  var init = Vue.prototype._init;
+  Vue.prototype._init = function (options) {
     if ( options === void 0 ) options = {};
 
     var root = options._parent || options.parent || this;
@@ -379,8 +378,8 @@ var Override = function (Vue$$1, languageVm) {
   };
 
   // Override the main destroy sequence to destroy all languageVm watchers.
-  var destroy = Vue$$1.prototype._destroy;
-  Vue$$1.prototype._destroy = function () {
+  var destroy = Vue.prototype._destroy;
+  Vue.prototype._destroy = function () {
     this.$language = null;
     destroy.apply(this, arguments);
   };
@@ -396,7 +395,9 @@ var defaultConfig = {
 
 var languageVm;  // Singleton.
 
-var GetTextPlugin = function (Vue$$1, options) {
+
+
+var GetTextPlugin = function (Vue, options) {
   if ( options === void 0 ) options = {};
 
 
@@ -410,9 +411,11 @@ var GetTextPlugin = function (Vue$$1, options) {
     throw new Error('No translations available.')
   }
 
+  exports._Vue = Vue;
+
   options = Object.assign(defaultConfig, options);
 
-  languageVm = new Vue$$1({
+  languageVm = new Vue({
     created: function () {
       // Non-reactive data.
       this.available = options.availableLanguages;
@@ -423,24 +426,26 @@ var GetTextPlugin = function (Vue$$1, options) {
     mixins: [options.languageVmMixin],
   });
 
-  Override(Vue$$1, languageVm);
+  Override(Vue, languageVm);
 
-  Config(Vue$$1, languageVm);
+  Config(Vue, languageVm);
 
   // Makes <translate> available as a global component.
-  Vue$$1.component('translate', Component);
+  Vue.component('translate', Component);
 
   // Exposes global properties.
-  Vue$$1.$translations = options.translations;
+  Vue.$translations = options.translations;
   // Exposes instance methods.
-  Vue$$1.prototype.$gettext = translate.gettext.bind(translate);
-  Vue$$1.prototype.$pgettext = translate.pgettext.bind(translate);
-  Vue$$1.prototype.$ngettext = translate.ngettext.bind(translate);
-  Vue$$1.prototype.$npgettext = translate.npgettext.bind(translate);
-  Vue$$1.prototype.$gettextInterpolate = interpolate.bind(interpolate);
+  Vue.prototype.$gettext = translate.gettext.bind(translate);
+  Vue.prototype.$pgettext = translate.pgettext.bind(translate);
+  Vue.prototype.$ngettext = translate.ngettext.bind(translate);
+  Vue.prototype.$npgettext = translate.npgettext.bind(translate);
+  Vue.prototype.$gettextInterpolate = interpolate.bind(interpolate);
 
 };
 
-return GetTextPlugin;
+exports['default'] = GetTextPlugin;
+
+Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
