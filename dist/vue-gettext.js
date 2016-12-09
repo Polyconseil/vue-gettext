@@ -1,13 +1,13 @@
 /**
- * vue-gettext v2.0.3
+ * vue-gettext v2.0.4
  * (c) 2016 Polyconseil
  * @license MIT
  */
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-  typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (factory((global.VueGettext = global.VueGettext || {})));
-}(this, (function (exports) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+  typeof define === 'function' && define.amd ? define(factory) :
+  (global.VueGettext = factory());
+}(this, (function () { 'use strict';
 
 /**
  * Plural Forms
@@ -152,6 +152,24 @@ var plurals = {
 
 };
 
+// Ensure to always use the same Vue instance throughout the plugin.
+//
+// This was previously done in `index.js` using both named and default exports.
+// However, this currently must be kept in a separate file because we are using
+// Rollup to build the dist files and it has a drawback when using named and
+// default exports together, see:
+// https://github.com/rollup/rollup/blob/fca14d/src/utils/getExportMode.js#L27
+// https://github.com/rollup/rollup/wiki/JavaScript-API#exports
+//
+// If we had kept named and default exports in `index.js`, a user would have to
+// do something like this to access the default export: GetTextPlugin['default']
+
+var _Vue;
+
+function shareVueInstance (Vue) {
+  _Vue = Vue;
+}
+
 var translate = {
 
  /**
@@ -167,7 +185,7 @@ var translate = {
   getTranslation: function (msgid, n, context, language) {
     if ( n === void 0 ) n = 1;
     if ( context === void 0 ) context = null;
-    if ( language === void 0 ) language = exports._Vue.config.language;
+    if ( language === void 0 ) language = _Vue.config.language;
 
     if (!msgid) {
       return ''  // Allow empty strings.
@@ -179,7 +197,7 @@ var translate = {
     // So try `ll_CC` first, or the `ll` abbreviation which can be three-letter sometimes:
     // https://www.gnu.org/software/gettext/manual/html_node/Language-Codes.html#Language-Codes
 
-    var translations = exports._Vue.$translations[language] || exports._Vue.$translations[language.split('_')[0]];
+    var translations = _Vue.$translations[language] || _Vue.$translations[language.split('_')[0]];
     if (!translations) {
       console.warn(("No translations found for " + language));
       return msgid  // Returns the untranslated string.
@@ -395,8 +413,6 @@ var defaultConfig = {
 
 var languageVm;  // Singleton.
 
-
-
 var GetTextPlugin = function (Vue, options) {
   if ( options === void 0 ) options = {};
 
@@ -411,8 +427,6 @@ var GetTextPlugin = function (Vue, options) {
     throw new Error('No translations available.')
   }
 
-  exports._Vue = Vue;
-
   options = Object.assign(defaultConfig, options);
 
   languageVm = new Vue({
@@ -425,6 +439,8 @@ var GetTextPlugin = function (Vue, options) {
     },
     mixins: [options.languageVmMixin],
   });
+
+  shareVueInstance(Vue);
 
   Override(Vue, languageVm);
 
@@ -444,8 +460,6 @@ var GetTextPlugin = function (Vue, options) {
 
 };
 
-exports['default'] = GetTextPlugin;
-
-Object.defineProperty(exports, '__esModule', { value: true });
+return GetTextPlugin;
 
 })));
