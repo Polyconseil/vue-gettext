@@ -1,5 +1,5 @@
 import plurals from './plurals'
-import { _Vue } from './index'
+import { _Vue } from './localVue'
 
 export default {
 

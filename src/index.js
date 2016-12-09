@@ -3,6 +3,7 @@ import Config from './config'
 import interpolate from './interpolate'
 import Override from './override'
 import translate from './translate'
+import { shareVueInstance } from './localVue'
 
 
 var defaultConfig = {
@@ -13,8 +14,6 @@ var defaultConfig = {
 }
 
 let languageVm  // Singleton.
-
-export let _Vue
 
 let GetTextPlugin = function (Vue, options = {}) {
 
@@ -28,8 +27,6 @@ let GetTextPlugin = function (Vue, options = {}) {
     throw new Error('No translations available.')
   }
 
-  _Vue = Vue
-
   options = Object.assign(defaultConfig, options)
 
   languageVm = new Vue({
@@ -42,6 +39,8 @@ let GetTextPlugin = function (Vue, options = {}) {
     },
     mixins: [options.languageVmMixin],
   })
+
+  shareVueInstance(Vue)
 
   Override(Vue, languageVm)
 
