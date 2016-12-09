@@ -1,6 +1,5 @@
-import Vue from 'vue'
-
 import plurals from './plurals'
+import { _Vue } from './index'
 
 export default {
 
@@ -14,7 +13,7 @@ export default {
   *
   * @return {String} The translated string
   */
-  getTranslation: function (msgid, n = 1, context = null, language = Vue.config.language) {
+  getTranslation: function (msgid, n = 1, context = null, language = _Vue.config.language) {
     if (!msgid) {
       return ''  // Allow empty strings.
     }
@@ -24,7 +23,8 @@ export default {
     // See the `Language` section in https://www.gnu.org/software/gettext/manual/html_node/Header-Entry.html
     // So try `ll_CC` first, or the `ll` abbreviation which can be three-letter sometimes:
     // https://www.gnu.org/software/gettext/manual/html_node/Language-Codes.html#Language-Codes
-    let translations = Vue.$translations[language] || Vue.$translations[language.split('_')[0]]
+
+    let translations = _Vue.$translations[language] || _Vue.$translations[language.split('_')[0]]
     if (!translations) {
       console.warn(`No translations found for ${language}`)
       return msgid  // Returns the untranslated string.

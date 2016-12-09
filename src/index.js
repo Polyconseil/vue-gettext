@@ -14,6 +14,8 @@ var defaultConfig = {
 
 let languageVm  // Singleton.
 
+export let _Vue
+
 let GetTextPlugin = function (Vue, options = {}) {
 
   Object.keys(options).forEach(key => {
@@ -25,6 +27,8 @@ let GetTextPlugin = function (Vue, options = {}) {
   if (!options.translations) {
     throw new Error('No translations available.')
   }
+
+  _Vue = Vue
 
   options = Object.assign(defaultConfig, options)
 
