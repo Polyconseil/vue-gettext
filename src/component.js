@@ -12,7 +12,11 @@ export default {
 
     this.msgid = ''  // Don't crash the app with an empty component, i.e.: <translate></translate>.
     if (this.$options._renderChildren) {
-      this.msgid = this.$options._renderChildren[0].trim()  // Stores the raw uninterpolated string to translate.
+      if (this.$options._renderChildren[0].hasOwnProperty('text')) {
+        this.msgid = this.$options._renderChildren[0].text.trim()  // Stores the raw uninterpolated string to translate.
+      } else {
+        this.msgid = this.$options._renderChildren[0].trim()
+      }
     }
 
     this.isPlural = this.translateN !== undefined && this.translatePlural !== undefined
