@@ -33,7 +33,7 @@ var webpackConfig = {
   resolve: {
     extensions: ['', '.js', '.vue'],
     alias: {
-      'vue$': 'vue/dist/vue',  // Use the Vue.js standalone build.
+      'vue$': 'vue/dist/vue.common.js',  // Use the Vue.js standalone build.
     },
   },
 

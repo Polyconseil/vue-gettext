@@ -266,15 +266,18 @@ which includes the compiler and supports the template option.
 
 ```
 vue-loader
+vue-template-compiler
 eslint-plugin-html
 ```
 
 ```
-npm install --save-dev vue-loader eslint-plugin-html
+npm install --save-dev vue-loader vue-template-compiler eslint-plugin-html
 ```
 
 `vue-loader` is a loader for Webpack that can transform Vue components into a
 plain JavaScript module.
+
+Since [Vue 2.1.0](https://github.com/vuejs/vue/releases/tag/v2.1.0), `vue-template-compiler` is a peer dependency of `vue-loader` instead of a direct dependency.
 
 We also need the [`eslint-html-plugin`](https://github.com/BenoitZugmeyer/eslint-plugin-html)
 with supports extracting and linting the JavaScript inside `*.vue` files and
