@@ -1,5 +1,12 @@
 # vue-gettext
 
+## Table of contents
+
+- [Implementation notes](#implementation-notes)
+- [Project Structure](#project-structure)
+- [Dev setup](#dev-setup)
+- [Dev setup notes](#dev-setup-notes)
+
 ## Implementation notes
 
 ### Version number
@@ -39,7 +46,7 @@ Drawbacks:
 But it works very well while waiting for something better. Practicality beats
 purity I guess.
 
-## Project Structure
+## Project structure
 
 ```
 .

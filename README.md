@@ -21,7 +21,7 @@ Translate [Vue.js](http://vuejs.org) applications with
 It relies on the [GNU gettext toolset](https://www.gnu.org/software/gettext/manual/index.html)
 and [`easygettext`](https://github.com/Polyconseil/easygettext).
 
-Here's how `vue-gettext` works at a high level:
+## How does `vue-gettext` works at a high level?
 
 1. **Annotating strings**: to make a Vue.js app translatable, you have to
     annotate the strings you want to translate in your JavaScript code and/or
@@ -47,7 +47,7 @@ Here's how `vue-gettext` works at a high level:
 5. **Dynamically render translated strings to the DOM**: `vue-gettext`
     currently uses a custom component for this.
 
-What does `vue-gettext` provide?
+## What does `vue-gettext` provide?
 
 - a custom component to annotate strings in templates and dynamically render
     translated strings to the DOM
@@ -65,21 +65,27 @@ What does `vue-gettext` provide?
 - a global and reactive `language` property added to `Vue.config` you can use
     to get or set the current language *outside* of Vue instances
 
-What does `vue-gettext` depend on?
+## What does `vue-gettext` depend on?
 
-- [`easygettext`'s `gettext-extract`](https://github.com/Polyconseil/easygettext#gettext-extract)
-    to extract annotated strings from template files and produce a `.pot`
-    (Portable Object Template) file.
+- [`easygettext`](https://github.com/Polyconseil/easygettext)
 
-- [`xgettext`](https://www.gnu.org/software/gettext/manual/html_node/xgettext-Invocation.html#xgettext-Invocation),
-    [`msgmerge`](https://www.gnu.org/software/gettext/manual/html_node/msgmerge-Invocation.html#msgmerge-Invocation),
-    [`msginit`](https://www.gnu.org/software/gettext/manual/html_node/msginit-Invocation.html#msginit-Invocation),
-    [`msgattrib`](https://www.gnu.org/software/gettext/manual/html_node/msgattrib-Invocation.html#msgattrib-Invocation)
-    to extract annotated strings from JavaScript files and generate `.po`
-    files for each available language.
+    - [`gettext-extract`](https://github.com/Polyconseil/easygettext#gettext-extract)
+        to extract annotated strings from template files and produce a `.pot`
+        (Portable Object Template) file.
 
-- [`easygettext`'s `gettext-compile`](https://github.com/Polyconseil/easygettext#gettext-compile)
-    to produce the sanitized JSON version of a `.po` file.
+    - [`gettext-compile`](https://github.com/Polyconseil/easygettext#gettext-compile)
+        to produce the sanitized JSON version of a `.po` file.
+
+- Some GNU gettext utilities to extract annotated strings from JavaScript files and generate
+    `.po` files
+
+    - [`xgettext`](https://www.gnu.org/software/gettext/manual/html_node/xgettext-Invocation.html#xgettext-Invocation)
+
+    - [`msgmerge`](https://www.gnu.org/software/gettext/manual/html_node/msgmerge-Invocation.html#msgmerge-Invocation)
+
+    - [`msginit`](https://www.gnu.org/software/gettext/manual/html_node/msginit-Invocation.html#msginit-Invocation)
+
+    - [`msgattrib`](https://www.gnu.org/software/gettext/manual/html_node/msgattrib-Invocation.html#msgattrib-Invocation)
 
 Those tools should be integrated in your build process.
 We'll show you examples later.
