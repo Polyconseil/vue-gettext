@@ -21,7 +21,8 @@ const INTERPOLATION_RE = /%\{((?:.|\n)+?)\}/g
 let interpolate = function (msgid, context = {}) {
   let interpolated = msgid.replace(INTERPOLATION_RE, (match, token) => {
     const key = token.trim()
-    return context[key]
+    // support dot notation
+    return key.split('.').reduce((o,i)=>o[i], context)
   })
   return interpolated
 }

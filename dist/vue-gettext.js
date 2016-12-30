@@ -381,7 +381,8 @@ var interpolate = function (msgid, context) {
 
   var interpolated = msgid.replace(INTERPOLATION_RE, function (match, token) {
     var key = token.trim();
-    return context[key]
+    // support dot notation
+    return key.split('.').reduce(function (o,i){ return o[i]; }, context)
   });
   return interpolated
 };
