@@ -2,11 +2,49 @@
 
 ## Table of contents
 
-- [Implementation notes](#implementation-notes)
 - [Project Structure](#project-structure)
 - [Dev setup](#dev-setup)
 - [Pull request guidelines](#pull-request-guidelines)
+- [Implementation notes](#implementation-notes)
 - [Dev setup notes](#dev-setup-notes)
+
+## Project structure
+
+```
+.
+├── build/            # Build and environment config files.
+├── dev/              # Files used for the development of the plugin.
+├── dist/             # The production version of the plugin.
+├── src/              # Source code of the plugin.
+├── test/             # Unit tests.
+├── .babelrc          # Babel config
+├── .eslintrc.js      # Eslint config
+├── Makefile          # A Makefile to extract translations and generate .po files
+└── package.json      # Build scripts and dependencies
+```
+
+## Dev setup
+
+```shell
+# install deps
+npm install
+
+# serve examples at localhost:8080
+npm run dev
+
+# lint & run all tests
+npm run test
+```
+
+## Pull request guidelines
+
+[Inspired by Vue](https://github.com/vuejs/vue/blob/299ecfc19fa0f59effef71d24686bd7eb70ecbab/.github/CONTRIBUTING.md#pull-request-guidelines).
+
+- explain why/what you are doing in the PR description, so that anybody can quickly understand what you want
+- all development should be done in dedicated branches
+- do not touch files in `dist` because they are automatically generated at release time
+- add accompanying test case(s)
+- make sure `npm test` passes
 
 ## Implementation notes
 
@@ -46,44 +84,6 @@ Drawbacks:
 
 But it works very well while waiting for something better. Practicality beats
 purity I guess.
-
-## Project structure
-
-```
-.
-├── build/            # Build and environment config files.
-├── dev/              # Files used for the development of the plugin.
-├── dist/             # The production version of the plugin.
-├── src/              # Source code of the plugin.
-├── test/             # Unit tests.
-├── .babelrc          # Babel config
-├── .eslintrc.js      # Eslint config
-├── Makefile          # A Makefile to extract translations and generate .po files
-└── package.json      # Build scripts and dependencies
-```
-
-## Dev setup
-
-```shell
-# install deps
-npm install
-
-# serve examples at localhost:8080
-npm run dev
-
-# lint & run all tests
-npm run test
-```
-
-## Pull request guidelines
-
-[Inspired by Vue](https://github.com/vuejs/vue/blob/299ecfc19fa0f59effef71d24686bd7eb70ecbab/.github/CONTRIBUTING.md#pull-request-guidelines).
-
-- explain why/what you are doing in the PR description, so that anybody can quickly understand what you want
-- all development should be done in dedicated branches
-- do not touch files in `dist` because they are automatically generated at release time
-- add accompanying test case(s)
-- make sure `npm test` passes
 
 ## Dev setup notes
 
