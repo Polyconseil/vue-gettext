@@ -13,10 +13,11 @@
     "registry": "https://registry.npmjs.org"
   },
   "scripts": {
-    "dev:dist": "rollup -w -c build/rollup.config.js",
     "build": "rollup -c build/rollup.config.js && uglifyjs dist/vue-gettext.js -cm --comments -o dist/vue-gettext.min.js",
     "dev": "node build/server-dev.js",
-    "test": "karma start build/karma.conf.js --single-run"
+    "dev:dist": "rollup -w -c build/rollup.config.js",
+    "lint": "eslint src test dev build",
+    "test": "npm run lint && karma start build/karma.conf.js --single-run"
   },
   "engines": {
     "npm": ">= 3.0.0"
