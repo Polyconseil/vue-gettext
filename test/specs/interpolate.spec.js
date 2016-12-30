@@ -3,45 +3,96 @@ import interpolate from '../../src/interpolate'
 
 describe('Interpolate tests', () => {
 
-  it('tests the interpolate() method without placeholders', () => {
+  it('without placeholders', () => {
     let msgid = 'Foo bar baz'
     let interpolated = interpolate(msgid)
     expect(interpolated).to.equal('Foo bar baz')
   })
 
-  it('tests the interpolate() method with a placeholder', () => {
+  it('with a placeholder', () => {
     let msgid = 'Foo %{ placeholder } baz'
     let context = { placeholder: 'bar' }
     let interpolated = interpolate(msgid, context)
     expect(interpolated).to.equal('Foo bar baz')
   })
 
-  it('tests the interpolate() method with multiple spaces in the placeholder', () => {
+  it('with multiple spaces in the placeholder', () => {
     let msgid = 'Foo %{              placeholder                              } baz'
     let context = { placeholder: 'bar' }
     let interpolated = interpolate(msgid, context)
     expect(interpolated).to.equal('Foo bar baz')
   })
 
-  it('tests the interpolate() method with the same placeholder multiple times', () => {
+  it('with the same placeholder multiple times', () => {
     let msgid = 'Foo %{ placeholder } baz %{ placeholder } foo'
     let context = { placeholder: 'bar' }
     let interpolated = interpolate(msgid, context)
     expect(interpolated).to.equal('Foo bar baz bar foo')
   })
 
-  it('tests the interpolate() method with multiple placeholders', () => {
+  it('with multiple placeholders', () => {
     let msgid = '%{foo}%{bar}%{baz}%{bar}%{foo}'
     let context = { foo: 1, bar: 2, baz: 3 }
     let interpolated = interpolate(msgid, context)
     expect(interpolated).to.equal('12321')
   })
 
-  it('tests the interpolate() method with new lines', () => {
+  it('with new lines', () => {
     let msgid = '%{       \n    \n\n\n\n  foo} %{bar}!'
     let context = { foo: 'Hello', bar: 'world' }
     let interpolated = interpolate(msgid, context)
     expect(interpolated).to.equal('Hello world!')
+  })
+
+  it('with an object', () => {
+    let msgid = 'Foo %{ foo.bar } baz'
+    let context = {
+      foo: {
+        bar: 'baz',
+      },
+    }
+    let interpolated = interpolate(msgid, context)
+    expect(interpolated).to.equal('Foo baz baz')
+  })
+
+  it('with an array', () => {
+    let msgid = 'Foo %{ foo[1] } baz'
+    let context = {
+      foo: [ 'bar', 'baz' ],
+    }
+    let interpolated = interpolate(msgid, context)
+    expect(interpolated).to.equal('Foo baz baz')
+  })
+
+  it('with a multi level object', () => {
+    let msgid = 'Foo %{ a.b.x } %{ a.c.y[1].title }'
+    let context = {
+      a: {
+        b: {
+          x: 'foo',
+        },
+        c: {
+          y: [
+            { title: 'bar' },
+            { title: 'baz' },
+          ],
+        },
+      },
+    }
+    let interpolated = interpolate(msgid, context)
+    expect(interpolated).to.equal('Foo foo baz')
+  })
+
+  it('with a failing eval', () => {
+    let msgid = 'Foo %{ alert("foobar") } baz'
+    let context = {
+      foo: 'bar',
+    }
+    console.warn = sinon.spy(console, 'warn')
+    interpolate(msgid, context)
+    expect(console.warn).calledTwice
+    expect(console.warn).calledWith('Cannot evaluate expression: "alert("foobar")".')
+    console.warn.restore()
   })
 
 })
