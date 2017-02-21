@@ -268,6 +268,15 @@ component:
 This will automatically be translated. For instance, in French, it might
 read *Bonjour !*.
 
+#### Custom HTML tag
+
+When rendered, the content of the `translate` component will be wrapped in
+a `span` element by default. You can also use another tag:
+
+```html
+<translate tag="h1">Hello!</translate>
+```
+
 #### Singular
 
 ```html
