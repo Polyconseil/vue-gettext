@@ -1,6 +1,6 @@
 /**
- * vue-gettext v2.0.6
- * (c) 2016 Polyconseil
+ * vue-gettext v2.0.7
+ * (c) 2017 Polyconseil
  * @license MIT
  */
 (function (global, factory) {
@@ -300,6 +300,10 @@ var Component = {
   },
 
   props: {
+    tag: {
+      type: String,
+      default: 'span',
+    },
     // Always use v-bind for dynamically binding the `translateN` prop to data on the parent,
     // i.e.: `:translateN`.
     translateN: {
@@ -329,14 +333,14 @@ var Component = {
         this.translateContext,
         this.$language.current
       );
-      return this.$gettextInterpolate(translation, this.$parent.$data)
+      return this.$gettextInterpolate(translation, this.$parent)
     },
   },
 
   render: function (createElement) {
     // The text must be wraped inside a root HTML element, so we use a <span>.
     // https://github.com/vuejs/vue/blob/a4fcdb/src/compiler/parser/index.js#L209
-    return createElement('span', [this.translation])
+    return createElement(this.tag, [this.translation])
   },
 
 };
