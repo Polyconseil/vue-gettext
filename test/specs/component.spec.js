@@ -46,6 +46,12 @@ describe('translate component tests', () => {
     expect(vm.$el.innerHTML.trim()).to.equal('<span>En cours</span>')
   })
 
+  it('renders translation in custom html tag', () => {
+    Vue.config.language = 'fr_FR'
+    let vm = new Vue({template: '<div><translate tag="h1">Pending</translate></div>'}).$mount()
+    expect(vm.$el.innerHTML.trim()).to.equal('<h1>En cours</h1>')
+  })
+
   it('translates known strings according to a given translation context', () => {
     Vue.config.language = 'en_US'
     let vm = new Vue({template: '<div><translate translate-context="Verb">Answer</translate></div>'}).$mount()
