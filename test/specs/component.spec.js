@@ -63,6 +63,17 @@ describe('translate component tests', () => {
     expect(vm.$el.innerHTML.trim()).to.equal('<span>Bonjour John Doe</span>')
   })
 
+  it('allows interpolation with computed property', () => {
+    Vue.config.language = 'fr_FR'
+    let vm = new Vue({
+      template: '<p><translate>Hello %{ name }</translate></p>',
+      computed: {
+        name () { return 'John Doe' },
+      },
+    }).$mount()
+    expect(vm.$el.innerHTML.trim()).to.equal('<span>Bonjour John Doe</span>')
+  })
+
   it('translates plurals', () => {
     Vue.config.language = 'fr_FR'
     let vm = new Vue({
@@ -70,6 +81,19 @@ describe('translate component tests', () => {
         <translate :translate-n="count" translate-plural="%{ count } cars">%{ count } car</translate>
       </p>`,
       data: {count: 2},
+    }).$mount()
+    expect(vm.$el.innerHTML.trim()).to.equal('<span>2 véhicules</span>')
+  })
+
+  it('translates plurals with computed property', () => {
+    Vue.config.language = 'fr_FR'
+    let vm = new Vue({
+      template: `<p>
+        <translate :translate-n="count" translate-plural="%{ count } cars">%{ count } car</translate>
+      </p>`,
+      computed: {
+        count () { return 2 },
+      },
     }).$mount()
     expect(vm.$el.innerHTML.trim()).to.equal('<span>2 véhicules</span>')
   })

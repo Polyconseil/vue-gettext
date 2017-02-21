@@ -9,6 +9,11 @@ export default {
   data: () => ({
     n: 0,
   }),
+  computed: {
+    nComputed () {
+      return this.n
+    },
+  },
   methods: {
     decrease () {
       if (this.n === 0) return
