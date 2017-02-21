@@ -8,6 +8,13 @@
     <button @click="increase()">+</button>
   </p>
   <p>
+    data:
     <translate :translate-n="n" translate-plural="%{ n } books">%{ n } book</translate>
+  </p>
+  <p>
+    computed:
+    <translate :translate-n="nComputed" translate-plural="%{ nComputed } books">
+      %{ nComputed } book
+    </translate>
   </p>
 </div>

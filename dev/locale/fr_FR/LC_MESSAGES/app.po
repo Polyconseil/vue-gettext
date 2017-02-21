@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vue-gettext 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-22 16:22+0100\n"
+"POT-Creation-Date: 2017-02-21 10:43+0100\n"
 "PO-Revision-Date: 2016-11-22 16:24+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -18,11 +18,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: dev/components/plural/template.html:11
+#: dev/components/plural/template.html:12
 msgid "%{ n } book"
 msgid_plural "%{ n } books"
 msgstr[0] "%{ n } livre"
 msgstr[1] "%{ n } livres"
+
+#: dev/components/plural/template.html:16
+msgid "%{ nComputed } book"
+msgid_plural "%{ nComputed } books"
+msgstr[0] "%{ nComputed } livre"
+msgstr[1] "%{ nComputed } livres"
 
 #: dev/components/plural/template.html:3
 msgid "In English, '0' (zero) is always plural."

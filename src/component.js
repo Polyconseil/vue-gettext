@@ -56,7 +56,7 @@ export default {
         this.translateContext,
         this.$language.current
       )
-      return this.$gettextInterpolate(translation, this.$parent.$data)
+      return this.$gettextInterpolate(translation, this.$parent)
     },
   },
 
