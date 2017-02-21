@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vue-gettext 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-21 10:43+0100\n"
+"POT-Creation-Date: 2017-02-21 19:04+0100\n"
 "PO-Revision-Date: 2016-11-22 16:24+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -29,9 +29,29 @@ msgid_plural "%{ nComputed } books"
 msgstr[0] "%{ nComputed } book"
 msgstr[1] "%{ nComputed } books"
 
+#: dev/components/customTags.vue:3
+msgid "Headline 1"
+msgstr "Headline 1"
+
+#: dev/components/customTags.vue:4
+msgid "Headline 2"
+msgstr "Headline 2"
+
+#: dev/components/customTags.vue:5
+msgid "Headline 3"
+msgstr "Headline 3"
+
+#: dev/components/customTags.vue:6
+msgid "Headline 4"
+msgstr "Headline 4"
+
 #: dev/components/plural/template.html:3
 msgid "In English, '0' (zero) is always plural."
 msgstr "In English, '0' (zero) is always plural."
+
+#: dev/components/customTags.vue:7
+msgid "Paragraph"
+msgstr "Paragraph"
 
 #: dev/components/languageSelect.vue:4
 msgid "Select your language:"

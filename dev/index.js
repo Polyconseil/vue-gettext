@@ -6,6 +6,7 @@ import GetTextPlugin from '../src/index'
 import translations from './translations.json'
 
 import AlertComponent from './components/alert'
+import CustomTags from './components/customTags'
 import LanguageSelectComponent from './components/languageSelect'
 import MomentFilterComponent from './components/momentFilter'
 import PluralComponent from './components/plural'
@@ -25,6 +26,7 @@ export let vm = new Vue({
   el: '#app',
   components: {
     'alert': AlertComponent,
+    'custom-tags': CustomTags,
     'language-select': LanguageSelectComponent,
     'moment-filter': MomentFilterComponent,
     'plural': PluralComponent,
