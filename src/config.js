@@ -1,4 +1,4 @@
-export default function (Vue, languageVm) {
+export default function (Vue, languageVm, getTextPluginSilent) {
 
   /*
    * Adds a `language` property to `Vue.config` and makes it reactive:
@@ -9,6 +9,16 @@ export default function (Vue, languageVm) {
     configurable: true,
     get: () => { return languageVm.current },
     set: (val) => { languageVm.current = val },
+  })
+
+ /*
+  * Adds a `getTextPluginSilent` property to `Vue.config`.
+  * Used to enable/disable some console warnings.
+  */
+  Object.defineProperty(Vue.config, 'getTextPluginSilent', {
+    enumerable: true,
+    writable: true,
+    value: getTextPluginSilent,
   })
 
 }

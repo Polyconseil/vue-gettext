@@ -23,15 +23,18 @@ export default {
     // See the `Language` section in https://www.gnu.org/software/gettext/manual/html_node/Header-Entry.html
     // So try `ll_CC` first, or the `ll` abbreviation which can be three-letter sometimes:
     // https://www.gnu.org/software/gettext/manual/html_node/Language-Codes.html#Language-Codes
-
     let translations = _Vue.$translations[language] || _Vue.$translations[language.split('_')[0]]
     if (!translations) {
-      console.warn(`No translations found for ${language}`)
+      if (!_Vue.config.getTextPluginSilent) {
+        console.warn(`No translations found for ${language}`)
+      }
       return msgid  // Returns the untranslated string.
     }
     let translated = translations[msgid]
     if (!translated) {
-      console.warn(`Untranslated ${language} key found:\n${msgid}`)
+      if (!_Vue.config.getTextPluginSilent) {
+        console.warn(`Untranslated ${language} key found:\n${msgid}`)
+      }
       return msgid  // Returns the untranslated string.
     }
     if (context) {

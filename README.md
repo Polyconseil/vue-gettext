@@ -120,7 +120,7 @@ There are a number of options you can use to configure the `vue-gettext` plugin:
     The JSON file of the application's translations (produced by
     `gettext-compile`)
 
-    It's exposed as a Vue global property as `Vue.$translations`.
+    It's exposed as a Vue global property as `Vue.$translations`
 
 - `availableLanguages {Object}` - optional:
 
@@ -154,7 +154,12 @@ There are a number of options you can use to configure the `vue-gettext` plugin:
     A [**mixin**](https://vuejs.org/v2/guide/mixins.html#Option-Merging)
     that will be passed to the main `languageVm` instance (exposed via
     `$language`) that can be used, for example, to add custom computed
-    properties.
+    properties
+
+- `silent {Boolean}` - optional (default value is [`Vue.config.silent`](https://vuejs.org/v2/api/#silent)):
+
+    Enable or disable logs/warnings for missing translations
+    and untranslated keys.
 
 Example:
 
@@ -181,6 +186,7 @@ Vue.use(GetTextPlugin, {
     },
   },
   translations: translations,
+  silent: True,
 })
 ```
 

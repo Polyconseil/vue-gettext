@@ -6,16 +6,17 @@ import translate from './translate'
 import { shareVueInstance } from './localVue'
 
 
-var defaultConfig = {
-  availableLanguages: { en_US: 'English' },
-  defaultLanguage: 'en_US',
-  languageVmMixin: {},
-  translations: null,
-}
-
 let languageVm  // Singleton.
 
 let GetTextPlugin = function (Vue, options = {}) {
+
+  let defaultConfig = {
+    availableLanguages: { en_US: 'English' },
+    defaultLanguage: 'en_US',
+    languageVmMixin: {},
+    silent: Vue.config.silent,
+    translations: null,
+  }
 
   Object.keys(options).forEach(key => {
     if (Object.keys(defaultConfig).indexOf(key) === -1) {
@@ -44,7 +45,7 @@ let GetTextPlugin = function (Vue, options = {}) {
 
   Override(Vue, languageVm)
 
-  Config(Vue, languageVm)
+  Config(Vue, languageVm, options.silent)
 
   // Makes <translate> available as a global component.
   Vue.component('translate', Component)
