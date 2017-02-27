@@ -1,5 +1,5 @@
 /**
- * vue-gettext v2.0.7
+ * vue-gettext v2.0.8
  * (c) 2017 Polyconseil
  * @license MIT
  */
@@ -196,15 +196,18 @@ var translate = {
     // See the `Language` section in https://www.gnu.org/software/gettext/manual/html_node/Header-Entry.html
     // So try `ll_CC` first, or the `ll` abbreviation which can be three-letter sometimes:
     // https://www.gnu.org/software/gettext/manual/html_node/Language-Codes.html#Language-Codes
-
     var translations = _Vue.$translations[language] || _Vue.$translations[language.split('_')[0]];
     if (!translations) {
-      console.warn(("No translations found for " + language));
+      if (!_Vue.config.getTextPluginSilent) {
+        console.warn(("No translations found for " + language));
+      }
       return msgid  // Returns the untranslated string.
     }
     var translated = translations[msgid];
     if (!translated) {
-      console.warn(("Untranslated " + language + " key found:\n" + msgid));
+      if (!_Vue.config.getTextPluginSilent) {
+        console.warn(("Untranslated " + language + " key found:\n" + msgid));
+      }
       return msgid  // Returns the untranslated string.
     }
     if (context) {
@@ -345,7 +348,7 @@ var Component = {
 
 };
 
-var Config = function (Vue, languageVm) {
+var Config = function (Vue, languageVm, getTextPluginSilent) {
 
   /*
    * Adds a `language` property to `Vue.config` and makes it reactive:
@@ -356,6 +359,16 @@ var Config = function (Vue, languageVm) {
     configurable: true,
     get: function () { return languageVm.current },
     set: function (val) { languageVm.current = val; },
+  });
+
+ /*
+  * Adds a `getTextPluginSilent` property to `Vue.config`.
+  * Used to enable/disable some console warnings.
+  */
+  Object.defineProperty(Vue.config, 'getTextPluginSilent', {
+    enumerable: true,
+    writable: true,
+    value: getTextPluginSilent,
   });
 
 };
@@ -437,18 +450,19 @@ var Override = function (Vue, languageVm) {
 
 };
 
-var defaultConfig = {
-  availableLanguages: { en_US: 'English' },
-  defaultLanguage: 'en_US',
-  languageVmMixin: {},
-  translations: null,
-};
-
 var languageVm;  // Singleton.
 
 var GetTextPlugin = function (Vue, options) {
   if ( options === void 0 ) options = {};
 
+
+  var defaultConfig = {
+    availableLanguages: { en_US: 'English' },
+    defaultLanguage: 'en_US',
+    languageVmMixin: {},
+    silent: Vue.config.silent,
+    translations: null,
+  };
 
   Object.keys(options).forEach(function (key) {
     if (Object.keys(defaultConfig).indexOf(key) === -1) {
@@ -477,7 +491,7 @@ var GetTextPlugin = function (Vue, options) {
 
   Override(Vue, languageVm);
 
-  Config(Vue, languageVm);
+  Config(Vue, languageVm, options.silent);
 
   // Makes <translate> available as a global component.
   Vue.component('translate', Component);
