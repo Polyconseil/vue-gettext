@@ -46,6 +46,24 @@ describe('translate component tests', () => {
     expect(vm.$el.innerHTML.trim()).to.equal('<span>En cours</span>')
   })
 
+  it('translates multiline strings no matter the number of spaces', () => {
+    Vue.config.language = 'fr_FR'
+    let vm = new Vue({template: `<div><translate tag="p">
+                  A
+
+
+                  lot
+
+
+
+
+                  of
+
+                  lines
+    </translate></div>`}).$mount()
+    expect(vm.$el.innerHTML.trim()).to.equal(`<p>Plein de lignes</p>`)
+  })
+
   it('renders translation in custom html tag', () => {
     Vue.config.language = 'fr_FR'
     let vm = new Vue({template: '<div><translate tag="h1">Pending</translate></div>'}).$mount()

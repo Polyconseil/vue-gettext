@@ -14,9 +14,11 @@ export default {
   * @return {String} The translated string
   */
   getTranslation: function (msgid, n = 1, context = null, language = _Vue.config.language) {
+
     if (!msgid) {
       return ''  // Allow empty strings.
     }
+
     // `easygettext`'s `gettext-compile` generates a JSON version of a .po file based on its `Language` field.
     // But in this field, `ll_CC` combinations denoting a language’s main dialect are abbreviated as `ll`,
     // for example `de` is equivalent to `de_DE` (German as spoken in Germany).
@@ -24,26 +26,44 @@ export default {
     // So try `ll_CC` first, or the `ll` abbreviation which can be three-letter sometimes:
     // https://www.gnu.org/software/gettext/manual/html_node/Language-Codes.html#Language-Codes
     let translations = _Vue.$translations[language] || _Vue.$translations[language.split('_')[0]]
+
     if (!translations) {
       if (!_Vue.config.getTextPluginSilent) {
         console.warn(`No translations found for ${language}`)
       }
       return msgid  // Returns the untranslated string.
     }
+
     let translated = translations[msgid]
+
+    // Sometimes msgid may not have the same number of spaces than its key. This could happen e.g. when using
+    // new lines. See comments in the `created` hook of `component.js` and issue #15 for more information.
+    if (!translated && /\s{2,}/g.test(msgid)) {
+      Object.keys(translations).some(key => {
+        if (key.replace(/\s{2,}/g, ' ') === msgid.replace(/\s{2,}/g, ' ')) {
+          translated = translations[key]
+          return translated
+        }
+      })
+    }
+
     if (!translated) {
       if (!_Vue.config.getTextPluginSilent) {
         console.warn(`Untranslated ${language} key found:\n${msgid}`)
       }
       return msgid  // Returns the untranslated string.
     }
+
     if (context) {
       translated = translated[context]
     }
+
     if (typeof translated === 'string') {
       translated = [translated]
     }
+
     return translated[plurals.getTranslationIndex(language, n)]
+
   },
 
  /**

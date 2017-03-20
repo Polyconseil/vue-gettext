@@ -9,6 +9,7 @@ import AlertComponent from './components/alert'
 import CustomTags from './components/customTags'
 import LanguageSelectComponent from './components/languageSelect'
 import MomentFilterComponent from './components/momentFilter'
+import MultiLinesComponent from './components/multilines'
 import PluralComponent from './components/plural'
 
 
@@ -29,6 +30,7 @@ export let vm = new Vue({
     'custom-tags': CustomTags,
     'language-select': LanguageSelectComponent,
     'moment-filter': MomentFilterComponent,
+    'multilines': MultiLinesComponent,
     'plural': PluralComponent,
   },
 })

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vue-gettext 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-21 19:04+0100\n"
+"POT-Creation-Date: 2017-03-20 21:15+0100\n"
 "PO-Revision-Date: 2016-11-22 16:26+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -29,6 +29,14 @@ msgid "%{ nComputed } book"
 msgid_plural "%{ nComputed } books"
 msgstr[0] "%{ nComputed } libbra"
 msgstr[1] "%{ nComputed } libri"
+
+#: dev/components/multilines.vue:3
+msgid ""
+"Forgotten your password? Enter your \"email address\" below,\n"
+"      and we'll email instructions for setting a new one."
+msgstr ""
+"Password dimenticata? Inserisci il tuo \"indirizzo email\" qui\n"
+"    sotto, e ti invieremo istruzioni per impostarne una nuova."
 
 #: dev/components/customTags.vue:3
 msgid "Headline 1"
@@ -60,10 +68,10 @@ msgstr "Seleziona la tua lingua:"
 
 #: dev/components/alert.vue:24
 msgid "Good bye!"
-msgstr "Arrivederci!"
+msgstr "Arriverdeci!"
 
 #: dev/components/alert.vue:35
 msgid "%{ n } car"
 msgid_plural "%{ n } cars"
-msgstr[0] "%{ n } auto (it_IT)"
-msgstr[1] "%{ n } automobili (it_IT)"
+msgstr[0] "%{ n } auto"
+msgstr[1] "%{ n } auto"
