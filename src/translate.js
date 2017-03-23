@@ -9,11 +9,12 @@ export default {
   * @param {String} msgid - The translation key
   * @param {Number} n - The number to switch between singular and plural
   * @param {String} context - The translation key context
+  * @param {String} defaultPlural - The default plural value (optional)
   * @param {String} language - The language ID (e.g. 'fr_FR' or 'en_US')
   *
   * @return {String} The translated string
   */
-  getTranslation: function (msgid, n = 1, context = null, language = _Vue.config.language) {
+  getTranslation: function (msgid, n = 1, context = null, defaultPlural = null, language = _Vue.config.language) {
 
     if (!msgid) {
       return ''  // Allow empty strings.
@@ -31,7 +32,7 @@ export default {
       if (!_Vue.config.getTextPluginSilent) {
         console.warn(`No translations found for ${language}`)
       }
-      return msgid  // Returns the untranslated string.
+      return defaultPlural && n > 1 ? defaultPlural : msgid  // Returns the untranslated string, singular or plural.
     }
 
     let translated = translations[msgid]
@@ -51,7 +52,7 @@ export default {
       if (!_Vue.config.getTextPluginSilent) {
         console.warn(`Untranslated ${language} key found:\n${msgid}`)
       }
-      return msgid  // Returns the untranslated string.
+      return defaultPlural && n > 1 ? defaultPlural : msgid  // Returns the untranslated string, singular or plural.
     }
 
     if (context) {
@@ -103,7 +104,7 @@ export default {
   * @return {String} The translated string
   */
   'ngettext': function (msgid, plural, n) {
-    return this.getTranslation(msgid, n)
+    return this.getTranslation(msgid, n, null, plural)
   },
 
  /**
@@ -119,7 +120,7 @@ export default {
   * @return {String} The translated string
   */
   'npgettext': function (context, msgid, plural, n) {
-    return this.getTranslation(msgid, n, context)
+    return this.getTranslation(msgid, n, context, plural)
   },
 
 }

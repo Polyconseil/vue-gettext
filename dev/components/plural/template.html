@@ -1,4 +1,5 @@
 <div>
+
   <p :class="styles.title">
     <translate>In English, '0' (zero) is always plural.</translate>
   </p>
@@ -17,4 +18,16 @@
       %{ nComputed } book
     </translate>
   </p>
+
+  <p :class="styles.title">
+    <translate>
+      Use default singular or plural form when there is no translation. This is left untranslated on purpose.
+    </translate>
+  </p>
+  <p>
+    <translate :translate-n="countForUntranslated" translate-plural="%{ countForUntranslated } items. This is left untranslated on purpose.">
+      %{ countForUntranslated } item. This is left untranslated on purpose.
+    </translate>
+  </p>
+
 </div>

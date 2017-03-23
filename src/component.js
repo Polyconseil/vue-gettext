@@ -66,6 +66,7 @@ export default {
         this.msgid,
         this.translateN,
         this.translateContext,
+        this.isPlural ? this.translatePlural : null,
         this.$language.current
       )
       return this.$gettextInterpolate(translation, this.$parent)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vue-gettext 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-20 21:15+0100\n"
+"POT-Creation-Date: 2017-03-23 21:44+0100\n"
 "PO-Revision-Date: 2016-11-22 16:26+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -18,13 +18,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: dev/components/plural/template.html:12
+#: dev/components/plural/template.html:28
+msgid "%{ countForUntranslated } item. This is left untranslated on purpose."
+msgid_plural "%{ countForUntranslated } items. This is left untranslated on purpose."
+msgstr[0] ""
+msgstr[1] ""
+
+#: dev/components/plural/template.html:13
 msgid "%{ n } book"
 msgid_plural "%{ n } books"
 msgstr[0] "%{ n } libbra"
 msgstr[1] "%{ n } libri"
 
-#: dev/components/plural/template.html:16
+#: dev/components/plural/template.html:17
 msgid "%{ nComputed } book"
 msgid_plural "%{ nComputed } books"
 msgstr[0] "%{ nComputed } libbra"
@@ -54,7 +60,7 @@ msgstr "Titolo 3"
 msgid "Headline 4"
 msgstr "Titolo 4"
 
-#: dev/components/plural/template.html:3
+#: dev/components/plural/template.html:4
 msgid "In English, '0' (zero) is always plural."
 msgstr "In inglese, '0' (zero) è sempre al plurale."
 
@@ -65,6 +71,10 @@ msgstr "Paragrafo"
 #: dev/components/languageSelect.vue:4
 msgid "Select your language:"
 msgstr "Seleziona la tua lingua:"
+
+#: dev/components/plural/template.html:23
+msgid "Use default singular or plural form when there is no translation. This is left untranslated on purpose."
+msgstr ""
 
 #: dev/components/alert.vue:24
 msgid "Good bye!"

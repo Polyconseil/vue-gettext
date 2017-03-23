@@ -26,26 +26,34 @@ describe('Translate tests', () => {
     translated = translate.getTranslation('', 1, null, 'fr_FR')
     expect(translated).to.equal('')
 
-    translated = translate.getTranslation('Unexisting language', null, null, 'be_FR')
+    translated = translate.getTranslation('Unexisting language', null, null, null, 'be_FR')
     expect(translated).to.equal('Unexisting language')
 
-    translated = translate.getTranslation('Untranslated key', null, null, 'fr_FR')
+    translated = translate.getTranslation('Untranslated key', null, null, null, 'fr_FR')
     expect(translated).to.equal('Untranslated key')
 
-    translated = translate.getTranslation('Pending', 1, null, 'fr_FR')
+    translated = translate.getTranslation('Pending', 1, null, null, 'fr_FR')
     expect(translated).to.equal('En cours')
 
-    translated = translate.getTranslation('%{ carCount } car', 2, null, 'fr_FR')
+    translated = translate.getTranslation('%{ carCount } car', 2, null, null, 'fr_FR')
     expect(translated).to.equal('%{ carCount } véhicules')
 
-    translated = translate.getTranslation('Answer', 1, 'Verb', 'fr_FR')
+    translated = translate.getTranslation('Answer', 1, 'Verb', null, 'fr_FR')
     expect(translated).to.equal('Réponse (verbe)')
 
-    translated = translate.getTranslation('Answer', 1, 'Noun', 'fr_FR')
+    translated = translate.getTranslation('Answer', 1, 'Noun', null, 'fr_FR')
     expect(translated).to.equal('Réponse (nom)')
 
-    translated = translate.getTranslation('Pending', 1, null, 'en_US')
+    translated = translate.getTranslation('Pending', 1, null, null, 'en_US')
     expect(translated).to.equal('Pending')
+
+    // If no translation exists, display the default singular form (if n < 2).
+    translated = translate.getTranslation('Untranslated %{ n } item', 0, null, 'Untranslated %{ n } items', 'fr_FR')
+    expect(translated).to.equal('Untranslated %{ n } item')
+
+    // If no translation exists, display the default plural form (if n > 1).
+    translated = translate.getTranslation('Untranslated %{ n } item', 10, null, 'Untranslated %{ n } items', 'fr_FR')
+    expect(translated).to.equal('Untranslated %{ n } items')
 
   })
 
@@ -83,6 +91,16 @@ describe('Translate tests', () => {
     Vue.config.language = 'en_US'
     expect(undetectableNgettext('%{ carCount } car', '%{ carCount } cars', 2)).to.equal('%{ carCount } cars')
 
+    // If no translation exists, display the default singular form (if n < 2).
+    Vue.config.language = 'fr_FR'
+    expect(undetectableNgettext('Untranslated %{ n } item', 'Untranslated %{ n } items', -1))
+      .to.equal('Untranslated %{ n } item')
+
+    // If no translation exists, display the default plural form (if n > 1).
+    Vue.config.language = 'fr_FR'
+    expect(undetectableNgettext('Untranslated %{ n } item', 'Untranslated %{ n } items', 2))
+      .to.equal('Untranslated %{ n } items')
+
   })
 
   it('tests the npgettext() method', () => {
@@ -104,6 +122,16 @@ describe('Translate tests', () => {
     Vue.config.language = 'en_US'
     expect(undetectableNpgettext('Verb', '%{ carCount } car (verb)', '%{ carCount } cars (verb)', 1))
       .to.equal('%{ carCount } car (verb)')
+
+    // If no translation exists, display the default singular form (if n < 2).
+    Vue.config.language = 'fr_FR'
+    expect(undetectableNpgettext('Noun', 'Untranslated %{ n } item (noun)', 'Untranslated %{ n } items (noun)', 1))
+      .to.equal('Untranslated %{ n } item (noun)')
+
+    // If no translation exists, display the default plural form (if n > 1).
+    Vue.config.language = 'fr_FR'
+    expect(undetectableNpgettext('Noun', 'Untranslated %{ n } item (noun)', 'Untranslated %{ n } items (noun)', 2))
+      .to.equal('Untranslated %{ n } items (noun)')
 
   })
 

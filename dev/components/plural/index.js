@@ -8,6 +8,7 @@ export default {
   },
   data: () => ({
     n: 0,
+    countForUntranslated: 10,
   }),
   computed: {
     nComputed () {
