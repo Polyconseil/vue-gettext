@@ -1,5 +1,5 @@
 /**
- * vue-gettext v2.0.9
+ * vue-gettext v2.0.10
  * (c) 2017 Polyconseil
  * @license MIT
  */
@@ -178,13 +178,15 @@ var translate = {
   * @param {String} msgid - The translation key
   * @param {Number} n - The number to switch between singular and plural
   * @param {String} context - The translation key context
+  * @param {String} defaultPlural - The default plural value (optional)
   * @param {String} language - The language ID (e.g. 'fr_FR' or 'en_US')
   *
   * @return {String} The translated string
   */
-  getTranslation: function (msgid, n, context, language) {
+  getTranslation: function (msgid, n, context, defaultPlural, language) {
     if ( n === void 0 ) n = 1;
     if ( context === void 0 ) context = null;
+    if ( defaultPlural === void 0 ) defaultPlural = null;
     if ( language === void 0 ) language = _Vue.config.language;
 
 
@@ -204,7 +206,7 @@ var translate = {
       if (!_Vue.config.getTextPluginSilent) {
         console.warn(("No translations found for " + language));
       }
-      return msgid  // Returns the untranslated string.
+      return defaultPlural && n > 1 ? defaultPlural : msgid  // Returns the untranslated string, singular or plural.
     }
 
     var translated = translations[msgid];
@@ -224,7 +226,7 @@ var translate = {
       if (!_Vue.config.getTextPluginSilent) {
         console.warn(("Untranslated " + language + " key found:\n" + msgid));
       }
-      return msgid  // Returns the untranslated string.
+      return defaultPlural && n > 1 ? defaultPlural : msgid  // Returns the untranslated string, singular or plural.
     }
 
     if (context) {
@@ -276,7 +278,7 @@ var translate = {
   * @return {String} The translated string
   */
   'ngettext': function (msgid, plural, n) {
-    return this.getTranslation(msgid, n)
+    return this.getTranslation(msgid, n, null, plural)
   },
 
  /**
@@ -292,7 +294,7 @@ var translate = {
   * @return {String} The translated string
   */
   'npgettext': function (context, msgid, plural, n) {
-    return this.getTranslation(msgid, n, context)
+    return this.getTranslation(msgid, n, context, plural)
   },
 
 };
@@ -362,6 +364,7 @@ var Component = {
         this.msgid,
         this.translateN,
         this.translateContext,
+        this.isPlural ? this.translatePlural : null,
         this.$language.current
       );
       return this.$gettextInterpolate(translation, this.$parent)
