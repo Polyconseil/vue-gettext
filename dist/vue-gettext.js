@@ -1,5 +1,5 @@
 /**
- * vue-gettext v2.0.11
+ * vue-gettext v2.0.12
  * (c) 2017 Polyconseil
  * @license MIT
  */
@@ -126,7 +126,7 @@ var plurals = {
         return (n === 1) ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2
       case 'sl':  // Slovenian
         // 4 forms
-        return (n % 100 === 1 ? 1 : n % 100 === 2 ? 2 : n % 100 === 3 || n % 100 === 4 ? 3 : 0)
+        return (n % 100 === 1 ? 0 : n % 100 === 2 ? 1 : n % 100 === 3 || n % 100 === 4 ? 2 : 3)
       case 'mt':  // Maltese
         // 4 forms
         return (n === 1 ? 0 : n === 0 || (n % 100 > 1 && n % 100 < 11) ? 1 : (n % 100 > 10 && n % 100 < 20) ? 2 : 3)
