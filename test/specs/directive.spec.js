@@ -139,13 +139,13 @@ describe('translate directive tests', () => {
   it('updates a plural translation after a data change', (done) => {
     Vue.config.language = 'fr_FR'
     let vm = new Vue({
-      template: '<p v-translate="count" :translate-n="count" translate-plural="<strong>%{ count }</strong> cars"><strong>%{ count }</strong> car</p>',
-      data: {count: 10},
+      template: '<p v-translate="count + brand" :translate-n="count" translate-plural="<strong>%{ count }</strong> %{ brand } cars"><strong>%{ count }</strong> %{ brand } car</p>',
+      data: {count: 1, brand: 'Toyota'},
     }).$mount()
-    expect(vm.$el.innerHTML).to.equal('<strong>10</strong> véhicules')
+    expect(vm.$el.innerHTML).to.equal('<strong>1</strong> Toyota véhicule')
     vm.count = 8
     vm.$nextTick(function () {
-      expect(vm.$el.innerHTML).to.equal('<strong>8</strong> véhicules')
+      expect(vm.$el.innerHTML).to.equal('<strong>8</strong> Toyota véhicules')
       done()
     })
   })
