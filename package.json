@@ -1,6 +1,6 @@
 {
   "name": "vue-gettext",
-  "version": "2.0.12",
+  "version": "2.1.0",
   "description": "Translate your Vue.js applications with gettext",
   "main": "dist/vue-gettext.js",
   "author": "Marc Hertzog",
