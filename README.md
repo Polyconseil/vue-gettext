@@ -398,6 +398,10 @@ Extracting strings and generating `.po` files becomes as easy as running:
 make makemessages
 ```
 
+#### Helper library for using template languages in Vue's Single File Component
+
+If you are using a template language, i.e. [Pug.js](https://pugjs.org/api/getting-started.html) in [Single File Component](https://vuejs.org/v2/guide/single-file-components.html) within a webpack setup (using vue-loader), have a look at [vue-webpack-gettext](https://github.com/kennyki/vue-webpack-gettext).
+
 ## 3) Translating message files
 
 The translator needs to fill out the translations of each generated `.po`
