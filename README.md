@@ -341,6 +341,18 @@ It is described in the [official guide](https://vuejs.org/v2/guide/custom-direct
 <p v-translate='count + brand' :translate-n="count" translate-plural="<strong>%{ count }</strong> %{brand} cars" translate-comment="My comment for translators"><strong>%{ count }</strong> %{brand} car</translate>
 ```
 
+**Caveat when using v-translate with Vue components or Vue-specific attributes**
+
+It's not possible (yet) to support components or attributes like `v-bind` and `v-on`. So make sure that your HTML translations stay basic for now.
+
+For example, this is *not supported*:
+
+```
+<p v-translate>
+  Please <button @click='doSomething'>click</button> here to view <my-account></my-account>
+</p>
+```
+
 ### In JavaScript code (`.js` or `.vue` files)
 
 Strings are marked as translatable in your Vue instances JavaScript code using
