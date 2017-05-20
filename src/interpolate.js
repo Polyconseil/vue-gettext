@@ -34,6 +34,10 @@ let interpolate = function (msgid, context = {}) {
     const expression = token.trim()
 
     function evalInContext (expression) {
+      if (eval('this.' + expression) === undefined && this.$parent) {  // eslint-disable-line no-eval
+        // Allow evaluation of expressions inside nested components, see #23.
+        return evalInContext.call(this.$parent, expression)
+      }
       return eval('this.' + expression)  // eslint-disable-line no-eval
     }
 
