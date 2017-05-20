@@ -1,5 +1,5 @@
 /**
- * vue-gettext v2.0.12
+ * vue-gettext v2.0.13
  * (c) 2017 Polyconseil
  * @license MIT
  */
@@ -442,6 +442,10 @@ var interpolate = function (msgid, context) {
     var expression = token.trim();
 
     function evalInContext (expression) {
+      if (eval('this.' + expression) === undefined && this.$parent) {  // eslint-disable-line no-eval
+        // Allow evaluation of expressions inside nested components, see #23.
+        return evalInContext.call(this.$parent, expression)
+      }
       return eval('this.' + expression)  // eslint-disable-line no-eval
     }
 
