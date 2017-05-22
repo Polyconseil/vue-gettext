@@ -51,7 +51,7 @@ let GetTextPlugin = function (Vue, options = {}) {
   // Makes <translate> available as a global component.
   Vue.component('translate', Component)
 
-  // An option to support translation with HTML content: v-translate
+  // An option to support translation with HTML content: `v-translate`.
   Vue.directive('translate', Directive)
 
   // Exposes global properties.

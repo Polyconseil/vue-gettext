@@ -55,4 +55,10 @@ let interpolate = function (msgid, context = {}) {
 
 }
 
+// Store this values as function attributes for easy access elsewhere to bypass a Rollup
+// weak point with `export`:
+// https://github.com/rollup/rollup/blob/fca14d/src/utils/getExportMode.js#L27
+interpolate.INTERPOLATION_RE = INTERPOLATION_RE
+interpolate.INTERPOLATION_PREFIX = '%{'
+
 export default interpolate
