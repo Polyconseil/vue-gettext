@@ -49,8 +49,11 @@ and [`easygettext`](https://github.com/Polyconseil/easygettext).
 
 ## What does `vue-gettext` provide?
 
-- a custom component to annotate strings in templates and dynamically render
-    translated strings to the DOM
+- a custom `component` to annotate strings (**without HTML support**) in
+    templates and dynamically render translated strings to the DOM
+
+- a custom `directive` to annotate strings (**with HTML support**) in
+    templates and dynamically render translated strings to the DOM
 
 - a set of methods to annotate strings in JavaScript code and translate them
 
@@ -265,16 +268,17 @@ template.html
 ### In templates (`.html` or `.vue` files)
 
 Strings are marked as translatable in your templates using the `translate`
-component:
+component or the `v-translate` directive:
 
 ```html
 <translate>Hello!</translate>
+<span v-translate>Hello!</span>
 ```
 
 This will automatically be translated. For instance, in French, it might
 read *Bonjour !*.
 
-#### Custom HTML tag
+#### Custom HTML tag for the `translate` component
 
 When rendered, the content of the `translate` component will be wrapped in
 a `span` element by default. You can also use another tag:
@@ -315,6 +319,48 @@ in Vue 2, we have to use another set of delimiters. Instead of the
 
 ```html
 <translate translate-comment="My comment for translators">Foo</translate>
+```
+
+#### HTML support
+
+It is quite tricky to get raw HTML of a Vue component, so if you need
+to include HTML content in the translations you may use the provided directive.
+
+The directive has the same set of capabilities as the component.
+
+```html
+<p v-translate :translate-n="count" translate-plural="<strong>%{ count }</strong> cars" translate-comment="My comment for translators"><strong>%{ count }</strong> car</translate>
+```
+
+**Caveat when using v-translate with interpolation**
+
+It's not possible (yet) to detect changes on the parent component's data,
+so you have to add an expression to the directive to provide a changing
+binding value. This is so that it can do a comparison on old and current
+value before running the translation in its `update` hook.
+
+It is described in the [official guide](https://vuejs.org/v2/guide/custom-directive.html#Hook-Functions):
+
+> update: called after the containing component has updated, but possibly
+before its children have updated. The directive's value may or may not have
+changed, but you can skip unnecessary updates by comparing the binding's
+current and old values...
+
+```html
+<p v-translate='count + brand' :translate-n="count" translate-plural="<strong>%{ count }</strong> %{brand} cars" translate-comment="My comment for translators"><strong>%{ count }</strong> %{brand} car</translate>
+```
+
+**Caveat when using v-translate with Vue components or Vue-specific attributes**
+
+It's not possible (yet) to support components or attributes like `v-bind` and
+`v-on`. So make sure that your HTML translations stay basic for now.
+
+For example, this is *not supported*:
+
+```html
+<p v-translate>
+  Please <button @click='doSomething'>click</button> here to view <my-account></my-account>
+</p>
 ```
 
 ### In JavaScript code (`.js` or `.vue` files)
@@ -431,6 +477,15 @@ make translations
 ```
 
 Look at the included `Makefile` for an example.
+
+## Elsewhere
+
+### Helper library for using template languages in Vue's Single File Component
+
+If you are using a template language, i.e.
+[Pug.js](https://pugjs.org/api/getting-started.html) in
+[Single File Component](https://vuejs.org/v2/guide/single-file-components.html)
+within a webpack setup (using vue-loader), have a look at [vue-webpack-gettext](https://github.com/kennyki/vue-webpack-gettext).
 
 ## Credits
 

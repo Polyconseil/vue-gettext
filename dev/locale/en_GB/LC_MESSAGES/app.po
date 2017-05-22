@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vue-gettext 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-23 21:44+0100\n"
+"POT-Creation-Date: 2017-05-22 18:21+0200\n"
 "PO-Revision-Date: 2016-11-22 16:24+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -35,6 +35,16 @@ msgid_plural "%{ nComputed } books"
 msgstr[0] "%{ nComputed } book"
 msgstr[1] "%{ nComputed } books"
 
+#: dev/components/directive.vue:10
+msgid "<strong>%{ count }</strong> apple"
+msgid_plural "<strong>%{ count }</strong> apples"
+msgstr[0] "<strong>%{ count }</strong> apple"
+msgstr[1] "<strong>%{ count }</strong> apples"
+
+#: dev/components/directive.vue:3
+msgid "A <b>random</b> number: <i>%{ random }</i>"
+msgstr "A <b>random</b> number: <i>%{ random }</i>"
+
 #: dev/components/multilines.vue:3
 msgid ""
 "Forgotten your password? Enter your \"email address\" below,\n"
@@ -58,6 +68,10 @@ msgstr "Headline 3"
 #: dev/components/customTags.vue:6
 msgid "Headline 4"
 msgstr "Headline 4"
+
+#: dev/components/directive.vue:6
+msgid "Hello <strong>%{ name }</strong>"
+msgstr "Hello <strong>%{ name }</strong>"
 
 #: dev/components/plural/template.html:4
 msgid "In English, '0' (zero) is always plural."

@@ -1,4 +1,5 @@
 import Component from './component'
+import Directive from './directive'
 import Config from './config'
 import interpolate from './interpolate'
 import Override from './override'
@@ -49,6 +50,9 @@ let GetTextPlugin = function (Vue, options = {}) {
 
   // Makes <translate> available as a global component.
   Vue.component('translate', Component)
+
+  // An option to support translation with HTML content: `v-translate`.
+  Vue.directive('translate', Directive)
 
   // Exposes global properties.
   Vue.$translations = options.translations
