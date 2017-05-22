@@ -7,6 +7,7 @@ import translations from './translations.json'
 
 import AlertComponent from './components/alert'
 import CustomTags from './components/customTags'
+import DirectiveComponent from './components/directive'
 import LanguageSelectComponent from './components/languageSelect'
 import MomentFilterComponent from './components/momentFilter'
 import MultiLinesComponent from './components/multilines'
@@ -28,6 +29,7 @@ export let vm = new Vue({
   components: {
     'alert': AlertComponent,
     'custom-tags': CustomTags,
+    'directive': DirectiveComponent,
     'language-select': LanguageSelectComponent,
     'moment-filter': MomentFilterComponent,
     'multilines': MultiLinesComponent,
