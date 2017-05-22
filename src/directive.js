@@ -1,6 +1,6 @@
 import interpolate from './interpolate'
 import translate from './translate'
-import Vue from 'vue'
+import { _Vue } from './localVue'
 
 
 const updateTranslation = (el, binding, vnode) => {
@@ -55,10 +55,10 @@ export default {
     el.dataset.msgid = msgid
 
     // Store the current language in the element's dataset.
-    el.dataset.currentLanguage = Vue.config.language
+    el.dataset.currentLanguage = _Vue.config.language
 
     // Output a info in the console if an interpolation is required but no expression is provided.
-    if (!Vue.config.getTextPluginSilent) {
+    if (!_Vue.config.getTextPluginSilent) {
       let hasInterpolation = msgid.indexOf(interpolate.INTERPOLATION_PREFIX) !== -1
       if (hasInterpolation && !binding.expression) {
         console.info(`No expression is provided for change detection. The translation for this key will be static:\n${msgid}`)
@@ -74,8 +74,8 @@ export default {
     let doUpdate = false
 
     // Trigger an update if the language has changed.
-    if (el.dataset.currentLanguage !== Vue.config.language) {
-      el.dataset.currentLanguage = Vue.config.language
+    if (el.dataset.currentLanguage !== _Vue.config.language) {
+      el.dataset.currentLanguage = _Vue.config.language
       doUpdate = true
     }
 
