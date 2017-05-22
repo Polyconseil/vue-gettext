@@ -168,6 +168,32 @@ describe('translate component tests', () => {
     })
   })
 
+  it('works with nested components and goes up the parent chain to evaluate nested `user.details.name`', (done) => {
+    console.warn = sinon.spy(console, 'warn')
+    Vue.config.language = 'fr_FR'
+    let vm = new Vue({
+      template: `<div><inner-component></inner-component></div>`,
+      data: {
+        user: {
+          details: {
+            name: 'Jane Doe',
+          },
+        },
+      },
+      components: {
+        'inner-component': {
+          template: `<p><translate>Hello %{ user.details.name }</translate></p>`,
+        },
+      },
+    }).$mount()
+    vm.$nextTick(function () {
+      expect(vm.$el.innerHTML.trim()).to.equal('<p><span>Bonjour Jane Doe</span></p>')
+      expect(console.warn).notCalled
+      console.warn.restore()
+      done()
+    })
+  })
+
   // TODO: understand why PhantomJS keeps on crashing?
   // it('throws an error if you forget to add a `translate-plural` attribute', () => {
   //   expect(function () {

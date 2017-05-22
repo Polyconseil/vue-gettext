@@ -32,22 +32,27 @@ let interpolate = function (msgid, context = {}) {
   let result = msgid.replace(INTERPOLATION_RE, (match, token) => {
 
     const expression = token.trim()
+    let evaluated
 
     function evalInContext (expression) {
-      if (eval('this.' + expression) === undefined && this.$parent) {  // eslint-disable-line no-eval
-        // Allow evaluation of expressions inside nested components, see #23.
-        return evalInContext.call(this.$parent, expression)
-      }
       return eval('this.' + expression)  // eslint-disable-line no-eval
     }
 
     try {
-      return evalInContext.call(context, expression)
+      evaluated = evalInContext.call(context, expression)
     } catch (e) {
-      console.warn(`Cannot evaluate expression: "${expression}".`)
-      console.warn(e.stack)
-      return expression
+      if (!context.$parent) {
+        console.warn(`Cannot evaluate expression: "${expression}".`)
+        console.warn(e.stack)
+      }
     }
+
+    // Allow evaluation of expressions inside nested components, see #23 and #24.
+    if (evaluated === undefined && context.$parent) {
+      return evalInContext.call(context.$parent, expression)
+    }
+
+    return evaluated
 
   })
 
