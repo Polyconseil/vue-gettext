@@ -1,0 +1,24 @@
+{
+    "en_US": {
+        "Answer": {
+            "Noun": "Answer (noun)",
+            "Verb": "Answer (verb)"
+        },
+        "Hello <strong>%{ name }</strong>": "Hello <strong>%{ name }</strong>",
+        "Pending": "Pending",
+        "<strong>%{ count }</strong> car": ["<strong>1</strong> car", "<strong>%{ count }</strong> cars"],
+        "<strong>%{ count }</strong> %{ brand } car": ["<strong>1</strong> %{ brand } car", "<strong>%{ count }</strong> %{ brand } cars"],
+        "A\n\n\nlot\n\n\nof\n\nlines": "A\n\n\nlot\n\n\nof\n\nlines"
+    },
+    "fr_FR": {
+        "Answer": {
+            "Noun": "Réponse (nom)",
+            "Verb": "Réponse (verbe)"
+        },
+        "Hello <strong>%{ name }</strong>": "Bonjour <strong>%{ name }</strong>",
+        "Pending": "En cours",
+        "<strong>%{ count }</strong> car": ["<strong>1</strong> véhicule", "<strong>%{ count }</strong> véhicules"],
+        "<strong>%{ count }</strong> %{ brand } car": ["<strong>1</strong> %{ brand } véhicule", "<strong>%{ count }</strong> %{ brand } véhicules"],
+        "A\n\n\nlot\n\n\nof\n\nlines": "Plein\n\n\nde\n\nlignes"
+    }
+}
