@@ -1,5 +1,5 @@
 /**
- * vue-gettext v2.0.13
+ * vue-gettext v2.0.14
  * (c) 2017 Polyconseil
  * @license MIT
  */
@@ -379,31 +379,6 @@ var Component = {
 
 };
 
-var Config = function (Vue, languageVm, getTextPluginSilent) {
-
-  /*
-   * Adds a `language` property to `Vue.config` and makes it reactive:
-   * Vue.config.language = 'fr_FR'
-   */
-  Object.defineProperty(Vue.config, 'language', {
-    enumerable: true,
-    configurable: true,
-    get: function () { return languageVm.current },
-    set: function (val) { languageVm.current = val; },
-  });
-
- /*
-  * Adds a `getTextPluginSilent` property to `Vue.config`.
-  * Used to enable/disable some console warnings.
-  */
-  Object.defineProperty(Vue.config, 'getTextPluginSilent', {
-    enumerable: true,
-    writable: true,
-    value: getTextPluginSilent,
-  });
-
-};
-
 /* Interpolation RegExp.
  *
  * Because interpolation inside attributes are deprecated in Vue 2 we have to
@@ -440,26 +415,151 @@ var interpolate = function (msgid, context) {
   var result = msgid.replace(INTERPOLATION_RE, function (match, token) {
 
     var expression = token.trim();
+    var evaluated;
 
     function evalInContext (expression) {
-      if (eval('this.' + expression) === undefined && this.$parent) {  // eslint-disable-line no-eval
-        // Allow evaluation of expressions inside nested components, see #23.
-        return evalInContext.call(this.$parent, expression)
-      }
       return eval('this.' + expression)  // eslint-disable-line no-eval
     }
 
     try {
-      return evalInContext.call(context, expression)
+      evaluated = evalInContext.call(context, expression);
     } catch (e) {
-      console.warn(("Cannot evaluate expression: \"" + expression + "\"."));
-      console.warn(e.stack);
-      return expression
+      if (!context.$parent) {
+        console.warn(("Cannot evaluate expression: \"" + expression + "\"."));
+        console.warn(e.stack);
+      }
     }
+
+    // Allow evaluation of expressions inside nested components, see #23 and #24.
+    if (evaluated === undefined && context.$parent) {
+      return evalInContext.call(context.$parent, expression)
+    }
+
+    return evaluated
 
   });
 
   return result
+
+};
+
+// Store this values as function attributes for easy access elsewhere to bypass a Rollup
+// weak point with `export`:
+// https://github.com/rollup/rollup/blob/fca14d/src/utils/getExportMode.js#L27
+interpolate.INTERPOLATION_RE = INTERPOLATION_RE;
+interpolate.INTERPOLATION_PREFIX = '%{';
+
+var updateTranslation = function (el, binding, vnode) {
+
+  var attrs = vnode.data.attrs || {};
+  var msgid = el.dataset.msgid;
+  var translateContext = attrs['translate-context'];
+  var translateN = attrs['translate-n'];
+  var translatePlural = attrs['translate-plural'];
+  var isPlural = translateN !== undefined && translatePlural !== undefined;
+
+  if (!isPlural && (translateN || translatePlural)) {
+    throw new Error('`translate-n` and `translate-plural` attributes must be used together:' + msgid + '.')
+  }
+
+  var translation = translate.getTranslation(
+    msgid,
+    translateN,
+    translateContext,
+    isPlural ? translatePlural : null,
+    el.dataset.currentLanguage
+  );
+
+  var msg = interpolate(translation, vnode.context);
+
+  el.innerHTML = msg;
+
+};
+
+/**
+ * A directive to translate content according to the current language.
+ *
+ * Use this directive instead of the component if you need to translate HTML content.
+ * It's too tricky to support HTML content within the component because we cannot get the raw HTML to use as `msgid`.
+ *
+ * This directive has a similar interface to the <translate> component, supporting
+ * `translate-comment`, `translate-context`, `translate-plural`, `translate-n`.
+ *
+ * `<p v-translate translate-comment='Good stuff'>This is <strong class='txt-primary'>Sparta</strong>!</p>`
+ *
+ * If you need interpolation, you must add an expression that outputs binding value that changes with each of the
+ * context variable:
+ * `<p v-translate="fullName + location">I am %{ fullName } and from %{ location }</p>`
+ */
+var Directive = {
+
+  bind: function bind (el, binding, vnode) {
+
+    // Get the raw HTML and store it in the element's dataset (as advised in Vue's official guide).
+    // Note: not trimming the content here as it should be picked up as-is by the extractor.
+    var msgid = el.innerHTML;
+    el.dataset.msgid = msgid;
+
+    // Store the current language in the element's dataset.
+    el.dataset.currentLanguage = _Vue.config.language;
+
+    // Output a info in the console if an interpolation is required but no expression is provided.
+    if (!_Vue.config.getTextPluginSilent) {
+      var hasInterpolation = msgid.indexOf(interpolate.INTERPOLATION_PREFIX) !== -1;
+      if (hasInterpolation && !binding.expression) {
+        console.info(("No expression is provided for change detection. The translation for this key will be static:\n" + msgid));
+      }
+    }
+
+    updateTranslation(el, binding, vnode);
+
+  },
+
+  update: function update (el, binding, vnode) {
+
+    var doUpdate = false;
+
+    // Trigger an update if the language has changed.
+    if (el.dataset.currentLanguage !== _Vue.config.language) {
+      el.dataset.currentLanguage = _Vue.config.language;
+      doUpdate = true;
+    }
+
+    // Trigger an update if an optional bound expression has changed.
+    if (!doUpdate && binding.expression && (binding.value !== binding.oldValue)) {
+      doUpdate = true;
+    }
+
+    if (doUpdate) {
+      updateTranslation(el, binding, vnode);
+    }
+
+  },
+
+};
+
+var Config = function (Vue, languageVm, getTextPluginSilent) {
+
+  /*
+   * Adds a `language` property to `Vue.config` and makes it reactive:
+   * Vue.config.language = 'fr_FR'
+   */
+  Object.defineProperty(Vue.config, 'language', {
+    enumerable: true,
+    configurable: true,
+    get: function () { return languageVm.current },
+    set: function (val) { languageVm.current = val; },
+  });
+
+ /*
+  * Adds a `getTextPluginSilent` property to `Vue.config`.
+  * Used to enable/disable some console warnings.
+  */
+  Object.defineProperty(Vue.config, 'getTextPluginSilent', {
+    enumerable: true,
+    writable: true,
+    value: getTextPluginSilent,
+  });
 
 };
 
@@ -530,6 +630,9 @@ var GetTextPlugin = function (Vue, options) {
 
   // Makes <translate> available as a global component.
   Vue.component('translate', Component);
+
+  // An option to support translation with HTML content: `v-translate`.
+  Vue.directive('translate', Directive);
 
   // Exposes global properties.
   Vue.$translations = options.translations;
