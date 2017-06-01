@@ -35,24 +35,24 @@ let interpolate = function (msgid, context = {}) {
     let evaluated
 
     function evalInContext (expression) {
-      return eval('this.' + expression)  // eslint-disable-line no-eval
-    }
-
-    try {
-      evaluated = evalInContext.call(context, expression)
-    } catch (e) {
-      if (!context.$parent) {
-        console.warn(`Cannot evaluate expression: "${expression}".`)
-        console.warn(e.stack)
+      try {
+        evaluated = eval('this.' + expression)  // eslint-disable-line no-eval
+      } catch (e) {
+        // Ignore errors, because this function may be called recursively later.
       }
+      if (evaluated === undefined) {
+        if (this.$parent) {
+          // Recursively climb the $parent chain to allow evaluation inside nested components, see #23 and #24.
+          return evalInContext.call(this.$parent, expression)
+        } else {
+          console.warn(`Cannot evaluate expression: "${expression}".`)
+          evaluated = expression
+        }
+      }
+      return evaluated
     }
 
-    // Allow evaluation of expressions inside nested components, see #23 and #24.
-    if (evaluated === undefined && context.$parent) {
-      return evalInContext.call(context.$parent, expression)
-    }
-
-    return evaluated
+    return evalInContext.call(context, expression)
 
   })
 

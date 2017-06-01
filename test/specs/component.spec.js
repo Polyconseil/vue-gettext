@@ -149,7 +149,42 @@ describe('translate component tests', () => {
     })
   })
 
-  it('works with nested components and goes up the parent chain to evaluate `name`', (done) => {
+  // TODO: understand why PhantomJS keeps on crashing?
+  // it('throws an error if you forget to add a `translate-plural` attribute', () => {
+  //   expect(function () {
+  //     return new Vue({
+  //       template: '<span><translate :translate-n="n">%{ n } car</translate></span>',
+  //       data: {n: 2},
+  //     }).$mount()
+  //   }).to.throw('`translate-n` and `translate-plural` attributes must be used together: %{ n } car.')
+  // })
+
+  // TODO: understand why PhantomJS keeps on crashing?
+  // it('throws an error if you forget to add a `translate-n` attribute', () => {
+  //   expect(function () {
+  //     return new Vue({
+  //       template: '<p><translate translate-plural="%{ n }} cars">%{ n } car</translate></p>',
+  //     }).$mount()
+  //   }).to.throw('`translate-n` and `translate-plural` attributes must be used together: %{ n } car.')
+  // })
+
+})
+
+describe('translate component tests for interpolation', () => {
+
+  beforeEach(function () {
+    GetTextPlugin.installed = false
+    Vue.use(GetTextPlugin, {
+      availableLanguages: {
+        en_US: 'American English',
+        fr_FR: 'Français',
+      },
+      defaultLanguage: 'en_US',
+      translations: translations,
+    })
+  })
+
+  it('goes up the parent chain of a nested component to evaluate `name`', (done) => {
     Vue.config.language = 'fr_FR'
     let vm = new Vue({
       template: `<div><inner-component></inner-component></div>`,
@@ -168,7 +203,7 @@ describe('translate component tests', () => {
     })
   })
 
-  it('works with nested components and goes up the parent chain to evaluate nested `user.details.name`', (done) => {
+  it('goes up the parent chain of a nested component to evaluate `user.details.name`', (done) => {
     console.warn = sinon.spy(console, 'warn')
     Vue.config.language = 'fr_FR'
     let vm = new Vue({
@@ -194,23 +229,35 @@ describe('translate component tests', () => {
     })
   })
 
-  // TODO: understand why PhantomJS keeps on crashing?
-  // it('throws an error if you forget to add a `translate-plural` attribute', () => {
-  //   expect(function () {
-  //     return new Vue({
-  //       template: '<span><translate :translate-n="n">%{ n } car</translate></span>',
-  //       data: {n: 2},
-  //     }).$mount()
-  //   }).to.throw('`translate-n` and `translate-plural` attributes must be used together: %{ n } car.')
-  // })
-
-  // TODO: understand why PhantomJS keeps on crashing?
-  // it('throws an error if you forget to add a `translate-n` attribute', () => {
-  //   expect(function () {
-  //     return new Vue({
-  //       template: '<p><translate translate-plural="%{ n }} cars">%{ n } car</translate></p>',
-  //     }).$mount()
-  //   }).to.throw('`translate-n` and `translate-plural` attributes must be used together: %{ n } car.')
-  // })
+  it('goes up the parent chain of 2 nested components to evaluate `user.details.name`', (done) => {
+    console.warn = sinon.spy(console, 'warn')
+    Vue.config.language = 'fr_FR'
+    let vm = new Vue({
+      template: `<div><first-component></first-component></div>`,
+      data: {
+        user: {
+          details: {
+            name: 'Jane Doe',
+          },
+        },
+      },
+      components: {
+        'first-component': {
+          template: `<p><second-component></second-component></p>`,
+          components: {
+            'second-component': {
+              template: `<b><translate>Hello %{ user.details.name }</translate></b>`,
+            },
+          },
+        },
+      },
+    }).$mount()
+    vm.$nextTick(function () {
+      expect(vm.$el.innerHTML.trim()).to.equal('<p><b><span>Bonjour Jane Doe</span></b></p>')
+      expect(console.warn).notCalled
+      console.warn.restore()
+      done()
+    })
+  })
 
 })

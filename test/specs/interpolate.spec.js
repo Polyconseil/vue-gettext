@@ -90,7 +90,7 @@ describe('Interpolate tests', () => {
     }
     console.warn = sinon.spy(console, 'warn')
     interpolate(msgid, context)
-    expect(console.warn).calledTwice
+    expect(console.warn).calledOnce
     expect(console.warn).calledWith('Cannot evaluate expression: "alert("foobar")".')
     console.warn.restore()
   })
