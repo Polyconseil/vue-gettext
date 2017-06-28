@@ -1,6 +1,7 @@
 import interpolate from './interpolate'
 import translate from './translate'
 import { _Vue } from './localVue'
+import uuid from './uuid'
 
 
 const updateTranslation = (el, binding, vnode) => {
@@ -48,6 +49,12 @@ const updateTranslation = (el, binding, vnode) => {
 export default {
 
   bind (el, binding, vnode) {
+
+    // this is to fix the problem of usage with v-if, see #29
+    // we should auto-generate unique key if user hasn't define one
+    if (!vnode.key) {
+      vnode.key = uuid()
+    }
 
     // Get the raw HTML and store it in the element's dataset (as advised in Vue's official guide).
     // Note: not trimming the content here as it should be picked up as-is by the extractor.

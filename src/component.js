@@ -1,4 +1,5 @@
 import translate from './translate'
+import uuid from './uuid'
 
 
 /**
@@ -74,6 +75,12 @@ export default {
   },
 
   render: function (createElement) {
+    // this is to fix the problem of usage with v-if, see #29
+    // we should auto-generate unique key if user hasn't define one
+    if (!this.$vnode.key) {
+      this.$vnode.key = uuid()
+    }
+
     // The text must be wraped inside a root HTML element, so we use a <span> (by default).
     // https://github.com/vuejs/vue/blob/a4fcdb/src/compiler/parser/index.js#L209
     return createElement(this.tag, [this.translation])
