@@ -1,5 +1,6 @@
 import interpolate from './interpolate'
 import translate from './translate'
+import uuid from './uuid'
 import { _Vue } from './localVue'
 
 
@@ -48,6 +49,14 @@ const updateTranslation = (el, binding, vnode) => {
 export default {
 
   bind (el, binding, vnode) {
+
+    // Fix the problem with v-if, see #29.
+    // Vue re-uses DOM elements for efficiency if they don't have a key attribute, see:
+    // https://vuejs.org/v2/guide/conditional.html#Controlling-Reusable-Elements-with-key
+    // https://vuejs.org/v2/api/#key
+    if (!vnode.key) {
+      vnode.key = uuid()
+    }
 
     // Get the raw HTML and store it in the element's dataset (as advised in Vue's official guide).
     // Note: not trimming the content here as it should be picked up as-is by the extractor.

@@ -161,4 +161,21 @@ describe('translate directive tests', () => {
     })
   })
 
+  it('supports conditional rendering such as v-if, v-else-if, v-else', (done) => {
+    Vue.config.language = 'en_US'
+    let vm = new Vue({
+      template: `
+      <div v-if="show" v-translate>Pending</div>
+      <div v-else v-translate>Hello <strong>%{ name }</strong></div>
+      `,
+      data: {show: true, name: 'John Doe'},
+    }).$mount()
+    expect(vm.$el.innerHTML).to.equal('Pending')
+    vm.show = false
+    vm.$nextTick(function () {
+      expect(vm.$el.innerHTML).to.equal('Hello <strong>John Doe</strong>')
+      done()
+    })
+  })
+
 })

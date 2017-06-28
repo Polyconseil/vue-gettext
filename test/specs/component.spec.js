@@ -168,6 +168,23 @@ describe('translate component tests', () => {
   //   }).to.throw('`translate-n` and `translate-plural` attributes must be used together: %{ n } car.')
   // })
 
+  it('supports conditional rendering such as v-if, v-else-if, v-else', (done) => {
+    Vue.config.language = 'en_US'
+    let vm = new Vue({
+      template: `
+      <translate v-if="show">Pending</translate>
+      <translate v-else>Hello %{ name }</translate>
+      `,
+      data: {show: true, name: 'John Doe'},
+    }).$mount()
+    expect(vm.$el.innerHTML).to.equal('Pending')
+    vm.show = false
+    vm.$nextTick(function () {
+      expect(vm.$el.innerHTML).to.equal('Hello John Doe')
+      done()
+    })
+  })
+
 })
 
 describe('translate component tests for interpolation', () => {
