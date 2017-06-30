@@ -34,7 +34,7 @@ const MUSTACHE_SYNTAX_RE = /\{\{((?:.|\n)+?)\}\}/g
 let interpolate = function (msgid, context = {}) {
 
   if (!_Vue.config.getTextPluginSilent && MUSTACHE_SYNTAX_RE.test(msgid)) {
-    console.warn(`Mustache syntax is detected. Please use \`%{}\` instead of \`{{}}\` in: ${msgid}`)
+    console.warn(`Mustache syntax cannot be used with vue-gettext. Please use "%{}" instead of "{{}}" in: ${msgid}`)
   }
 
   let result = msgid.replace(INTERPOLATION_RE, (match, token) => {
@@ -53,7 +53,7 @@ let interpolate = function (msgid, context = {}) {
           // Recursively climb the $parent chain to allow evaluation inside nested components, see #23 and #24.
           return evalInContext.call(this.$parent, expression)
         } else {
-          console.warn(`Cannot evaluate expression: "${expression}".`)
+          console.warn(`Cannot evaluate expression: ${expression}`)
           evaluated = expression
         }
       }
