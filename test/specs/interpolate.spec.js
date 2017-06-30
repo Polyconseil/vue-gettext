@@ -1,7 +1,19 @@
+import Vue from 'vue'
+
+import GetTextPlugin from '../../src/'
 import interpolate from '../../src/interpolate'
+import translations from './json/translate.json'
 
 
 describe('Interpolate tests', () => {
+
+  beforeEach(function () {
+    GetTextPlugin.installed = false
+    Vue.use(GetTextPlugin, {
+      translations: translations,
+      silent: true,
+    })
+  })
 
   it('without placeholders', () => {
     let msgid = 'Foo bar baz'
@@ -92,6 +104,20 @@ describe('Interpolate tests', () => {
     interpolate(msgid, context)
     expect(console.warn).calledOnce
     expect(console.warn).calledWith('Cannot evaluate expression: "alert("foobar")".')
+    console.warn.restore()
+  })
+
+  it('should warn of the usage of mustache syntax', () => {
+    let msgid = 'Foo {{ foo }} baz'
+    let context = {
+      foo: 'bar',
+    }
+    console.warn = sinon.spy(console, 'warn')
+    interpolate(msgid, context)
+    expect(console.warn).notCalled
+    Vue.config.getTextPluginSilent = false
+    interpolate(msgid, context)
+    expect(console.warn).calledOnce
     console.warn.restore()
   })
 
