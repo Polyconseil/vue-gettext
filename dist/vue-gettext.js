@@ -1,5 +1,5 @@
 /**
- * vue-gettext v2.0.16
+ * vue-gettext v2.0.17
  * (c) 2017 Polyconseil
  * @license MIT
  */
@@ -428,6 +428,8 @@ var Component = {
  */
 var INTERPOLATION_RE = /%\{((?:.|\n)+?)\}/g;
 
+var MUSTACHE_SYNTAX_RE = /\{\{((?:.|\n)+?)\}\}/g;
+
 /**
  * Evaluate a piece of template string containing %{ } placeholders.
  * E.g.: 'Hi %{ user.name }' => 'Hi Bob'
@@ -443,6 +445,10 @@ var INTERPOLATION_RE = /%\{((?:.|\n)+?)\}/g;
 var interpolate = function (msgid, context) {
   if ( context === void 0 ) context = {};
 
+
+  if (!_Vue.config.getTextPluginSilent && MUSTACHE_SYNTAX_RE.test(msgid)) {
+    console.warn(("Mustache syntax cannot be used with vue-gettext. Please use \"%{}\" instead of \"{{}}\" in: " + msgid));
+  }
 
   var result = msgid.replace(INTERPOLATION_RE, function (match, token) {
 
@@ -460,7 +466,7 @@ var interpolate = function (msgid, context) {
           // Recursively climb the $parent chain to allow evaluation inside nested components, see #23 and #24.
           return evalInContext.call(this.$parent, expression)
         } else {
-          console.warn(("Cannot evaluate expression: \"" + expression + "\"."));
+          console.warn(("Cannot evaluate expression: " + expression));
           evaluated = expression;
         }
       }
