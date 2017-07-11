@@ -55,6 +55,12 @@ describe('Translate tests', () => {
     translated = translate.getTranslation('Untranslated %{ n } item', 10, null, 'Untranslated %{ n } items', 'fr_FR')
     expect(translated).to.equal('Untranslated %{ n } items')
 
+    // Test that it works when a msgid exists with and without a context, see #32.
+    translated = translate.getTranslation('Object', null, null, null, 'fr_FR')
+    expect(translated).to.equal('Objet')
+    translated = translate.getTranslation('Object', null, 'Context', null, 'fr_FR')
+    expect(translated).to.equal('Objet avec contexte')
+
   })
 
   it('tests the gettext() method', () => {

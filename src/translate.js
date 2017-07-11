@@ -63,6 +63,11 @@ export default {
       translated = [translated]
     }
 
+    // Avoid a crash when a msgid exists with and without a context, see #32.
+    if (!(translated instanceof Array) && translated.hasOwnProperty('')) {
+      translated = [translated['']]
+    }
+
     return translated[plurals.getTranslationIndex(language, n)]
 
   },

@@ -21,6 +21,10 @@
                 "%{ carCount } car (verb)",
                 "%{ carCount } cars (verb)"
             ]
+        },
+        "Object": {
+            "": "Object",
+            "Context": "Object with context"
         }
     },
     "fr": {
@@ -45,6 +49,10 @@
                 "%{ carCount } véhicule (verbe)",
                 "%{ carCount } véhicules (verbe)"
             ]
+        },
+        "Object": {
+            "": "Objet",
+            "Context": "Objet avec contexte"
         }
     }
 }
