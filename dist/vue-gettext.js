@@ -1,5 +1,5 @@
 /**
- * vue-gettext v2.0.17
+ * vue-gettext v2.0.18
  * (c) 2017 Polyconseil
  * @license MIT
  */
@@ -235,6 +235,11 @@ var translate = {
 
     if (typeof translated === 'string') {
       translated = [translated];
+    }
+
+    // Avoid a crash when a msgid exists with and without a context, see #32.
+    if (!(translated instanceof Array) && translated.hasOwnProperty('')) {
+      translated = [translated['']];
     }
 
     return translated[plurals.getTranslationIndex(language, n)]
