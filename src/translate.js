@@ -32,7 +32,8 @@ export default {
       if (!_Vue.config.getTextPluginSilent) {
         console.warn(`No translations found for ${language}`)
       }
-      return defaultPlural && plurals.getTranslationIndex(language, n) > 0 ? defaultPlural : msgid  // Returns the untranslated string, singular or plural.
+      // Returns the untranslated string, singular or plural.
+      return defaultPlural && plurals.getTranslationIndex(language, n) > 0 ? defaultPlural : msgid
     }
 
     let translated = translations[msgid]
@@ -52,7 +53,8 @@ export default {
       if (!_Vue.config.getTextPluginSilent) {
         console.warn(`Untranslated ${language} key found:\n${msgid}`)
       }
-      return defaultPlural && plurals.getTranslationIndex(language, n) > 0 ? defaultPlural : msgid  // Returns the untranslated string, singular or plural.
+      // Returns the untranslated string, singular or plural.
+      return defaultPlural && plurals.getTranslationIndex(language, n) > 0 ? defaultPlural : msgid
     }
 
     if (context) {
@@ -65,6 +67,7 @@ export default {
 
     // Avoid a crash when a msgid exists with and without a context, see #32.
     if (!(translated instanceof Array) && translated.hasOwnProperty('')) {
+      // As things currently stand, the void key means a void context for easygettext.
       translated = [translated['']]
     }
 

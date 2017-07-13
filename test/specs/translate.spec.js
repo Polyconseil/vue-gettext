@@ -68,6 +68,7 @@ describe('Translate tests', () => {
     expect(translated).to.equal('Untranslated %{ n } item')
     translated = translate.getTranslation('Untranslated %{ n } item', 2, null, 'Untranslated %{ n } items', 'en_US')
     expect(translated).to.equal('Untranslated %{ n } items')
+
   })
 
   it('tests the gettext() method', () => {
