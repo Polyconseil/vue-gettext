@@ -1,5 +1,5 @@
 /**
- * vue-gettext v2.0.18
+ * vue-gettext v2.0.19
  * (c) 2017 Polyconseil
  * @license MIT
  */
@@ -206,7 +206,8 @@ var translate = {
       if (!_Vue.config.getTextPluginSilent) {
         console.warn(("No translations found for " + language));
       }
-      return defaultPlural && n > 1 ? defaultPlural : msgid  // Returns the untranslated string, singular or plural.
+      // Returns the untranslated string, singular or plural.
+      return defaultPlural && plurals.getTranslationIndex(language, n) > 0 ? defaultPlural : msgid
     }
 
     var translated = translations[msgid];
@@ -226,7 +227,8 @@ var translate = {
       if (!_Vue.config.getTextPluginSilent) {
         console.warn(("Untranslated " + language + " key found:\n" + msgid));
       }
-      return defaultPlural && n > 1 ? defaultPlural : msgid  // Returns the untranslated string, singular or plural.
+      // Returns the untranslated string, singular or plural.
+      return defaultPlural && plurals.getTranslationIndex(language, n) > 0 ? defaultPlural : msgid
     }
 
     if (context) {
@@ -239,6 +241,7 @@ var translate = {
 
     // Avoid a crash when a msgid exists with and without a context, see #32.
     if (!(translated instanceof Array) && translated.hasOwnProperty('')) {
+      // As things currently stand, the void key means a void context for easygettext.
       translated = [translated['']];
     }
 
