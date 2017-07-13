@@ -61,6 +61,14 @@ describe('Translate tests', () => {
     translated = translate.getTranslation('Object', null, 'Context', null, 'fr_FR')
     expect(translated).to.equal('Objet avec contexte')
 
+    // Ensure that pluralization is right in English when there are no English translations.
+    translated = translate.getTranslation('Untranslated %{ n } item', 0, null, 'Untranslated %{ n } items', 'en_US')
+    expect(translated).to.equal('Untranslated %{ n } items')
+    translated = translate.getTranslation('Untranslated %{ n } item', 1, null, 'Untranslated %{ n } items', 'en_US')
+    expect(translated).to.equal('Untranslated %{ n } item')
+    translated = translate.getTranslation('Untranslated %{ n } item', 2, null, 'Untranslated %{ n } items', 'en_US')
+    expect(translated).to.equal('Untranslated %{ n } items')
+
   })
 
   it('tests the gettext() method', () => {
