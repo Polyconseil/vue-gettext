@@ -90,6 +90,49 @@ describe('translate directive tests', () => {
     expect(vm.$el.innerHTML).to.equal('Bonjour <strong>John Doe</strong>')
   })
 
+  it('allows custom params for interpolation', () => {
+    Vue.config.language = 'fr_FR'
+    let vm = new Vue({
+      template: '<p v-translate="{name: someNewNameVar}">Hello <strong>%{ name }</strong></p>',
+      data: {
+        someNewNameVar: 'John Doe',
+      },
+    }).$mount()
+    expect(vm.$el.innerHTML.trim()).to.equal('Bonjour <strong>John Doe</strong>')
+  })
+
+  it('allows interpolation within v-for with custom params', () => {
+    Vue.config.language = 'fr_FR'
+    let names = ['John Doe', 'Chester']
+    let vm = new Vue({
+      template: '<p><span v-for="name in names" v-translate="{name: name}">Hello <strong>%{ name }</strong></span></p>',
+      data: {
+        names,
+      },
+    }).$mount()
+    let html = vm.$el.innerHTML.trim()
+    let missedName = names.some((name) => {
+      if (html.indexOf(name) === -1) {
+        return true
+      }
+    })
+    expect(missedName).to.equal(false)
+  })
+
+  it('logs a warning in the console if translate-params is used', () => {
+    console.warn = sinon.spy(console, 'warn')
+    Vue.config.language = 'fr_FR'
+    let vm = new Vue({
+      template: '<p v-translate :translate-params="{name: someNewNameVar}">Hello <strong>%{ name }</strong></p>',
+      data: {
+        someNewNameVar: 'John Doe',
+      },
+    }).$mount()
+    expect(vm.$el.innerHTML.trim()).to.equal('Bonjour <strong>name</strong>')
+    expect(console.warn).called
+    console.warn.restore()
+  })
+
   it('updates a translation after a data change', (done) => {
     Vue.config.language = 'fr_FR'
     let vm = new Vue({

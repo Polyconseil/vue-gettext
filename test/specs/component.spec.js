@@ -98,6 +98,28 @@ describe('translate component tests', () => {
     expect(vm.$el.innerHTML.trim()).to.equal('<span>Bonjour John Doe</span>')
   })
 
+  it('allows custom params for interpolation', () => {
+    Vue.config.language = 'fr_FR'
+    let vm = new Vue({
+      template: '<p><translate :translate-params="{name: someNewNameVar}">Hello %{ name }</translate></p>',
+      data: {
+        someNewNameVar: 'John Doe',
+      },
+    }).$mount()
+    expect(vm.$el.innerHTML.trim()).to.equal('<span>Bonjour John Doe</span>')
+  })
+
+  it('allows interpolation within v-for with custom params', () => {
+    Vue.config.language = 'fr_FR'
+    let vm = new Vue({
+      template: '<p><translate v-for="name in names" :translate-params="{name: name}">Hello %{ name }</translate></p>',
+      data: {
+        names: ['John Doe', 'Chester'],
+      },
+    }).$mount()
+    expect(vm.$el.innerHTML.trim()).to.equal('<span>Bonjour John Doe</span><span>Bonjour Chester</span>')
+  })
+
   it('translates plurals', () => {
     Vue.config.language = 'fr_FR'
     let vm = new Vue({

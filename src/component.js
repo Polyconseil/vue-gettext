@@ -54,6 +54,10 @@ export default {
       type: String,
       required: false,
     },
+    translateParams: {
+      type: Object,
+      required: false,
+    },
     // `translateComment` is used exclusively by `easygettext`'s `gettext-extract`.
     translateComment: {
       type: String,
@@ -70,7 +74,14 @@ export default {
         this.isPlural ? this.translatePlural : null,
         this.$language.current
       )
-      return this.$gettextInterpolate(translation, this.$parent)
+
+      let context = this.$parent
+
+      if (this.translateParams) {
+        context = Object.assign({}, this.$parent, this.translateParams)
+      }
+
+      return this.$gettextInterpolate(translation, context)
     },
   },
 
