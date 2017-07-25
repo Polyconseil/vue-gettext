@@ -1,5 +1,5 @@
 /**
- * vue-gettext v2.0.19
+ * vue-gettext v2.0.20
  * (c) 2017 Polyconseil
  * @license MIT
  */
@@ -381,6 +381,10 @@ var Component = {
       type: String,
       required: false,
     },
+    translateParams: {
+      type: Object,
+      required: false,
+    },
     // `translateComment` is used exclusively by `easygettext`'s `gettext-extract`.
     translateComment: {
       type: String,
@@ -397,7 +401,14 @@ var Component = {
         this.isPlural ? this.translatePlural : null,
         this.$language.current
       );
-      return this.$gettextInterpolate(translation, this.$parent)
+
+      var context = this.$parent;
+
+      if (this.translateParams) {
+        context = Object.assign({}, this.$parent, this.translateParams);
+      }
+
+      return this.$gettextInterpolate(translation, context)
     },
   },
 
@@ -503,9 +514,18 @@ var updateTranslation = function (el, binding, vnode) {
   var translateN = attrs['translate-n'];
   var translatePlural = attrs['translate-plural'];
   var isPlural = translateN !== undefined && translatePlural !== undefined;
+  var context = vnode.context;
 
   if (!isPlural && (translateN || translatePlural)) {
     throw new Error('`translate-n` and `translate-plural` attributes must be used together:' + msgid + '.')
+  }
+
+  if (!_Vue.config.getTextPluginSilent && attrs['translate-params']) {
+    console.warn(("`translate-params` is required as an expression for v-translate directive. Please change to `v-translate='params'`: " + msgid));
+  }
+
+  if (binding.value && typeof binding.value === 'object') {
+    context = Object.assign({}, vnode.context, binding.value);
   }
 
   var translation = translate.getTranslation(
@@ -516,7 +536,7 @@ var updateTranslation = function (el, binding, vnode) {
     el.dataset.currentLanguage
   );
 
-  var msg = interpolate(translation, vnode.context);
+  var msg = interpolate(translation, context);
 
   el.innerHTML = msg;
 
