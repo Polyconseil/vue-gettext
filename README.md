@@ -315,6 +315,12 @@ in Vue 2, we have to use another set of delimiters. Instead of the
 <translate translate-context="Verb">Foo</translate>
 ```
 
+#### Custom parameters
+
+```html
+<translate :translate-params="{name: userFullName}">Foo %{name}</translate>
+```
+
 #### Comment
 
 ```html
@@ -326,10 +332,10 @@ in Vue 2, we have to use another set of delimiters. Instead of the
 It is quite tricky to get raw HTML of a Vue component, so if you need
 to include HTML content in the translations you may use the provided directive.
 
-The directive has the same set of capabilities as the component.
+The directive has the same set of capabilities as the component, **except for translate-params** which should be passed in as an expression.
 
 ```html
-<p v-translate :translate-n="count" translate-plural="<strong>%{ count }</strong> cars" translate-comment="My comment for translators"><strong>%{ count }</strong> car</translate>
+<p v-translate='{count: carNumbers}' :translate-n="count" translate-plural="<strong>%{ count }</strong> cars" translate-comment="My comment for translators"><strong>%{ count }</strong> car</p>
 ```
 
 **Caveat when using v-translate with interpolation**
@@ -347,7 +353,29 @@ changed, but you can skip unnecessary updates by comparing the binding's
 current and old values...
 
 ```html
-<p v-translate='count + brand' :translate-n="count" translate-plural="<strong>%{ count }</strong> %{brand} cars" translate-comment="My comment for translators"><strong>%{ count }</strong> %{brand} car</translate>
+<p v-translate='{count: count, brand: brand}' :translate-n="count" translate-plural="<strong>%{ count }</strong> %{brand} cars" translate-comment="My comment for translators"><strong>%{ count }</strong> %{brand} car</p>
+```
+
+**Caveat when using either the component '<translate>' or directive 'v-translate' with interpolation inside v-for**
+
+It's not possible (yet) to access the scope within `v-for`, example:
+
+```html
+<p>
+  <translate v-for='name in names'>Hello %{name}</translate>
+  <span v-for='name in names' v-translate>Hello %{name}</span>
+</p>
+```
+
+Will result in all `Hello %{name}` being rendered as `Hello name`
+
+You need to pass in custom parameters for it to work:
+
+```html
+<p>
+  <translate v-for='name in names' :translate-params='{name: name}'>Hello %{name}</translate>
+  <span v-for='name in names' v-translate='{name: name}'>Hello %{name}</span>
+</p>
 ```
 
 **Caveat when using v-translate with Vue components or Vue-specific attributes**

@@ -12,9 +12,18 @@ const updateTranslation = (el, binding, vnode) => {
   let translateN = attrs['translate-n']
   let translatePlural = attrs['translate-plural']
   let isPlural = translateN !== undefined && translatePlural !== undefined
+  let context = vnode.context
 
   if (!isPlural && (translateN || translatePlural)) {
     throw new Error('`translate-n` and `translate-plural` attributes must be used together:' + msgid + '.')
+  }
+
+  if (!_Vue.config.getTextPluginSilent && attrs['translate-params']) {
+    console.warn(`\`translate-params\` is required as an expression for v-translate directive. Please change to \`v-translate='params'\`: ${msgid}`)
+  }
+
+  if (binding.value && typeof binding.value === 'object') {
+    context = Object.assign({}, vnode.context, binding.value)
   }
 
   let translation = translate.getTranslation(
@@ -25,7 +34,7 @@ const updateTranslation = (el, binding, vnode) => {
     el.dataset.currentLanguage
   )
 
-  let msg = interpolate(translation, vnode.context)
+  let msg = interpolate(translation, context)
 
   el.innerHTML = msg
 
