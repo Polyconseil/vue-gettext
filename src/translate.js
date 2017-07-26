@@ -42,7 +42,7 @@ export default {
     // new lines. See comments in the `created` hook of `component.js` and issue #15 for more information.
     if (!translated && /\s{2,}/g.test(msgid)) {
       Object.keys(translations).some(key => {
-        if (key.replace(/\s{2,}/g, ' ') === msgid.replace(/\s{2,}/g, ' ')) {
+        if (key.replace(/\s{2,}/g, ' ') === msgid.trim().replace(/\s{2,}/g, ' ')) {
           translated = translations[key]
           return translated
         }
