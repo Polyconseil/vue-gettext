@@ -233,10 +233,10 @@ This will automatically be translated. For instance, in French, it might read *B
 
 #### Custom parameters
 
-You can set up translation strings that are agnostic to how your app state is structured. This way if you can change variable names within your app, it won't break your translation strings.
+You can set up translation strings that are agnostic to how your app state is structured. This way you can change variable names within your app, it won't break your translation strings.
 
 ```html
-<translate:translate-params="{name: userFullName}">Foo %{name}</translate>
+<translate :translate-params="{name: userFullName}">Foo %{name}</translate>
 ```
 
 ### HTML support: difference between the component and the directive
