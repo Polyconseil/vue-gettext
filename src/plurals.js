@@ -11,7 +11,8 @@ export default {
 
   getTranslationIndex: function (languageCode, n) {
 
-    n = Number.isNaN(parseInt(n)) ? 1 : parseInt(n)  // Fallback to singular.
+    n = parseInt(n)
+    n = typeof n === 'number' && window.isNaN(n) ? 1 : n  // Fallback to singular.
 
     // Extract the ISO 639 language code. The ISO 639 standard defines
     // two-letter codes for many languages, and three-letter codes for
