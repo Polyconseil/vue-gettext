@@ -250,7 +250,7 @@ The directive has the same set of capabilities as the component, **except for tr
 ```html
 <p
   v-translate='{count: carNumbers}'
-  :translate-n="count"
+  :translate-n="carNumbers"
   translate-plural="<strong>%{ count }</strong> cars"
   translate-comment="My comment for translators"
   >
