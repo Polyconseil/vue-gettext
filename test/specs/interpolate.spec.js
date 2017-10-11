@@ -3,12 +3,13 @@ import Vue from 'vue'
 import GetTextPlugin from '../../src/'
 import interpolate from '../../src/interpolate'
 import translations from './json/translate.json'
+import uninstallPlugin from '../testUtils'
 
 
 describe('Interpolate tests', () => {
 
   beforeEach(function () {
-    GetTextPlugin.installed = false
+    uninstallPlugin(Vue, GetTextPlugin)
     Vue.use(GetTextPlugin, {
       translations: translations,
       silent: true,

@@ -61,7 +61,7 @@
     "sinon-chai": "^2.8.0",
     "style-loader": "^0.13.1",
     "uglify-js": "^2.7.4",
-    "vue": "^2.1.6",
+    "vue": "^2.4.4",
     "vue-loader": "^10.0.0",
     "vue-template-compiler": "^2.1.6",
     "webpack": "^1.13.3",

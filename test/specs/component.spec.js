@@ -2,12 +2,13 @@ import Vue from 'vue'
 
 import GetTextPlugin from '../../src/'
 import translations from './json/component.json'
+import uninstallPlugin from '../testUtils'
 
 
 describe('translate component tests', () => {
 
   beforeEach(function () {
-    GetTextPlugin.installed = false
+    uninstallPlugin(Vue, GetTextPlugin)
     Vue.use(GetTextPlugin, {
       availableLanguages: {
         en_US: 'American English',
@@ -212,7 +213,7 @@ describe('translate component tests', () => {
 describe('translate component tests for interpolation', () => {
 
   beforeEach(function () {
-    GetTextPlugin.installed = false
+    uninstallPlugin(Vue, GetTextPlugin)
     Vue.use(GetTextPlugin, {
       availableLanguages: {
         en_US: 'American English',

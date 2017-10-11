@@ -2,12 +2,13 @@ import Vue from 'vue'
 
 import GetTextPlugin from '../../src/'
 import translations from './json/plugin.config.json'
+import uninstallPlugin from '../testUtils'
 
 
 describe('GetText plugin configuration tests', () => {
 
   beforeEach(function () {
-    GetTextPlugin.installed = false
+    uninstallPlugin(Vue, GetTextPlugin)
   })
 
   it('raises an error when an unknown option is used', () => {
@@ -49,7 +50,7 @@ describe('GetText plugin configuration tests', () => {
 describe('GetText plugin `silent` option tests', () => {
 
   beforeEach(function () {
-    GetTextPlugin.installed = false
+    uninstallPlugin(Vue, GetTextPlugin)
   })
 
   it('warnings are ON for a missing language when `silent` is false', () => {

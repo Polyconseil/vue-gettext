@@ -3,12 +3,13 @@ import Vue from 'vue'
 import GetTextPlugin from '../../src/'
 import translate from '../../src/translate'
 import translations from './json/translate.json'
+import uninstallPlugin from '../testUtils'
 
 
 describe('Translate tests', () => {
 
   beforeEach(function () {
-    GetTextPlugin.installed = false
+    uninstallPlugin(Vue, GetTextPlugin)
     Vue.use(GetTextPlugin, {
       availableLanguages: {
         en_US: 'American English',
