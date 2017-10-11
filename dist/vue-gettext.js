@@ -1,13 +1,45 @@
 /**
- * vue-gettext v2.0.23
+ * vue-gettext v2.0.24
  * (c) 2017 Polyconseil
  * @license MIT
  */
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
-  (global.VueGettext = factory());
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(global.VueGettext = factory());
 }(this, (function () { 'use strict';
+
+// Polyfill Object.assign for legacy browsers.
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+
+if (typeof Object.assign !== 'function') {
+  (function () {
+    Object.assign = function (target) {
+      'use strict';
+      var arguments$1 = arguments;
+
+      var output;
+      var index;
+      var source;
+      var nextKey;
+      if (target === undefined || target === null) {
+        throw new TypeError('Cannot convert undefined or null to object')
+      }
+      output = Object(target);
+      for (index = 1; index < arguments.length; index++) {
+        source = arguments$1[index];
+        if (source !== undefined && source !== null) {
+          for (nextKey in source) {
+            if (source.hasOwnProperty(nextKey)) {
+              output[nextKey] = source[nextKey];
+            }
+          }
+        }
+      }
+      return output
+    };
+  }());
+}
 
 /**
  * Plural Forms
