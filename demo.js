@@ -108,11 +108,11 @@ var Plural = Vue.extend({
     }
   },
   methods: {
-    decrease () {
+    decrease: function () {
       if (this.n === 0) return
       this.n -= 1
     },
-    increase () {
+    increase: function () {
       this.n += 1
     },
   },
@@ -153,20 +153,20 @@ var Alert = Vue.extend({
     }
   },
   methods: {
-    alertSingular () {
+    alertSingular: function () {
       var msg = this.$gettext('Good bye!')
       return window.alert(msg)
     },
-    alertPlural (n) {
+    alertPlural: function (n) {
       let msg = this.$ngettext('%{ n } foo', '%{ n } foos', n)
       msg = this.$gettextInterpolate(msg, {n: n})
       return window.alert(msg)
     },
-    decrease () {
+    decrease: function () {
       if (this.n === 0) return
       this.n -= 1
     },
-    increase () {
+    increase: function () {
       this.n += 1
     },
   },
