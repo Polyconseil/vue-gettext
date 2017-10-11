@@ -1,21 +1,20 @@
 const buble = require('rollup-plugin-buble')
 const commonjs = require('rollup-plugin-commonjs')
-const nodeResolve = require('rollup-plugin-node-resolve')
 const version = process.env.VERSION || require('../package.json').version
 
 
 module.exports = {
-  entry: 'src/index.js',
-  dest: 'dist/vue-gettext.js',
-  format: 'umd',
-  moduleName: 'VueGettext',
+  input: 'src/index.js',
+  output: {
+    file: 'dist/vue-gettext.js',
+    format: 'umd',
+  },
+  name: 'VueGettext',
   globals: {
     vue: 'Vue',
   },
+  external: ['vue'],
   plugins: [
-    nodeResolve({
-      skip: ['vue'],
-    }),
     commonjs(),
     buble(),
   ],

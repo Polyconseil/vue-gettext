@@ -1,3 +1,5 @@
+import './object-assign-polyfill'
+
 import Component from './component'
 import Directive from './directive'
 import Config from './config'

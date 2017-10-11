@@ -248,10 +248,10 @@ npm install --save-dev eslint-loader eslint-friendly-formatter
 ### 5) Babel
 
 ```
-babel-core                      // Babel compiler core.
-babel-loader                    // Allows transpiling JavaScript files using Babel and Webpack.
-babel-preset-es2015             // ES6/ES2015 support.
-babel-plugin-transform-runtime  // Avoid repeated inclusion of Babel's helper functions.
+babel-core                            // Babel compiler core.
+babel-loader                          // Allows transpiling JavaScript files using Babel and Webpack.
+babel-preset-es2015                   // ES6/ES2015 support.
+babel-plugin-transform-runtime        // Avoid repeated inclusion of Babel's helper functions.
 ```
 
 ```
@@ -404,13 +404,12 @@ rollup
 buble
 rollup-plugin-buble
 rollup-plugin-commonjs
-rollup-plugin-node-resolve
 rollup-watch
 uglify-js
 ```
 
 ```
-npm install --save-dev rollup buble rollup-plugin-buble rollup-plugin-commonjs rollup-plugin-node-resolve rollup-watch
+npm install --save-dev rollup buble rollup-plugin-buble rollup-plugin-commonjs rollup-watch
 ```
 
 Using [Rollup](https://github.com/rollup/rollup) for packaging
@@ -421,5 +420,4 @@ behaviour of Rollup at key points in the bundling process.
 
 - [rollup-plugin-buble](https://gitlab.com/Rich-Harris/rollup-plugin-buble) for [buble](https://gitlab.com/Rich-Harris/buble)
 - [rollup-plugin-commonjs](https://github.com/rollup/rollup-plugin-commonjs)
-- [rollup-plugin-node-resolve](https://github.com/rollup/rollup-plugin-node-resolve)
 - [rollup-watch](https://github.com/rollup/rollup-watch)
