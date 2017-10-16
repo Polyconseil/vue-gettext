@@ -19,7 +19,7 @@ Any help is greatly appreciated:
 
 `vue-gettext` is a plugin to translate Vue.js applications with [`gettext`](http://www.labri.fr/perso/fleury/posts/programming/a-quick-gettext-tutorial.html). It relies on the [GNU gettext toolset](https://www.gnu.org/software/gettext/manual/index.html) and [`easygettext`](https://github.com/Polyconseil/easygettext).
 
-## How does `vue-gettext` works at a high level?
+## How does `vue-gettext` work at a high level?
 
 1. **Annotating strings**: to make a Vue.js app translatable, you have to annotate the strings you want to translate in your JavaScript code and/or templates.
 
