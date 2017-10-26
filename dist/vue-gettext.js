@@ -1,5 +1,5 @@
 /**
- * vue-gettext v2.0.24
+ * vue-gettext v2.0.25
  * (c) 2017 Polyconseil
  * @license MIT
  */
@@ -463,6 +463,8 @@ var Component = {
 
 };
 
+var EVALUATION_RE = /[[\].]{1,2}/g;
+
 /* Interpolation RegExp.
  *
  * Because interpolation inside attributes are deprecated in Vue 2 we have to
@@ -507,9 +509,18 @@ var interpolate = function (msgid, context) {
     var expression = token.trim();
     var evaluated;
 
+    // Avoid eval() by splitting `expression` and looping through its different properties if any, see #55.
+    function getProps (obj, expression) {
+      var arr = expression.split(EVALUATION_RE).filter(function (x) { return x; });
+      while (arr.length) {
+        obj = obj[arr.shift()];
+      }
+      return obj
+    }
+
     function evalInContext (expression) {
       try {
-        evaluated = eval('this.' + expression);  // eslint-disable-line no-eval
+        evaluated = getProps(this, expression);
       } catch (e) {
         // Ignore errors, because this function may be called recursively later.
       }
