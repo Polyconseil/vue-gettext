@@ -1,5 +1,7 @@
 import { _Vue } from './localVue'
 
+const EVALUATION_RE = /[[\].]{1,2}/g
+
 /* Interpolation RegExp.
  *
  * Because interpolation inside attributes are deprecated in Vue 2 we have to
@@ -42,9 +44,18 @@ let interpolate = function (msgid, context = {}) {
     const expression = token.trim()
     let evaluated
 
+    // Avoid eval() by splitting `expression` and looping through its different properties if any, see #55.
+    function getProps (obj, expression) {
+      const arr = expression.split(EVALUATION_RE).filter(x => x)
+      while (arr.length) {
+        obj = obj[arr.shift()]
+      }
+      return obj
+    }
+
     function evalInContext (expression) {
       try {
-        evaluated = eval('this.' + expression)  // eslint-disable-line no-eval
+        evaluated = getProps(this, expression)
       } catch (e) {
         // Ignore errors, because this function may be called recursively later.
       }

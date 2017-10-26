@@ -96,7 +96,7 @@ describe('Interpolate tests', () => {
     expect(interpolated).to.equal('Foo foo baz')
   })
 
-  it('with a failing eval', () => {
+  it('with a failing expression', () => {
     let msgid = 'Foo %{ alert("foobar") } baz'
     let context = {
       foo: 'bar',
