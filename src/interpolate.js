@@ -45,7 +45,7 @@ let interpolate = function (msgid, context = {}) {
     let evaluated
 
     function getProps (obj, expression) {
-      var arr = expression.split(EVALUATION_RE).filter(x => x)
+      const arr = expression.split(EVALUATION_RE).filter(x => x)
       while (arr.length) {
         obj = obj[arr.shift()]
       }
