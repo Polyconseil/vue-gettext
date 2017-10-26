@@ -1,5 +1,7 @@
 import { _Vue } from './localVue'
 
+const EVALUATION_RE = /[[\].]{1,2}/g
+
 /* Interpolation RegExp.
  *
  * Because interpolation inside attributes are deprecated in Vue 2 we have to
@@ -15,8 +17,6 @@ import { _Vue } from './localVue'
  *   \}                 => Ending delimiter: `}`
  * /g                   => Global: don't return after first match
  */
-const EVALUATION_RE = /[[\].]{1,2}/g
-
 const INTERPOLATION_RE = /%\{((?:.|\n)+?)\}/g
 
 const MUSTACHE_SYNTAX_RE = /\{\{((?:.|\n)+?)\}\}/g
@@ -44,6 +44,7 @@ let interpolate = function (msgid, context = {}) {
     const expression = token.trim()
     let evaluated
 
+    // Avoid eval() by splitting `expression` and looping through its different properties if any, see #55.
     function getProps (obj, expression) {
       const arr = expression.split(EVALUATION_RE).filter(x => x)
       while (arr.length) {
