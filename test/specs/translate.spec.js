@@ -150,4 +150,33 @@ describe('Translate tests', () => {
 
   })
 
+  it('discard language warnings parameter', () => {
+    var options = {
+      availableLanguages: {
+        en_US: 'American English',
+        fr_FR: 'Français',
+      },
+      defaultLanguage: 'be_FR',
+      translations: translations,
+    }
+    uninstallPlugin(Vue, GetTextPlugin)
+    Vue.use(GetTextPlugin, options)
+    var warn = console.warn
+
+    console.warn = function (message) {
+      expect(message).to.equal('No translations found for be_FR')
+    }
+    translate.getTranslation('Untranslated key', null, null, null, 'be_FR')
+    uninstallPlugin(Vue, GetTextPlugin)
+    options.muteLanguages = ['be_FR']
+    Vue.use(GetTextPlugin, options)
+    console.warn = function (message) {
+      expect('You shall not pass').to.equal(true)
+    }
+    translate.getTranslation('Untranslated key', null, null, null, 'be_FR')
+
+    console.warn = warn
+  })
+
+
 })
