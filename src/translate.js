@@ -29,7 +29,7 @@ export default {
     let translations = _Vue.$translations[language] || _Vue.$translations[language.split('_')[0]]
 
     if (!translations) {
-      if (!_Vue.config.getTextPluginSilent) {
+      if (!_Vue.config.getTextPluginSilent && !_Vue.config.getTextPluginIsCurrentLanguageMute) {
         console.warn(`No translations found for ${language}`)
       }
       // Returns the untranslated string, singular or plural.

@@ -19,6 +19,7 @@ let GetTextPlugin = function (Vue, options = {}) {
     languageVmMixin: {},
     silent: Vue.config.silent,
     translations: null,
+    muteLanguages: [],
   }
 
   Object.keys(options).forEach(key => {
@@ -48,7 +49,7 @@ let GetTextPlugin = function (Vue, options = {}) {
 
   Override(Vue, languageVm)
 
-  Config(Vue, languageVm, options.silent)
+  Config(Vue, languageVm, options.silent, options.muteLanguages)
 
   // Makes <translate> available as a global component.
   Vue.component('translate', Component)
