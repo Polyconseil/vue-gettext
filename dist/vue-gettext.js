@@ -1,6 +1,6 @@
 /**
- * vue-gettext v2.0.25
- * (c) 2017 Polyconseil
+ * vue-gettext v2.0.26
+ * (c) 2018 Polyconseil
  * @license MIT
  */
 (function (global, factory) {
@@ -236,7 +236,7 @@ var translate = {
     var translations = _Vue.$translations[language] || _Vue.$translations[language.split('_')[0]];
 
     if (!translations) {
-      if (!_Vue.config.getTextPluginSilent) {
+      if (!_Vue.config.getTextPluginSilent && !_Vue.config.getTextPluginIsCurrentLanguageMute) {
         console.warn(("No translations found for " + language));
       }
       // Returns the untranslated string, singular or plural.
@@ -656,7 +656,7 @@ var Directive = {
 
 };
 
-var Config = function (Vue, languageVm, getTextPluginSilent) {
+var Config = function (Vue, languageVm, getTextPluginSilent, muteLanguages) {
 
   /*
    * Adds a `language` property to `Vue.config` and makes it reactive:
@@ -677,6 +677,16 @@ var Config = function (Vue, languageVm, getTextPluginSilent) {
     enumerable: true,
     writable: true,
     value: getTextPluginSilent,
+  });
+
+ /*
+  * Adds a `isCurrentLanguageMute` property to `Vue.config`.
+  * Used to enable/disable some console warnings depending on muted language parameters.
+  */
+  Object.defineProperty(Vue.config, 'getTextPluginIsCurrentLanguageMute', {
+    enumerable: true,
+    configurable: true,
+    get: function () { return muteLanguages.indexOf(languageVm.current) !== -1 },
   });
 
 };
@@ -715,6 +725,7 @@ var GetTextPlugin = function (Vue, options) {
     languageVmMixin: {},
     silent: Vue.config.silent,
     translations: null,
+    muteLanguages: [],
   };
 
   Object.keys(options).forEach(function (key) {
@@ -744,7 +755,7 @@ var GetTextPlugin = function (Vue, options) {
 
   Override(Vue, languageVm);
 
-  Config(Vue, languageVm, options.silent);
+  Config(Vue, languageVm, options.silent, options.muteLanguages);
 
   // Makes <translate> available as a global component.
   Vue.component('translate', Component);
