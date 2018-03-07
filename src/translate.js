@@ -65,11 +65,22 @@ export default {
       translated = [translated]
     }
 
-    // Avoid a crash when a msgid exists with and without a context, see #32.
-    if (!(translated instanceof Array) && translated.hasOwnProperty('')) {
-      // As things currently stand, the void key means a void context for easygettext.
-      translated = [translated['']]
+    // Avoid a crash when a msgid does not exist in the context
+    if (!translated) {
+      if (!_Vue.config.getTextPluginSilent) {
+        console.warn(`Untranslated ${language} key found:\n${msgid}`)
+      }
+      return defaultPlural && plurals.getTranslationIndex(language, n) > 0 ? defaultPlural : msgid
+    } else {
+      // Avoid a crash when a msgid exists with and without a context, see #32.
+      if (!(translated instanceof Array) && translated.hasOwnProperty('')) {
+        // As things currently stand, the void key means a void context for easygettext.
+        translated = [translated['']];
+      }
+  
+      return translated[plurals.getTranslationIndex(language, n)]
     }
+
 
     return translated[plurals.getTranslationIndex(language, n)]
 
