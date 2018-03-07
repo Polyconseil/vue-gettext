@@ -28,8 +28,10 @@ export default {
     // https://www.gnu.org/software/gettext/manual/html_node/Language-Codes.html#Language-Codes
     let translations = _Vue.$translations[language] || _Vue.$translations[language.split('_')[0]]
 
+    let displayWarning = !_Vue.config.getTextPluginSilent && !_Vue.config.getTextPluginIsCurrentLanguageMute
+
     if (!translations) {
-      if (!_Vue.config.getTextPluginSilent && !_Vue.config.getTextPluginIsCurrentLanguageMute) {
+      if (displayWarning) {
         console.warn(`No translations found for ${language}`)
       }
       // Returns the untranslated string, singular or plural.
@@ -49,38 +51,31 @@ export default {
       })
     }
 
+    if (translated && context) {
+      translated = translated[context]
+    }
+
     if (!translated) {
-      if (!_Vue.config.getTextPluginSilent) {
-        console.warn(`Untranslated ${language} key found:\n${msgid}`)
+      if (displayWarning) {
+        let msg = `Untranslated ${language} key found:\n${msgid}`
+        if (context) {
+          msg += ` (with context: ${context})`
+        }
+        console.warn(msg)
       }
       // Returns the untranslated string, singular or plural.
       return defaultPlural && plurals.getTranslationIndex(language, n) > 0 ? defaultPlural : msgid
-    }
-
-    if (context) {
-      translated = translated[context]
     }
 
     if (typeof translated === 'string') {
       translated = [translated]
     }
 
-    // Avoid a crash when a msgid does not exist in the context
-    if (!translated) {
-      if (!_Vue.config.getTextPluginSilent) {
-        console.warn(`Untranslated ${language} key found:\n${msgid}`)
-      }
-      return defaultPlural && plurals.getTranslationIndex(language, n) > 0 ? defaultPlural : msgid
-    } else {
-      // Avoid a crash when a msgid exists with and without a context, see #32.
-      if (!(translated instanceof Array) && translated.hasOwnProperty('')) {
-        // As things currently stand, the void key means a void context for easygettext.
-        translated = [translated['']];
-      }
-  
-      return translated[plurals.getTranslationIndex(language, n)]
+    // Avoid a crash when a msgid exists with and without a context, see #32.
+    if (!(translated instanceof Array) && translated.hasOwnProperty('')) {
+      // As things currently stand, the void key means a void context for easygettext.
+      translated = [translated['']]
     }
-
 
     return translated[plurals.getTranslationIndex(language, n)]
 
