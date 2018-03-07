@@ -5,6 +5,7 @@
             "Verb": "Answer (verb)"
         },
         "Hello %{ name }": "Hello %{ name }",
+        "May": "May",
         "Pending": "Pending",
         "%{ carCount } car": [
             "1 car",
@@ -33,6 +34,7 @@
             "Verb": "Réponse (verbe)"
         },
         "Hello %{ name }": "Bonjour %{ name }",
+        "May": "Pourrait",
         "Pending": "En cours",
         "%{ carCount } car": [
             "1 véhicule",

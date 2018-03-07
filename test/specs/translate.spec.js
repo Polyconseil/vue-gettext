@@ -178,5 +178,22 @@ describe('Translate tests', () => {
     console.warn = warn
   })
 
+  it('works when a msgid exists with and without a context, but the one with the context has not been translated', () => {
+
+    expect(Vue.config.silent).to.equal(false)
+    console.warn = sinon.spy(console, 'warn')
+
+    translated = translate.getTranslation('May', null, null, null, 'fr_FR')
+    expect(translated).to.equal('Pourrait')
+
+    translated = translate.getTranslation('May', null, 'Month name', null, 'fr_FR')
+    expect(translated).to.equal('May')
+
+    expect(console.warn).calledOnce
+    expect(console.warn).calledWith('Untranslated fr_FR key found:\nMay (with context: Month name)')
+
+    console.warn.restore()
+
+  })
 
 })
