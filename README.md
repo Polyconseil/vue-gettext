@@ -99,7 +99,7 @@ There are a number of options you can use to configure the `vue-gettext` plugin:
 | `defaultLanguage` | `{String}` | optional | The [**local name**](http://www.localeplanet.com/icu/) of the default language, e.g. `en_US`. This will be the current active language. It's exposed in all Vue instances via `vm.$language.current` |
 | `languageVmMixin` | `{Object}` | optional | A [**mixin**](https://vuejs.org/v2/guide/mixins.html#Option-Merging) that will be passed to the main `languageVm` instance (exposed via `$language`) that can be used, for example, to add custom computed properties |
 | `silent` | `{Boolean}` | optional | Enable or disable logs/warnings for missing translations and untranslated keys. Default value is [`Vue.config.silent`](https://vuejs.org/v2/api/#silent). |
-| `muteLanguages` | `{Array}` | optional | Discard warnings for missing translations for all languages of the list. This is usefull to avoid messages from the language used in source code. |
+| `muteLanguages` | `{Array}` | optional | Discard warnings for missing translations for all languages of the list. This is useful to avoid messages from the language used in source code. |
 
 Example:
 
