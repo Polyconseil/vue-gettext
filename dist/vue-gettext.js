@@ -1,5 +1,5 @@
 /**
- * vue-gettext v2.0.26
+ * vue-gettext v2.0.27
  * (c) 2018 Polyconseil
  * @license MIT
  */
@@ -235,8 +235,10 @@ var translate = {
     // https://www.gnu.org/software/gettext/manual/html_node/Language-Codes.html#Language-Codes
     var translations = _Vue.$translations[language] || _Vue.$translations[language.split('_')[0]];
 
+    var displayWarning = !_Vue.config.getTextPluginSilent && !_Vue.config.getTextPluginIsCurrentLanguageMute;
+
     if (!translations) {
-      if (!_Vue.config.getTextPluginSilent && !_Vue.config.getTextPluginIsCurrentLanguageMute) {
+      if (displayWarning) {
         console.warn(("No translations found for " + language));
       }
       // Returns the untranslated string, singular or plural.
@@ -256,16 +258,20 @@ var translate = {
       });
     }
 
+    if (translated && context) {
+      translated = translated[context];
+    }
+
     if (!translated) {
-      if (!_Vue.config.getTextPluginSilent) {
-        console.warn(("Untranslated " + language + " key found:\n" + msgid));
+      if (displayWarning) {
+        var msg = "Untranslated " + language + " key found:\n" + msgid;
+        if (context) {
+          msg += " (with context: " + context + ")";
+        }
+        console.warn(msg);
       }
       // Returns the untranslated string, singular or plural.
       return defaultPlural && plurals.getTranslationIndex(language, n) > 0 ? defaultPlural : msgid
-    }
-
-    if (context) {
-      translated = translated[context];
     }
 
     if (typeof translated === 'string') {
