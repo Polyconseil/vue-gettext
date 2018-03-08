@@ -162,7 +162,7 @@ describe('Translate tests', () => {
     expect(translated).to.equal('May')
 
     expect(console.warn).calledOnce
-    expect(console.warn).calledWith('Untranslated fr_FR key found:\nMay (with context: Month name)')
+    expect(console.warn).calledWith('Untranslated fr_FR key found: May (with context: Month name)')
 
     console.warn.restore()
 

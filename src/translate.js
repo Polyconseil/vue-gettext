@@ -60,7 +60,7 @@ export default {
 
     if (!translated) {
       if (displayWarning) {
-        let msg = `Untranslated ${language} key found:\n${msgid}`
+        let msg = `Untranslated ${language} key found: ${msgid}`
         if (context) {
           msg += ` (with context: ${context})`
         }

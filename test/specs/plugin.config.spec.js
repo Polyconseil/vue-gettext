@@ -94,7 +94,7 @@ describe('GetText plugin `silent` option tests', () => {
     expect(translations.fr_FR.hasOwnProperty('Bar')).to.be.false
     expect(vm.$el.innerHTML.trim()).to.equal('<span>Bar</span>')
     expect(console.warn).calledOnce
-    expect(console.warn.calledWith('Untranslated fr_FR key found:\nBar')).to.be.true
+    expect(console.warn.calledWith('Untranslated fr_FR key found: Bar')).to.be.true
     console.warn.restore()
   })
 
@@ -133,9 +133,9 @@ describe('GetText plugin `muteLanguages` option tests', () => {
   it('warnings are ON for all languages', () => {
     console.warn = sinon.spy(console, 'warn')
     translate.getTranslation('Untranslated key', null, null, null, 'fr_FR')
-    expect(console.warn).calledWith('Untranslated fr_FR key found:\nUntranslated key')
+    expect(console.warn).calledWith('Untranslated fr_FR key found: Untranslated key')
     translate.getTranslation('Untranslated key', null, null, null, 'en_US')
-    expect(console.warn).calledWith('Untranslated en_US key found:\nUntranslated key')
+    expect(console.warn).calledWith('Untranslated en_US key found: Untranslated key')
     console.warn.restore()
   })
 
@@ -145,7 +145,7 @@ describe('GetText plugin `muteLanguages` option tests', () => {
     translate.getTranslation('Untranslated key', null, null, null, 'fr_FR')
     expect(console.warn).notCalled
     translate.getTranslation('Untranslated key', null, null, null, 'en_US')
-    expect(console.warn).calledWith('Untranslated en_US key found:\nUntranslated key')
+    expect(console.warn).calledWith('Untranslated en_US key found: Untranslated key')
     console.warn.restore()
   })
 
@@ -153,7 +153,7 @@ describe('GetText plugin `muteLanguages` option tests', () => {
     console.warn = sinon.spy(console, 'warn')
     Vue.config.getTextPluginMuteLanguages = ['fr_FR']
     translate.getTranslation('Untranslated key', null, null, null, 'fr_FR')
-    expect(console.warn).calledWith('Untranslated fr_FR key found:\nUntranslated key')
+    expect(console.warn).calledWith('Untranslated fr_FR key found: Untranslated key')
     translate.getTranslation('Untranslated key', null, null, null, 'en_US')
     expect(console.warn).notCalled
     console.warn.restore()
