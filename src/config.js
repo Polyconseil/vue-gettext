@@ -13,7 +13,7 @@ export default function (Vue, languageVm, getTextPluginSilent, muteLanguages) {
 
  /*
   * Adds a `getTextPluginSilent` property to `Vue.config`.
-  * Used to enable/disable some console warnings.
+  * Used to enable/disable some console warnings globally.
   */
   Object.defineProperty(Vue.config, 'getTextPluginSilent', {
     enumerable: true,
@@ -22,13 +22,13 @@ export default function (Vue, languageVm, getTextPluginSilent, muteLanguages) {
   })
 
  /*
-  * Adds a `isCurrentLanguageMute` property to `Vue.config`.
-  * Used to enable/disable some console warnings depending on muted language parameters.
+  * Adds a `getTextPluginMuteLanguages` property to `Vue.config`.
+  * Used to enable/disable some console warnings for a specific set of languages.
   */
-  Object.defineProperty(Vue.config, 'getTextPluginIsCurrentLanguageMute', {
+  Object.defineProperty(Vue.config, 'getTextPluginMuteLanguages', {
     enumerable: true,
-    configurable: true,
-    get: () => { return muteLanguages.indexOf(languageVm.current) !== -1 },
+    writable: true,
+    value: muteLanguages,  // Stores an array of languages for which the warnings are disabled.
   })
 
 }

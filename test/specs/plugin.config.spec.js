@@ -1,6 +1,7 @@
 import Vue from 'vue'
 
 import GetTextPlugin from '../../src/'
+import translate from '../../src/translate'
 import translations from './json/plugin.config.json'
 import uninstallPlugin from '../testUtils'
 
@@ -107,6 +108,63 @@ describe('GetText plugin `silent` option tests', () => {
     let vm = new Vue({template: '<div><translate>Bar</translate></div>'}).$mount()
     expect(translations.fr_FR.hasOwnProperty('Bar')).to.be.false
     expect(vm.$el.innerHTML.trim()).to.equal('<span>Bar</span>')
+    expect(console.warn).notCalled
+    console.warn.restore()
+  })
+
+})
+
+describe('GetText plugin `muteLanguages` option tests', () => {
+
+  beforeEach(function () {
+    uninstallPlugin(Vue, GetTextPlugin)
+    Vue.use(GetTextPlugin, {
+      availableLanguages: {
+        en_US: 'American English',
+        fr_FR: 'Français',
+      },
+      defaultLanguage: 'fr_FR',
+      muteLanguages: [],
+      silent: false,
+      translations: translations,
+    })
+  })
+
+  it('warnings are ON for all languages', () => {
+    console.warn = sinon.spy(console, 'warn')
+    translate.getTranslation('Untranslated key', null, null, null, 'fr_FR')
+    expect(console.warn).calledWith('Untranslated fr_FR key found:\nUntranslated key')
+    translate.getTranslation('Untranslated key', null, null, null, 'en_US')
+    expect(console.warn).calledWith('Untranslated en_US key found:\nUntranslated key')
+    console.warn.restore()
+  })
+
+  it('warnings are OFF for fr_FR', () => {
+    console.warn = sinon.spy(console, 'warn')
+    Vue.config.getTextPluginMuteLanguages = ['fr_FR']
+    translate.getTranslation('Untranslated key', null, null, null, 'fr_FR')
+    expect(console.warn).notCalled
+    translate.getTranslation('Untranslated key', null, null, null, 'en_US')
+    expect(console.warn).calledWith('Untranslated en_US key found:\nUntranslated key')
+    console.warn.restore()
+  })
+
+  it('warnings are OFF for en_US', () => {
+    console.warn = sinon.spy(console, 'warn')
+    Vue.config.getTextPluginMuteLanguages = ['fr_FR']
+    translate.getTranslation('Untranslated key', null, null, null, 'fr_FR')
+    expect(console.warn).calledWith('Untranslated fr_FR key found:\nUntranslated key')
+    translate.getTranslation('Untranslated key', null, null, null, 'en_US')
+    expect(console.warn).notCalled
+    console.warn.restore()
+  })
+
+  it('warnings are OFF for en_US and fr_FR', () => {
+    console.warn = sinon.spy(console, 'warn')
+    Vue.config.getTextPluginMuteLanguages = ['fr_FR', 'en_US']
+    translate.getTranslation('Untranslated key', null, null, null, 'fr_FR')
+    expect(console.warn).notCalled
+    translate.getTranslation('Untranslated key', null, null, null, 'en_US')
     expect(console.warn).notCalled
     console.warn.restore()
   })

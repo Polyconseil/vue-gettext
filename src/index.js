@@ -17,9 +17,9 @@ let GetTextPlugin = function (Vue, options = {}) {
     availableLanguages: { en_US: 'English' },
     defaultLanguage: 'en_US',
     languageVmMixin: {},
+    muteLanguages: [],
     silent: Vue.config.silent,
     translations: null,
-    muteLanguages: [],
   }
 
   Object.keys(options).forEach(key => {

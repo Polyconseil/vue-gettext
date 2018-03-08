@@ -28,7 +28,8 @@ export default {
     // https://www.gnu.org/software/gettext/manual/html_node/Language-Codes.html#Language-Codes
     let translations = _Vue.$translations[language] || _Vue.$translations[language.split('_')[0]]
 
-    let displayWarning = !_Vue.config.getTextPluginSilent && !_Vue.config.getTextPluginIsCurrentLanguageMute
+    let languageIsMuted = _Vue.config.getTextPluginMuteLanguages.indexOf(language) !== -1
+    let displayWarning = !_Vue.config.getTextPluginSilent || !languageIsMuted
 
     if (!translations) {
       if (displayWarning) {
