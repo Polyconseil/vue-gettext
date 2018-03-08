@@ -31,12 +31,14 @@ export default {
     let languageIsMuted = _Vue.config.getTextPluginMuteLanguages.indexOf(language) !== -1
     let displayWarning = !_Vue.config.getTextPluginSilent || !languageIsMuted
 
+    // Default untranslated string, singular or plural.
+    let untranslated = defaultPlural && plurals.getTranslationIndex(language, n) > 0 ? defaultPlural : msgid
+
     if (!translations) {
       if (displayWarning) {
         console.warn(`No translations found for ${language}`)
       }
-      // Returns the untranslated string, singular or plural.
-      return defaultPlural && plurals.getTranslationIndex(language, n) > 0 ? defaultPlural : msgid
+      return untranslated
     }
 
     let translated = translations[msgid]
@@ -64,8 +66,7 @@ export default {
         }
         console.warn(msg)
       }
-      // Returns the untranslated string, singular or plural.
-      return defaultPlural && plurals.getTranslationIndex(language, n) > 0 ? defaultPlural : msgid
+      return untranslated
     }
 
     if (typeof translated === 'string') {
