@@ -359,7 +359,8 @@ production environment.
 karma
 mocha
 karma-mocha
-karma-phantomjs-launcher
+puppeteer
+karma-chrome-launcher
 chai                         // Required by `karma-sinon-chai`.
 sinon                        // Required by `karma-sinon-chai`.
 sinon-chai                   // Required by `karma-sinon-chai`.
@@ -368,7 +369,7 @@ karma-webpack
 ```
 
 ```
-npm install --save-dev karma mocha karma-mocha karma-phantomjs-launcher chai sinon sinon-chai karma-sinon-chai karma-webpack
+npm install --save-dev karma mocha karma-mocha karma-chrome-launcher chai sinon sinon-chai karma-sinon-chai karma-webpack
 ```
 
 [Karma](https://karma-runner.github.io/1.0/intro/installation.html) is a
@@ -379,9 +380,7 @@ It runs on Node.js and is available as an NPM package.
 [Mocha](https://mochajs.org) is the test framework that we write test specs
 with. `karma-mocha` lets Karma use Mocha as the test framework.
 
-`karma-phantomjs-launcher` lets Karma run tests with
-[PhantomJS](http://phantomjs.org). PhantomJS is a headless WebKit scriptable
-with a JavaScript API.
+[`karma-chrome-launcher`](https://github.com/karma-runner/karma-chrome-launcher) lets Karma run tests with [Headless Chrome](https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md). [Puppeteer](https://github.com/GoogleChrome/puppeteer) is a Node library which provides a high-level API to control headless Chrome or Chromium over the DevTools Protocol.
 
 [Chai](http://chaijs.com) and [Sinon](http://sinonjs.org)
 ([Sinon-Chai](https://github.com/domenic/sinon-chai)) are integrated using

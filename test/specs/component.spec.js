@@ -172,24 +172,26 @@ describe('translate component tests', () => {
     })
   })
 
-  // TODO: understand why PhantomJS keeps on crashing?
-  // it('throws an error if you forget to add a `translate-plural` attribute', () => {
-  //   expect(function () {
-  //     return new Vue({
-  //       template: '<span><translate :translate-n="n">%{ n } car</translate></span>',
-  //       data: {n: 2},
-  //     }).$mount()
-  //   }).to.throw('`translate-n` and `translate-plural` attributes must be used together: %{ n } car.')
-  // })
+  it('thrown errors displayed in the console if you forget to add a `translate-plural` attribute', () => {
+    console.error = sinon.spy(console, 'error')
+    new Vue({
+      template: '<span><translate :translate-n="n">%{ n } car</translate></span>',
+      data: {n: 2},
+    }).$mount()
+    expect(console.error)
+      .calledWith(sinon.match('`translate-n` and `translate-plural` attributes must be used together: %{ n } car.'))
+    console.error.restore()
+  })
 
-  // TODO: understand why PhantomJS keeps on crashing?
-  // it('throws an error if you forget to add a `translate-n` attribute', () => {
-  //   expect(function () {
-  //     return new Vue({
-  //       template: '<p><translate translate-plural="%{ n }} cars">%{ n } car</translate></p>',
-  //     }).$mount()
-  //   }).to.throw('`translate-n` and `translate-plural` attributes must be used together: %{ n } car.')
-  // })
+  it('thrown errors displayed in the console if you forget to add a `translate-n` attribute', () => {
+    console.error = sinon.spy(console, 'error')
+    new Vue({
+      template: '<p><translate translate-plural="%{ n }} cars">%{ n } car</translate></p>',
+    }).$mount()
+    expect(console.error)
+      .calledWith(sinon.match('`translate-n` and `translate-plural` attributes must be used together: %{ n } car.'))
+    console.error.restore()
+  })
 
   it('supports conditional rendering such as v-if, v-else-if, v-else', (done) => {
     Vue.config.language = 'en_US'
