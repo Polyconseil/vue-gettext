@@ -20,6 +20,11 @@ export default {
       return ''  // Allow empty strings.
     }
 
+    let silent = _Vue.config.getTextPluginSilent || (_Vue.config.getTextPluginMuteLanguages.indexOf(language) !== -1)
+
+    // Default untranslated string, singular or plural.
+    let untranslated = defaultPlural && plurals.getTranslationIndex(language, n) > 0 ? defaultPlural : msgid
+
     // `easygettext`'s `gettext-compile` generates a JSON version of a .po file based on its `Language` field.
     // But in this field, `ll_CC` combinations denoting a language’s main dialect are abbreviated as `ll`,
     // for example `de` is equivalent to `de_DE` (German as spoken in Germany).
@@ -28,14 +33,8 @@ export default {
     // https://www.gnu.org/software/gettext/manual/html_node/Language-Codes.html#Language-Codes
     let translations = _Vue.$translations[language] || _Vue.$translations[language.split('_')[0]]
 
-    let languageIsMuted = _Vue.config.getTextPluginMuteLanguages.indexOf(language) !== -1
-    let displayWarning = !_Vue.config.getTextPluginSilent || !languageIsMuted
-
-    // Default untranslated string, singular or plural.
-    let untranslated = defaultPlural && plurals.getTranslationIndex(language, n) > 0 ? defaultPlural : msgid
-
     if (!translations) {
-      if (displayWarning) {
+      if (!silent) {
         console.warn(`No translations found for ${language}`)
       }
       return untranslated
@@ -59,7 +58,7 @@ export default {
     }
 
     if (!translated) {
-      if (displayWarning) {
+      if (!silent) {
         let msg = `Untranslated ${language} key found: ${msgid}`
         if (context) {
           msg += ` (with context: ${context})`

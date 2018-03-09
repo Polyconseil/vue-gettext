@@ -151,7 +151,7 @@ describe('GetText plugin `muteLanguages` option tests', () => {
 
   it('warnings are OFF for en_US', () => {
     console.warn = sinon.spy(console, 'warn')
-    Vue.config.getTextPluginMuteLanguages = ['fr_FR']
+    Vue.config.getTextPluginMuteLanguages = ['en_US']
     translate.getTranslation('Untranslated key', null, null, null, 'fr_FR')
     expect(console.warn).calledWith('Untranslated fr_FR key found: Untranslated key')
     translate.getTranslation('Untranslated key', null, null, null, 'en_US')
