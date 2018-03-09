@@ -1,5 +1,5 @@
 /**
- * vue-gettext v2.0.27
+ * vue-gettext v2.0.28
  * (c) 2018 Polyconseil
  * @license MIT
  */
@@ -227,6 +227,11 @@ var translate = {
       return ''  // Allow empty strings.
     }
 
+    var silent = _Vue.config.getTextPluginSilent || (_Vue.config.getTextPluginMuteLanguages.indexOf(language) !== -1);
+
+    // Default untranslated string, singular or plural.
+    var untranslated = defaultPlural && plurals.getTranslationIndex(language, n) > 0 ? defaultPlural : msgid;
+
     // `easygettext`'s `gettext-compile` generates a JSON version of a .po file based on its `Language` field.
     // But in this field, `ll_CC` combinations denoting a language’s main dialect are abbreviated as `ll`,
     // for example `de` is equivalent to `de_DE` (German as spoken in Germany).
@@ -235,14 +240,11 @@ var translate = {
     // https://www.gnu.org/software/gettext/manual/html_node/Language-Codes.html#Language-Codes
     var translations = _Vue.$translations[language] || _Vue.$translations[language.split('_')[0]];
 
-    var displayWarning = !_Vue.config.getTextPluginSilent && !_Vue.config.getTextPluginIsCurrentLanguageMute;
-
     if (!translations) {
-      if (displayWarning) {
+      if (!silent) {
         console.warn(("No translations found for " + language));
       }
-      // Returns the untranslated string, singular or plural.
-      return defaultPlural && plurals.getTranslationIndex(language, n) > 0 ? defaultPlural : msgid
+      return untranslated
     }
 
     var translated = translations[msgid];
@@ -263,15 +265,14 @@ var translate = {
     }
 
     if (!translated) {
-      if (displayWarning) {
-        var msg = "Untranslated " + language + " key found:\n" + msgid;
+      if (!silent) {
+        var msg = "Untranslated " + language + " key found: " + msgid;
         if (context) {
           msg += " (with context: " + context + ")";
         }
         console.warn(msg);
       }
-      // Returns the untranslated string, singular or plural.
-      return defaultPlural && plurals.getTranslationIndex(language, n) > 0 ? defaultPlural : msgid
+      return untranslated
     }
 
     if (typeof translated === 'string') {
@@ -677,7 +678,7 @@ var Config = function (Vue, languageVm, getTextPluginSilent, muteLanguages) {
 
  /*
   * Adds a `getTextPluginSilent` property to `Vue.config`.
-  * Used to enable/disable some console warnings.
+  * Used to enable/disable some console warnings globally.
   */
   Object.defineProperty(Vue.config, 'getTextPluginSilent', {
     enumerable: true,
@@ -686,13 +687,13 @@ var Config = function (Vue, languageVm, getTextPluginSilent, muteLanguages) {
   });
 
  /*
-  * Adds a `isCurrentLanguageMute` property to `Vue.config`.
-  * Used to enable/disable some console warnings depending on muted language parameters.
+  * Adds a `getTextPluginMuteLanguages` property to `Vue.config`.
+  * Used to enable/disable some console warnings for a specific set of languages.
   */
-  Object.defineProperty(Vue.config, 'getTextPluginIsCurrentLanguageMute', {
+  Object.defineProperty(Vue.config, 'getTextPluginMuteLanguages', {
     enumerable: true,
-    configurable: true,
-    get: function () { return muteLanguages.indexOf(languageVm.current) !== -1 },
+    writable: true,
+    value: muteLanguages,  // Stores an array of languages for which the warnings are disabled.
   });
 
 };
@@ -729,9 +730,9 @@ var GetTextPlugin = function (Vue, options) {
     availableLanguages: { en_US: 'English' },
     defaultLanguage: 'en_US',
     languageVmMixin: {},
+    muteLanguages: [],
     silent: Vue.config.silent,
     translations: null,
-    muteLanguages: [],
   };
 
   Object.keys(options).forEach(function (key) {
