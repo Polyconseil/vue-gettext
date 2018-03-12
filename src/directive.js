@@ -69,7 +69,7 @@ export default {
 
     // Get the raw HTML and store it in the element's dataset (as advised in Vue's official guide).
     // Note: not trimming the content here as it should be picked up as-is by the extractor.
-    let msgid = el.innerHTML
+    let msgid = el.innerHTML.trim()
     el.dataset.msgid = msgid
 
     // Store the current language in the element's dataset.
