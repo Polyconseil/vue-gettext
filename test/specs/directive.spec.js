@@ -47,9 +47,27 @@ describe('translate directive tests', () => {
     expect(vm.$el.innerHTML).to.equal('En cours')
   })
 
+  it('translates known strings when surrounded by whitespace', () => {
+    Vue.config.language = 'fr_FR'
+    let vm = new Vue({template: '<div v-translate> Pending\t</div>'}).$mount()
+    expect(vm.$el.innerHTML).to.equal('En cours')
+  })
+
   it('translates multiline strings as-is, preserving the original content', () => {
     Vue.config.language = 'fr_FR'
     let vm = new Vue({template: '<p v-translate>A\n\n\nlot\n\n\nof\n\nlines</p>'}).$mount()
+    expect(vm.$el.innerHTML).to.equal('Plein\n\n\nde\n\nlignes')
+  })
+
+  it('translates multiline strings even when begins with newline', () => {
+    Vue.config.language = 'fr_FR'
+    let vm = new Vue({template: '<p v-translate>\nA\n\n\nlot\n\n\nof\n\nlines\n</p>'}).$mount()
+    expect(vm.$el.innerHTML).to.equal('Plein\n\n\nde\n\nlignes')
+  })
+
+  it('translates multiline strings even when indented', () => {
+    Vue.config.language = 'fr_FR'
+    let vm = new Vue({template: '<p v-translate>\n  A\n  lot\n  of\n  lines\n</p>'}).$mount()
     expect(vm.$el.innerHTML).to.equal('Plein\n\n\nde\n\nlignes')
   })
 
