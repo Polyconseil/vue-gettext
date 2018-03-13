@@ -1,6 +1,8 @@
 import plurals from './plurals'
 import { _Vue } from './localVue'
 
+const SPACING_RE = /\s{2,}/g
+
 export default {
 
  /**
@@ -42,11 +44,21 @@ export default {
 
     let translated = translations[msgid]
 
-    // Sometimes msgid may not have the same number of spaces than its key. This could happen e.g. when using
-    // new lines. See comments in the `created` hook of `component.js` and issue #15 for more information.
-    if (!translated && /\s{2,}/g.test(msgid)) {
+    // Sometimes `msgid` may not have the same number of spaces than its translation key.
+    //
+    // This could happen:
+    // - 1) because currently easygettext `trim`s entries since it needs to output consistent PO translation
+    // content even if a web template designer added spaces between lines (which are ignored in HTML or jade,
+    // but are significant in text),
+    // - 2) because we use the private attribute `_renderChildren` to access the raw uninterpolated string
+    // to translate in the `created` hook of `component.js`: spaces are not exactly the same between the HTML
+    // and the content of `_renderChildren`, e.g. 6 spaces becomes 4 etc.
+    // See #15, #38 and #65.
+    //
+    // In such cases, we need to compare the translation keys and `msgid` with the same number of spaces.
+    if (!translated && SPACING_RE.test(msgid)) {
       Object.keys(translations).some(key => {
-        if (key.replace(/\s{2,}/g, ' ') === msgid.trim().replace(/\s{2,}/g, ' ')) {
+        if (key.replace(SPACING_RE, ' ') === msgid.trim().replace(SPACING_RE, ' ')) {
           translated = translations[key]
           return translated
         }

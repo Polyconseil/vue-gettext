@@ -50,10 +50,13 @@ describe('translate component tests', () => {
   it('translates multiline strings no matter the number of spaces', () => {
     Vue.config.language = 'fr_FR'
     let vm = new Vue({template: `<div><translate tag="p">
+
+
+
                   A
 
 
-                  lot
+                                    lot
 
 
 
@@ -61,6 +64,10 @@ describe('translate component tests', () => {
                   of
 
                   lines
+
+
+
+
     </translate></div>`}).$mount()
     expect(vm.$el.innerHTML.trim()).to.equal(`<p>Plein de lignes</p>`)
   })

@@ -14,17 +14,13 @@ export default {
     this.msgid = ''  // Don't crash the app with an empty component, i.e.: <translate></translate>.
 
     // Store the raw uninterpolated string to translate.
-    // This is currently done by looking inside a private attribute `_renderChildren` of the current
-    // Vue instance's instantiation options.
-    // However spaces introduced by newlines are not exactly the same between the HTML and the
-    // content of `_renderChildren`, e.g. 6 spaces becomes 4 etc. See issue #15 for problems which
-    // can arise with this.
+    // This is currently done by looking inside a private attribute `_renderChildren`.
     // I haven't (yet) found a better way to access the raw content of the component.
     if (this.$options._renderChildren) {
       if (this.$options._renderChildren[0].hasOwnProperty('text')) {
-        this.msgid = this.$options._renderChildren[0].text.trim()
+        this.msgid = this.$options._renderChildren[0].text
       } else {
-        this.msgid = this.$options._renderChildren[0].trim()
+        this.msgid = this.$options._renderChildren[0]
       }
     }
 
