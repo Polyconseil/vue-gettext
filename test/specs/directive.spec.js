@@ -47,9 +47,15 @@ describe('translate directive tests', () => {
     expect(vm.$el.innerHTML).to.equal('En cours')
   })
 
+  it('translates known strings when surrounded by one or more tabs and spaces', () => {
+    Vue.config.language = 'fr_FR'
+    let vm = new Vue({template: '<div v-translate>\tPending\t\t \t\r\n\t\f\v</div>'}).$mount()
+    expect(vm.$el.innerHTML).to.equal('En cours')
+  })
+
   it('translates multiline strings as-is, preserving the original content', () => {
     Vue.config.language = 'fr_FR'
-    let vm = new Vue({template: '<p v-translate>A\n\n\nlot\n\n\nof\n\nlines</p>'}).$mount()
+    let vm = new Vue({template: '<p v-translate>\n\nA\n\n\nlot\n\n\nof\n\nlines</p>'}).$mount()
     expect(vm.$el.innerHTML).to.equal('Plein\n\n\nde\n\nlignes')
   })
 
