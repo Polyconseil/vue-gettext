@@ -1,5 +1,5 @@
 /**
- * vue-gettext v2.0.28
+ * vue-gettext v2.0.29
  * (c) 2018 Polyconseil
  * @license MIT
  */
@@ -203,6 +203,8 @@ function shareVueInstance (Vue) {
   _Vue = Vue;
 }
 
+var SPACING_RE = /\s{2,}/g;
+
 var translate = {
 
  /**
@@ -247,13 +249,22 @@ var translate = {
       return untranslated
     }
 
+    // Currently easygettext trims entries since it needs to output consistent PO translation content
+    // even if a web template designer added spaces between lines (which are ignored in HTML or jade,
+    // but are significant in text). See #65.
+    // Replicate the same behaviour here.
+    msgid = msgid.trim();
+
     var translated = translations[msgid];
 
-    // Sometimes msgid may not have the same number of spaces than its key. This could happen e.g. when using
-    // new lines. See comments in the `created` hook of `component.js` and issue #15 for more information.
-    if (!translated && /\s{2,}/g.test(msgid)) {
+    // Sometimes `msgid` may not have the same number of spaces than its translation key.
+    // This could happen because we use the private attribute `_renderChildren` to access the raw uninterpolated
+    // string to translate in the `created` hook of `component.js`: spaces are not exactly the same between the
+    // HTML and the content of `_renderChildren`, e.g. 6 spaces becomes 4 etc. See #15, #38.
+    // In such cases, we need to compare the translation keys and `msgid` with the same number of spaces.
+    if (!translated && SPACING_RE.test(msgid)) {
       Object.keys(translations).some(function (key) {
-        if (key.replace(/\s{2,}/g, ' ') === msgid.trim().replace(/\s{2,}/g, ' ')) {
+        if (key.replace(SPACING_RE, ' ') === msgid.replace(SPACING_RE, ' ')) {
           translated = translations[key];
           return translated
         }
@@ -381,17 +392,13 @@ var Component = {
     this.msgid = '';  // Don't crash the app with an empty component, i.e.: <translate></translate>.
 
     // Store the raw uninterpolated string to translate.
-    // This is currently done by looking inside a private attribute `_renderChildren` of the current
-    // Vue instance's instantiation options.
-    // However spaces introduced by newlines are not exactly the same between the HTML and the
-    // content of `_renderChildren`, e.g. 6 spaces becomes 4 etc. See issue #15 for problems which
-    // can arise with this.
+    // This is currently done by looking inside a private attribute `_renderChildren`.
     // I haven't (yet) found a better way to access the raw content of the component.
     if (this.$options._renderChildren) {
       if (this.$options._renderChildren[0].hasOwnProperty('text')) {
-        this.msgid = this.$options._renderChildren[0].text.trim();
+        this.msgid = this.$options._renderChildren[0].text;
       } else {
-        this.msgid = this.$options._renderChildren[0].trim();
+        this.msgid = this.$options._renderChildren[0];
       }
     }
 
@@ -621,14 +628,13 @@ var Directive = {
     }
 
     // Get the raw HTML and store it in the element's dataset (as advised in Vue's official guide).
-    // Note: not trimming the content here as it should be picked up as-is by the extractor.
     var msgid = el.innerHTML;
     el.dataset.msgid = msgid;
 
     // Store the current language in the element's dataset.
     el.dataset.currentLanguage = _Vue.config.language;
 
-    // Output a info in the console if an interpolation is required but no expression is provided.
+    // Output an info in the console if an interpolation is required but no expression is provided.
     if (!_Vue.config.getTextPluginSilent) {
       var hasInterpolation = msgid.indexOf(interpolate.INTERPOLATION_PREFIX) !== -1;
       if (hasInterpolation && !binding.expression) {
