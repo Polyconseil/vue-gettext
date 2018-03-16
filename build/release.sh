@@ -14,10 +14,12 @@ then
 
   git add -A
   git commit -m "[build] $VERSION"
+  npm login
   npm version $VERSION --message "[release] $VERSION"
 
   # publish
   git push origin refs/tags/v$VERSION
   git push
   npm publish
+  npm logout
 fi
