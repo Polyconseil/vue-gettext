@@ -14,6 +14,7 @@ Any help is greatly appreciated:
 
 - It could be tricky to parse some `.vue` files, see [#28](https://github.com/Polyconseil/vue-gettext/issues/28)
 - Translations in attributes is not supported yet, see [#9](https://github.com/Polyconseil/vue-gettext/issues/9)
+- `vue-gettext` is not SSR compliant, see [#51](https://github.com/Polyconseil/vue-gettext/issues/51)
 
 # Introduction
 
