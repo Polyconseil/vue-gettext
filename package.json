@@ -2,6 +2,7 @@
   "name": "vue-gettext",
   "version": "2.0.29",
   "description": "Translate your Vue.js applications with gettext",
+  "typings": "types/index.d.ts",
   "main": "dist/vue-gettext.js",
   "author": "Marc Hertzog",
   "license": "MIT",
@@ -70,6 +71,7 @@
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "types/*.d.ts"
   ]
 }
