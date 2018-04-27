@@ -1,5 +1,5 @@
 /**
- * vue-gettext v2.0.30
+ * vue-gettext v2.0.31
  * (c) 2018 Polyconseil
  * @license MIT
  */
@@ -296,7 +296,15 @@ var translate = {
       translated = [translated['']];
     }
 
-    return translated[plurals.getTranslationIndex(language, n)]
+    var translationIndex = plurals.getTranslationIndex(language, n);
+
+    // Do not assume that the default value of n is 1 for the singular form of all languages.
+    // E.g. Arabic, see #69.
+    if (translated.length === 1 && n === 1) {
+      translationIndex = 0;
+    }
+
+    return translated[translationIndex]
 
   },
 
