@@ -1,6 +1,6 @@
 {
   "name": "vue-gettext",
-  "version": "2.0.30",
+  "version": "2.0.31",
   "description": "Translate your Vue.js applications with gettext",
   "typings": "types/index.d.ts",
   "main": "dist/vue-gettext.js",
