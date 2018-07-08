@@ -14,6 +14,7 @@ let languageVm  // Singleton.
 let GetTextPlugin = function (Vue, options = {}) {
 
   let defaultConfig = {
+    autoAddKeyAttributes: false,
     availableLanguages: { en_US: 'English' },
     defaultLanguage: 'en_US',
     languageVmMixin: {},
@@ -49,7 +50,7 @@ let GetTextPlugin = function (Vue, options = {}) {
 
   Override(Vue, languageVm)
 
-  Config(Vue, languageVm, options.silent, options.muteLanguages)
+  Config(Vue, languageVm, options.silent, options.autoAddKeyAttributes, options.muteLanguages)
 
   // Makes <translate> available as a global component.
   Vue.component('translate', Component)

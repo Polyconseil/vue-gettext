@@ -95,12 +95,17 @@ There are a number of options you can use to configure the `vue-gettext` plugin:
 
 | Option | Type | Requirement | Description |
 | ------------- | ------------- | ------------- | ------------- |
-| `translations` | `{Object}` | required | The JSON file of the application's translations (produced by `gettext-compile`). It's exposed as a Vue global property as `Vue.$translations` |
+| `autoAddKeyAttributes` | `{Boolean}` | optional | If `true`, key attributes are auto-generated if not present in your code. See the [`key` documentation](https://vuejs.org/v2/api/#key) and issues [#29](https://github.com/Polyconseil/vue-gettext/issues/29) and [#66](https://github.com/Polyconseil/vue-gettext/issues/66). Default value is `false`. Enable this option only if you know what you're doing. |
 | `availableLanguages` | `{Object}` | optional | An object that represents the list of the available languages for the app whose keys are [**local names**](http://www.localeplanet.com/icu/) (e.g. [`en`](https://www.gnu.org/software/gettext/manual/html_node/Language-Codes.html#Language-Codes) or [`en_US`](https://www.gnu.org/software/gettext/manual/html_node/Country-Codes.html#Country-Codes)) and whose values are [**language names**](http://docs.translatehouse.org/projects/localization-guide/en/latest/l10n/languagenames.html) used for the display in UI, e.g. `English (United States)`. It's exposed in all Vue instances via `vm.$language.available` |
 | `defaultLanguage` | `{String}` | optional | The [**local name**](http://www.localeplanet.com/icu/) of the default language, e.g. `en_US`. This will be the current active language. It's exposed in all Vue instances via `vm.$language.current` |
+| `muteLanguages` | `{Array}` | optional | Discard warnings for missing translations for all languages of the list. This is useful to avoid messages from the language used in source code. |
 | `languageVmMixin` | `{Object}` | optional | A [**mixin**](https://vuejs.org/v2/guide/mixins.html#Option-Merging) that will be passed to the main `languageVm` instance (exposed via `$language`) that can be used, for example, to add custom computed properties |
 | `silent` | `{Boolean}` | optional | Enable or disable logs/warnings for missing translations and untranslated keys. Default value is [`Vue.config.silent`](https://vuejs.org/v2/api/#silent). |
-| `muteLanguages` | `{Array}` | optional | Discard warnings for missing translations for all languages of the list. This is useful to avoid messages from the language used in source code. |
+| `translations` | `{Object}` | required | The JSON file of the application's translations (produced by `gettext-compile`). It's exposed as a Vue global property as `Vue.$translations` |
+
+The key special attribute is primarily used as a hint for Vue's virtual DOM algorithm to identify VNodes when diffing ... Vue uses an algorithm that minimizes element movement and tries to patch/reuse elements of the same type in-place as much as possible.
+
+
 
 Example:
 

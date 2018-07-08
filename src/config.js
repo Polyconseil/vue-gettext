@@ -1,4 +1,4 @@
-export default function (Vue, languageVm, getTextPluginSilent, muteLanguages) {
+export default function (Vue, languageVm, getTextPluginSilent, autoAddKeyAttributes, muteLanguages) {
 
   /*
    * Adds a `language` property to `Vue.config` and makes it reactive:
@@ -19,6 +19,16 @@ export default function (Vue, languageVm, getTextPluginSilent, muteLanguages) {
     enumerable: true,
     writable: true,
     value: getTextPluginSilent,
+  })
+
+ /*
+  * Adds an `autoAddKeyAttributes` property to `Vue.config`.
+  * Used to enable/disable the automatic addition of `key` attributes.
+  */
+  Object.defineProperty(Vue.config, 'autoAddKeyAttributes', {
+    enumerable: true,
+    writable: true,
+    value: autoAddKeyAttributes,
   })
 
  /*

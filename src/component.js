@@ -1,5 +1,6 @@
 import translate from './translate'
 import uuid from './uuid'
+import { _Vue } from './localVue'
 
 
 /**
@@ -87,7 +88,7 @@ export default {
     // Vue re-uses DOM elements for efficiency if they don't have a key attribute, see:
     // https://vuejs.org/v2/guide/conditional.html#Controlling-Reusable-Elements-with-key
     // https://vuejs.org/v2/api/#key
-    if (!this.$vnode.key) {
+    if (_Vue.config.autoAddKeyAttributes && !this.$vnode.key) {
       this.$vnode.key = uuid()
     }
 

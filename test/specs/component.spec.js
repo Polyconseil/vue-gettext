@@ -202,6 +202,7 @@ describe('translate component tests', () => {
 
   it('supports conditional rendering such as v-if, v-else-if, v-else', (done) => {
     Vue.config.language = 'en_US'
+    Vue.config.autoAddKeyAttributes = true
     let vm = new Vue({
       template: `
       <translate v-if="show">Pending</translate>
@@ -213,6 +214,7 @@ describe('translate component tests', () => {
     vm.show = false
     vm.$nextTick(function () {
       expect(vm.$el.innerHTML).to.equal('Hello John Doe')
+      Vue.config.autoAddKeyAttributes = false
       done()
     })
   })

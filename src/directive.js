@@ -63,7 +63,7 @@ export default {
     // Vue re-uses DOM elements for efficiency if they don't have a key attribute, see:
     // https://vuejs.org/v2/guide/conditional.html#Controlling-Reusable-Elements-with-key
     // https://vuejs.org/v2/api/#key
-    if (!vnode.key) {
+    if (_Vue.config.autoAddKeyAttributes && !vnode.key) {
       vnode.key = uuid()
     }
 
