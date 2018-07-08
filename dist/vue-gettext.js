@@ -1,5 +1,5 @@
 /**
- * vue-gettext v2.0.31
+ * vue-gettext v2.1.0
  * (c) 2018 Polyconseil
  * @license MIT
  */
@@ -473,7 +473,7 @@ var Component = {
     // Vue re-uses DOM elements for efficiency if they don't have a key attribute, see:
     // https://vuejs.org/v2/guide/conditional.html#Controlling-Reusable-Elements-with-key
     // https://vuejs.org/v2/api/#key
-    if (!this.$vnode.key) {
+    if (_Vue.config.autoAddKeyAttributes && !this.$vnode.key) {
       this.$vnode.key = uuid();
     }
 
@@ -631,7 +631,7 @@ var Directive = {
     // Vue re-uses DOM elements for efficiency if they don't have a key attribute, see:
     // https://vuejs.org/v2/guide/conditional.html#Controlling-Reusable-Elements-with-key
     // https://vuejs.org/v2/api/#key
-    if (!vnode.key) {
+    if (_Vue.config.autoAddKeyAttributes && !vnode.key) {
       vnode.key = uuid();
     }
 
@@ -677,7 +677,7 @@ var Directive = {
 
 };
 
-var Config = function (Vue, languageVm, getTextPluginSilent, muteLanguages) {
+var Config = function (Vue, languageVm, getTextPluginSilent, autoAddKeyAttributes, muteLanguages) {
 
   /*
    * Adds a `language` property to `Vue.config` and makes it reactive:
@@ -698,6 +698,16 @@ var Config = function (Vue, languageVm, getTextPluginSilent, muteLanguages) {
     enumerable: true,
     writable: true,
     value: getTextPluginSilent,
+  });
+
+ /*
+  * Adds an `autoAddKeyAttributes` property to `Vue.config`.
+  * Used to enable/disable the automatic addition of `key` attributes.
+  */
+  Object.defineProperty(Vue.config, 'autoAddKeyAttributes', {
+    enumerable: true,
+    writable: true,
+    value: autoAddKeyAttributes,
   });
 
  /*
@@ -741,6 +751,7 @@ var GetTextPlugin = function (Vue, options) {
 
 
   var defaultConfig = {
+    autoAddKeyAttributes: false,
     availableLanguages: { en_US: 'English' },
     defaultLanguage: 'en_US',
     languageVmMixin: {},
@@ -776,7 +787,7 @@ var GetTextPlugin = function (Vue, options) {
 
   Override(Vue, languageVm);
 
-  Config(Vue, languageVm, options.silent, options.muteLanguages);
+  Config(Vue, languageVm, options.silent, options.autoAddKeyAttributes, options.muteLanguages);
 
   // Makes <translate> available as a global component.
   Vue.component('translate', Component);
