@@ -1,5 +1,5 @@
 /**
- * vue-gettext v2.1.0
+ * vue-gettext v2.1.1
  * (c) 2018 Polyconseil
  * @license MIT
  */
@@ -531,6 +531,14 @@ var interpolate = function (msgid, context) {
     var expression = token.trim();
     var evaluated;
 
+    var escapeHtmlMap = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      '\'': '&#039;',
+    };
+
     // Avoid eval() by splitting `expression` and looping through its different properties if any, see #55.
     function getProps (obj, expression) {
       var arr = expression.split(EVALUATION_RE).filter(function (x) { return x; });
@@ -556,6 +564,9 @@ var interpolate = function (msgid, context) {
         }
       }
       return evaluated
+        .toString()
+        // Escape HTML, see #78.
+        .replace(/[&<>"']/g, function (m) { return escapeHtmlMap[m] })
     }
 
     return evalInContext.call(context, expression)
