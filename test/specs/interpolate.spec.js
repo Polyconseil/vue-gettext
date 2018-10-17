@@ -29,6 +29,13 @@ describe('Interpolate tests', () => {
     expect(interpolated).to.equal('Foo bar baz')
   })
 
+  it('with HTML in var (should be escaped)', () => {
+    let msgid = 'Foo %{ placeholder } baz'
+    let context = { placeholder: '<p>bar</p>' }
+    let interpolated = interpolate(msgid, context)
+    expect(interpolated).to.equal('Foo &lt;p&gt;bar&lt;/p&gt; baz')
+  })
+
   it('with multiple spaces in the placeholder', () => {
     let msgid = 'Foo %{              placeholder                              } baz'
     let context = { placeholder: 'bar' }

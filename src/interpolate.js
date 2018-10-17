@@ -44,6 +44,14 @@ let interpolate = function (msgid, context = {}) {
     const expression = token.trim()
     let evaluated
 
+    let escapeHtmlMap = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      '\'': '&#039;',
+    }
+
     // Avoid eval() by splitting `expression` and looping through its different properties if any, see #55.
     function getProps (obj, expression) {
       const arr = expression.split(EVALUATION_RE).filter(x => x)
@@ -69,6 +77,9 @@ let interpolate = function (msgid, context = {}) {
         }
       }
       return evaluated
+        .toString()
+        // Escape HTML, see #78.
+        .replace(/[&<>"']/g, function (m) { return escapeHtmlMap[m] })
     }
 
     return evalInContext.call(context, expression)
