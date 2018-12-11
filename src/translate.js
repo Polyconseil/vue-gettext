@@ -103,7 +103,7 @@ export default {
 
  /**
   * Returns a string of the translation of the message.
-  * Also makes the string discoverable by xgettext.
+  * Also makes the string discoverable by gettext-extract.
   *
   * @param {String} msgid - The translation key
   *
@@ -115,7 +115,7 @@ export default {
 
  /**
   * Returns a string of the translation for the given context.
-  * Also makes the string discoverable by xgettext.
+  * Also makes the string discoverable by gettext-extract.
   *
   * @param {String} context - The context of the string to translate
   * @param {String} msgid - The translation key
@@ -129,7 +129,7 @@ export default {
  /**
   * Returns a string of the translation of either the singular or plural,
   * based on the number.
-  * Also makes the string discoverable by xgettext.
+  * Also makes the string discoverable by gettext-extract.
   *
   * @param {String} msgid - The translation key
   * @param {String} plural - The plural form of the translation key
@@ -144,7 +144,7 @@ export default {
  /**
   * Returns a string of the translation of either the singular or plural,
   * based on the number, for the given context.
-  * Also makes the string discoverable by xgettext.
+  * Also makes the string discoverable by gettext-extract.
   *
   * @param {String} context - The context of the string to translate
   * @param {String} msgid - The translation key

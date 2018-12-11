@@ -74,7 +74,7 @@ describe('Translate tests', () => {
 
   it('tests the gettext() method', () => {
 
-    let undetectableGettext = translate.gettext.bind(translate)  // Hide from xgettext.
+    let undetectableGettext = translate.gettext.bind(translate)  // Hide from gettext-extract.
 
     Vue.config.language = 'fr_FR'
     expect(undetectableGettext('Pending')).to.equal('En cours')
@@ -86,7 +86,7 @@ describe('Translate tests', () => {
 
   it('tests the pgettext() method', () => {
 
-    let undetectablePgettext = translate.pgettext.bind(translate)  // Hide from xgettext.
+    let undetectablePgettext = translate.pgettext.bind(translate)  // Hide from gettext-extract.
 
     Vue.config.language = 'fr_FR'
     expect(undetectablePgettext('Noun', 'Answer')).to.equal('Réponse (nom)')
@@ -98,7 +98,7 @@ describe('Translate tests', () => {
 
   it('tests the ngettext() method', () => {
 
-    let undetectableNgettext = translate.ngettext.bind(translate)  // Hide from xgettext.
+    let undetectableNgettext = translate.ngettext.bind(translate)  // Hide from gettext-extract.
 
     Vue.config.language = 'fr_FR'
     expect(undetectableNgettext('%{ carCount } car', '%{ carCount } cars', 2)).to.equal('%{ carCount } véhicules')
@@ -120,7 +120,7 @@ describe('Translate tests', () => {
 
   it('tests the npgettext() method', () => {
 
-    let undetectableNpgettext = translate.npgettext.bind(translate)  // Hide from xgettext.
+    let undetectableNpgettext = translate.npgettext.bind(translate)  // Hide from gettext-extract
 
     Vue.config.language = 'fr_FR'
     expect(undetectableNpgettext('Noun', '%{ carCount } car (noun)', '%{ carCount } cars (noun)', 2))

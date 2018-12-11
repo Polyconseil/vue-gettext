@@ -58,8 +58,6 @@ Any help is greatly appreciated:
 
 - Some GNU gettext utilities to extract annotated strings from JavaScript files and generate `.po` files
 
-    - [`xgettext`](https://www.gnu.org/software/gettext/manual/html_node/xgettext-Invocation.html#xgettext-Invocation)
-
     - [`msgmerge`](https://www.gnu.org/software/gettext/manual/html_node/msgmerge-Invocation.html#msgmerge-Invocation)
 
     - [`msginit`](https://www.gnu.org/software/gettext/manual/html_node/msginit-Invocation.html#msginit-Invocation)
@@ -398,7 +396,7 @@ Here are the things we must do:
 
 You'll need to install [`easygettext`](https://github.com/Polyconseil/easygettext) and use `gettext-extract` to extract annotated strings from template files and produce a `.pot` file.
 
-You'll also need some GNU gettext utilities, namely `xgettext`, `msgmerge`, `msginit` and `msgattrib` to extract annotated strings from JavaScript files and generate `.po` files.
+You'll also need some GNU gettext utilities, namely `msgmerge`, `msginit` and `msgattrib` to generate `.po` files from the `.pot` dictionary file.
 
 We use a `Makefile` with a `makemessages` target to automate this step. To give you an example, I included a `Makefile` with a `makemessages` target in this project that you can include in your build process.
 
