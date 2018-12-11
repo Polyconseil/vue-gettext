@@ -20,13 +20,13 @@ describe('translate directive tests', () => {
   })
 
   it('works on empty strings', () => {
-    let vm = new Vue({template: '<div v-translate></div>'}).$mount()
+    let vm = new Vue({ template: '<div v-translate></div>' }).$mount()
     expect(vm.$el.innerHTML).to.equal('')
   })
 
   it('returns an unchanged string when no translation is available for a language', () => {
     console.warn = sinon.spy(console, 'warn')
-    let vm = new Vue({template: '<div v-translate>Unchanged string</div>'}).$mount()
+    let vm = new Vue({ template: '<div v-translate>Unchanged string</div>' }).$mount()
     vm.$language.current = 'fr_BE'
     expect(vm.$el.innerHTML).to.equal('Unchanged string')
     expect(console.warn).calledOnce
@@ -35,7 +35,7 @@ describe('translate directive tests', () => {
 
   it('returns an unchanged string when no translation key is available', () => {
     console.warn = sinon.spy(console, 'warn')
-    let vm = new Vue({template: '<div v-translate>Untranslated string</div>'}).$mount()
+    let vm = new Vue({ template: '<div v-translate>Untranslated string</div>' }).$mount()
     expect(vm.$el.innerHTML).to.equal('Untranslated string')
     expect(console.warn).calledOnce
     console.warn.restore()
@@ -43,37 +43,37 @@ describe('translate directive tests', () => {
 
   it('translates known strings', () => {
     Vue.config.language = 'fr_FR'
-    let vm = new Vue({template: '<div v-translate>Pending</div>'}).$mount()
+    let vm = new Vue({ template: '<div v-translate>Pending</div>' }).$mount()
     expect(vm.$el.innerHTML).to.equal('En cours')
   })
 
   it('translates known strings when surrounded by one or more tabs and spaces', () => {
     Vue.config.language = 'fr_FR'
-    let vm = new Vue({template: '<div v-translate>\tPending\t\t \t\r\n\t\f\v</div>'}).$mount()
+    let vm = new Vue({ template: '<div v-translate>\tPending\t\t \t\r\n\t\f\v</div>' }).$mount()
     expect(vm.$el.innerHTML).to.equal('En cours')
   })
 
   it('translates multiline strings as-is, preserving the original content', () => {
     Vue.config.language = 'fr_FR'
-    let vm = new Vue({template: '<p v-translate>\n\nA\n\n\nlot\n\n\nof\n\nlines</p>'}).$mount()
+    let vm = new Vue({ template: '<p v-translate>\n\nA\n\n\nlot\n\n\nof\n\nlines</p>' }).$mount()
     expect(vm.$el.innerHTML).to.equal('Plein\n\n\nde\n\nlignes')
   })
 
   it('translates known strings according to a given translation context', () => {
     Vue.config.language = 'en_US'
-    let vm = new Vue({template: '<div v-translate translate-context="Verb">Answer</div>'}).$mount()
+    let vm = new Vue({ template: '<div v-translate translate-context="Verb">Answer</div>' }).$mount()
     expect(vm.$el.innerHTML).to.equal('Answer (verb)')
-    vm = new Vue({template: '<div v-translate translate-context="Noun">Answer</div>'}).$mount()
+    vm = new Vue({ template: '<div v-translate translate-context="Noun">Answer</div>' }).$mount()
     expect(vm.$el.innerHTML).to.equal('Answer (noun)')
   })
 
   it('works with text content', () => {
-    let vm = new Vue({template: '<div v-translate>This is sparta!</div>'}).$mount()
+    let vm = new Vue({ template: '<div v-translate>This is sparta!</div>' }).$mount()
     expect(vm.$el.innerHTML).to.equal('This is sparta!')
   })
 
   it('works with HTML content', () => {
-    let vm = new Vue({template: '<div v-translate>This is <strong class="txt-primary">sparta</strong>!</div>'}).$mount()
+    let vm = new Vue({ template: '<div v-translate>This is <strong class="txt-primary">sparta</strong>!</div>' }).$mount()
     expect(vm.$el.innerHTML).to.equal('This is <strong class="txt-primary">sparta</strong>!')
   })
 
@@ -81,7 +81,7 @@ describe('translate directive tests', () => {
     Vue.config.language = 'fr_FR'
     let vm = new Vue({
       template: '<p v-translate>Hello <strong>%{ name }</strong></p>',
-      data: {name: 'John Doe'},
+      data: { name: 'John Doe' },
     }).$mount()
     expect(vm.$el.innerHTML).to.equal('Bonjour <strong>John Doe</strong>')
   })
@@ -144,7 +144,7 @@ describe('translate directive tests', () => {
     Vue.config.language = 'fr_FR'
     let vm = new Vue({
       template: '<p v-translate="name">Hello <strong>%{ name }</strong></p>',
-      data: {name: 'John Doe'},
+      data: { name: 'John Doe' },
     }).$mount()
     expect(vm.$el.innerHTML).to.equal('Bonjour <strong>John Doe</strong>')
     vm.name = 'Kenny'
@@ -159,7 +159,7 @@ describe('translate directive tests', () => {
     Vue.config.language = 'fr_FR'
     let vm = new Vue({
       template: '<p v-translate>Hello <strong>%{ name }</strong></p>',
-      data: {name: 'John Doe'},
+      data: { name: 'John Doe' },
     }).$mount()
     expect(vm.$el.innerHTML).to.equal('Bonjour <strong>John Doe</strong>')
     expect(console.info).calledOnce
@@ -170,7 +170,7 @@ describe('translate directive tests', () => {
     Vue.config.language = 'fr_FR'
     let vm = new Vue({
       template: '<p v-translate :translate-n="count" translate-plural="<strong>%{ count }</strong> cars"><strong>%{ count }</strong> car</p>',
-      data: {count: 2},
+      data: { count: 2 },
     }).$mount()
     expect(vm.$el.innerHTML).to.equal('<strong>2</strong> véhicules')
   })
@@ -190,7 +190,7 @@ describe('translate directive tests', () => {
     Vue.config.language = 'fr_FR'
     let vm = new Vue({
       template: '<p v-translate="count + brand" :translate-n="count" translate-plural="<strong>%{ count }</strong> %{ brand } cars"><strong>%{ count }</strong> %{ brand } car</p>',
-      data: {count: 1, brand: 'Toyota'},
+      data: { count: 1, brand: 'Toyota' },
     }).$mount()
     expect(vm.$el.innerHTML).to.equal('<strong>1</strong> Toyota véhicule')
     vm.count = 8
@@ -202,7 +202,7 @@ describe('translate directive tests', () => {
 
   it('updates a translation after a language change', (done) => {
     Vue.config.language = 'fr_FR'
-    let vm = new Vue({template: '<div v-translate>Pending</div>'}).$mount()
+    let vm = new Vue({ template: '<div v-translate>Pending</div>' }).$mount()
     expect(vm.$el.innerHTML).to.equal('En cours')
     Vue.config.language = 'en_US'
     vm.$nextTick(function () {
@@ -219,7 +219,7 @@ describe('translate directive tests', () => {
       <div v-if="show" v-translate>Pending</div>
       <div v-else v-translate>Hello <strong>%{ name }</strong></div>
       `,
-      data: {show: true, name: 'John Doe'},
+      data: { show: true, name: 'John Doe' },
     }).$mount()
     expect(vm.$el.innerHTML).to.equal('Pending')
     vm.show = false

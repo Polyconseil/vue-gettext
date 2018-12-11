@@ -38,6 +38,9 @@ module.exports = {
     // Disable padding within blocks http://eslint.org/docs/rules/padded-blocks.html
     'padded-blocks': 'off',
 
+    // Disable unused expressions since those are incorrectly flagged in tests
+    'no-unused-expressions': 'off',
+
   }
 
 }

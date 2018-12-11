@@ -20,13 +20,13 @@ describe('translate component tests', () => {
   })
 
   it('works on empty strings', () => {
-    let vm = new Vue({template: '<div><translate></translate></div>'}).$mount()
+    let vm = new Vue({ template: '<div><translate></translate></div>' }).$mount()
     expect(vm.$el.innerHTML.trim()).to.equal('<span></span>')
   })
 
   it('returns an unchanged string when no translation is available for a language', () => {
     console.warn = sinon.spy(console, 'warn')
-    let vm = new Vue({template: '<div><translate>Unchanged string</translate></div>'}).$mount()
+    let vm = new Vue({ template: '<div><translate>Unchanged string</translate></div>' }).$mount()
     vm.$language.current = 'fr_BE'
     expect(vm.$el.innerHTML.trim()).to.equal('<span>Unchanged string</span>')
     expect(console.warn).calledOnce
@@ -35,7 +35,7 @@ describe('translate component tests', () => {
 
   it('returns an unchanged string when no translation key is available', () => {
     console.warn = sinon.spy(console, 'warn')
-    let vm = new Vue({template: '<div><translate>Untranslated string</translate></div>'}).$mount()
+    let vm = new Vue({ template: '<div><translate>Untranslated string</translate></div>' }).$mount()
     expect(vm.$el.innerHTML.trim()).to.equal('<span>Untranslated string</span>')
     expect(console.warn).calledOnce
     console.warn.restore()
@@ -43,13 +43,13 @@ describe('translate component tests', () => {
 
   it('translates known strings', () => {
     Vue.config.language = 'fr_FR'
-    let vm = new Vue({template: '<div><translate>Pending</translate></div>'}).$mount()
+    let vm = new Vue({ template: '<div><translate>Pending</translate></div>' }).$mount()
     expect(vm.$el.innerHTML.trim()).to.equal('<span>En cours</span>')
   })
 
   it('translates multiline strings no matter the number of spaces', () => {
     Vue.config.language = 'fr_FR'
-    let vm = new Vue({template: `<div><translate tag="p">
+    let vm = new Vue({ template: `<div><translate tag="p">
 
 
 
@@ -68,21 +68,21 @@ describe('translate component tests', () => {
 
 
 
-    </translate></div>`}).$mount()
+    </translate></div>` }).$mount()
     expect(vm.$el.innerHTML.trim()).to.equal(`<p>Plein de lignes</p>`)
   })
 
   it('renders translation in custom html tag', () => {
     Vue.config.language = 'fr_FR'
-    let vm = new Vue({template: '<div><translate tag="h1">Pending</translate></div>'}).$mount()
+    let vm = new Vue({ template: '<div><translate tag="h1">Pending</translate></div>' }).$mount()
     expect(vm.$el.innerHTML.trim()).to.equal('<h1>En cours</h1>')
   })
 
   it('translates known strings according to a given translation context', () => {
     Vue.config.language = 'en_US'
-    let vm = new Vue({template: '<div><translate translate-context="Verb">Answer</translate></div>'}).$mount()
+    let vm = new Vue({ template: '<div><translate translate-context="Verb">Answer</translate></div>' }).$mount()
     expect(vm.$el.innerHTML.trim()).to.equal('<span>Answer (verb)</span>')
-    vm = new Vue({template: '<div><translate translate-context="Noun">Answer</translate></div>'}).$mount()
+    vm = new Vue({ template: '<div><translate translate-context="Noun">Answer</translate></div>' }).$mount()
     expect(vm.$el.innerHTML.trim()).to.equal('<span>Answer (noun)</span>')
   })
 
@@ -90,7 +90,7 @@ describe('translate component tests', () => {
     Vue.config.language = 'fr_FR'
     let vm = new Vue({
       template: '<p><translate>Hello %{ name }</translate></p>',
-      data: {name: 'John Doe'},
+      data: { name: 'John Doe' },
     }).$mount()
     expect(vm.$el.innerHTML.trim()).to.equal('<span>Bonjour John Doe</span>')
   })
@@ -134,7 +134,7 @@ describe('translate component tests', () => {
       template: `<p>
         <translate :translate-n="count" translate-plural="%{ count } cars">%{ count } car</translate>
       </p>`,
-      data: {count: 2},
+      data: { count: 2 },
     }).$mount()
     expect(vm.$el.innerHTML.trim()).to.equal('<span>2 véhicules</span>')
   })
@@ -158,7 +158,7 @@ describe('translate component tests', () => {
       template: `<p>
         <translate :translate-n="count" translate-plural="%{ count } cars">%{ count } car</translate>
       </p>`,
-      data: {count: 10},
+      data: { count: 10 },
     }).$mount()
     expect(vm.$el.innerHTML.trim()).to.equal('<span>10 véhicules</span>')
     vm.count = 8
@@ -170,7 +170,7 @@ describe('translate component tests', () => {
 
   it('updates a translation after a language change', (done) => {
     Vue.config.language = 'fr_FR'
-    let vm = new Vue({template: '<div><translate>Pending</translate></div>'}).$mount()
+    let vm = new Vue({ template: '<div><translate>Pending</translate></div>' }).$mount()
     expect(vm.$el.innerHTML.trim()).to.equal('<span>En cours</span>')
     Vue.config.language = 'en_US'
     vm.$nextTick(function () {
@@ -183,7 +183,7 @@ describe('translate component tests', () => {
     console.error = sinon.spy(console, 'error')
     new Vue({
       template: '<span><translate :translate-n="n">%{ n } car</translate></span>',
-      data: {n: 2},
+      data: { n: 2 },
     }).$mount()
     expect(console.error)
       .calledWith(sinon.match('`translate-n` and `translate-plural` attributes must be used together: %{ n } car.'))
@@ -208,7 +208,7 @@ describe('translate component tests', () => {
       <translate v-if="show">Pending</translate>
       <translate v-else>Hello %{ name }</translate>
       `,
-      data: {show: true, name: 'John Doe'},
+      data: { show: true, name: 'John Doe' },
     }).$mount()
     expect(vm.$el.innerHTML).to.equal('Pending')
     vm.show = false

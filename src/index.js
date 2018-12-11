@@ -9,7 +9,7 @@ import translate from './translate'
 import { shareVueInstance } from './localVue'
 
 
-let languageVm  // Singleton.
+let languageVm // Singleton.
 
 let GetTextPlugin = function (Vue, options = {}) {
 

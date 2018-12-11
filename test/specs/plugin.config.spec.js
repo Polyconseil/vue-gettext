@@ -40,7 +40,7 @@ describe('GetText plugin configuration tests', () => {
         },
       },
     })
-    let vm = new Vue({template: '<div>Foo</div>'}).$mount()
+    let vm = new Vue({ template: '<div>Foo</div>' }).$mount()
     expect(vm.$language.currentKebabCase).to.equal('fr-fr')
     vm.$language.current = 'en_GB'
     expect(vm.$language.currentKebabCase).to.equal('en-gb')
@@ -62,7 +62,7 @@ describe('GetText plugin `silent` option tests', () => {
     })
     Vue.config.language = 'pt_BR'
     expect(translations.hasOwnProperty('pt_BR')).to.be.false
-    let vm = new Vue({template: '<div><translate>Bar</translate></div>'}).$mount()
+    let vm = new Vue({ template: '<div><translate>Bar</translate></div>' }).$mount()
     expect(vm.$el.innerHTML.trim()).to.equal('<span>Bar</span>')
     expect(console.warn).calledOnce
     expect(console.warn.calledWith('No translations found for pt_BR')).to.be.true
@@ -77,7 +77,7 @@ describe('GetText plugin `silent` option tests', () => {
     })
     Vue.config.language = 'pt_BR'
     expect(translations.hasOwnProperty('pt_BR')).to.be.false
-    let vm = new Vue({template: '<div><translate>Bar</translate></div>'}).$mount()
+    let vm = new Vue({ template: '<div><translate>Bar</translate></div>' }).$mount()
     expect(vm.$el.innerHTML.trim()).to.equal('<span>Bar</span>')
     expect(console.warn).notCalled
     console.warn.restore()
@@ -90,7 +90,7 @@ describe('GetText plugin `silent` option tests', () => {
       silent: false,
     })
     Vue.config.language = 'fr_FR'
-    let vm = new Vue({template: '<div><translate>Bar</translate></div>'}).$mount()
+    let vm = new Vue({ template: '<div><translate>Bar</translate></div>' }).$mount()
     expect(translations.fr_FR.hasOwnProperty('Bar')).to.be.false
     expect(vm.$el.innerHTML.trim()).to.equal('<span>Bar</span>')
     expect(console.warn).calledOnce
@@ -105,7 +105,7 @@ describe('GetText plugin `silent` option tests', () => {
       silent: true,
     })
     Vue.config.language = 'fr_FR'
-    let vm = new Vue({template: '<div><translate>Bar</translate></div>'}).$mount()
+    let vm = new Vue({ template: '<div><translate>Bar</translate></div>' }).$mount()
     expect(translations.fr_FR.hasOwnProperty('Bar')).to.be.false
     expect(vm.$el.innerHTML.trim()).to.equal('<span>Bar</span>')
     expect(console.warn).notCalled

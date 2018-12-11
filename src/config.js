@@ -11,7 +11,7 @@ export default function (Vue, languageVm, getTextPluginSilent, autoAddKeyAttribu
     set: (val) => { languageVm.current = val },
   })
 
- /*
+  /*
   * Adds a `getTextPluginSilent` property to `Vue.config`.
   * Used to enable/disable some console warnings globally.
   */
@@ -21,7 +21,7 @@ export default function (Vue, languageVm, getTextPluginSilent, autoAddKeyAttribu
     value: getTextPluginSilent,
   })
 
- /*
+  /*
   * Adds an `autoAddKeyAttributes` property to `Vue.config`.
   * Used to enable/disable the automatic addition of `key` attributes.
   */
@@ -31,14 +31,14 @@ export default function (Vue, languageVm, getTextPluginSilent, autoAddKeyAttribu
     value: autoAddKeyAttributes,
   })
 
- /*
+  /*
   * Adds a `getTextPluginMuteLanguages` property to `Vue.config`.
   * Used to enable/disable some console warnings for a specific set of languages.
   */
   Object.defineProperty(Vue.config, 'getTextPluginMuteLanguages', {
     enumerable: true,
     writable: true,
-    value: muteLanguages,  // Stores an array of languages for which the warnings are disabled.
+    value: muteLanguages, // Stores an array of languages for which the warnings are disabled.
   })
 
 }

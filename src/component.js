@@ -12,7 +12,7 @@ export default {
 
   created: function () {
 
-    this.msgid = ''  // Don't crash the app with an empty component, i.e.: <translate></translate>.
+    this.msgid = '' // Don't crash the app with an empty component, i.e.: <translate></translate>.
 
     // Store the raw uninterpolated string to translate.
     // This is currently done by looking inside a private attribute `_renderChildren`.
