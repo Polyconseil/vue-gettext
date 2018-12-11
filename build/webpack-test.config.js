@@ -7,6 +7,7 @@ var config = require('./config')
 var root = path.resolve(__dirname, '..')
 
 var webpackConfig = {
+  mode: 'development',
 
   output: {
     filename: 'bundle.js',
@@ -14,7 +15,7 @@ var webpackConfig = {
   },
 
   resolve: {
-    extensions: ['', '.js', '.vue'],
+    extensions: ['.js', '.vue'],
     alias: {
       'vue$': 'vue/dist/vue.common.js',
     },
@@ -26,58 +27,44 @@ var webpackConfig = {
     }),
   ],
 
-  eslint: {
-    formatter: require('eslint-friendly-formatter'),
-  },
-
   module: {
-    preLoaders: [
+    rules: [
+      {
+        test: /\.js$/,
+        use: ['eslint-loader', 'babel-loader'],
+        include: root,
+        exclude: /node_modules/,
+      },
       {
         test: /\.vue$/,
-        loader: 'eslint',
-        include: root,
-        exclude: /node_modules/,
-      },
-      {
-        test: /\.js$/,
-        loader: 'eslint',
-        include: root,
-        exclude: /node_modules/,
-      },
-    ],
-    loaders: [
-      {
-        test: /\.js$/,
-        loader: 'babel',
+        use: ['eslint-loader', 'vue-loader'],
         include: root,
         exclude: /node_modules/,
       },
       {
         test: /\.css$/,
-        loader: 'style!css?localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader',
+        use: [
+          'style-loader',
+          { loader: 'css-loader', options: { importLoaders: 1 } },
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: function (loader) {
+                return [
+                  require('postcss-import')({
+                    path: [loader.resourcePath, root],
+                  }),
+                  require('postcss-cssnext')(),
+                ]
+              },
+            },
+          },
+        ],
       },
-      {
-        test: /\.html$/,
-        loader: 'html',
-      },
-      {
-        test: /\.json$/,
-        loader: 'json',
-      },
-      {
-        test: /\.vue$/,
-        loader: 'vue',
-      },
+      { test: /\.html$/, use: 'html-loader' },
+      // { test: /\.json$/, use: 'json-loader' },
     ],
   },
-
-  postcss: function (webpack) {
-    return [
-      require('postcss-import')({ addDependencyTo: webpack }),
-      require('postcss-cssnext')(),
-    ]
-  },
-
 }
 
 module.exports = webpackConfig

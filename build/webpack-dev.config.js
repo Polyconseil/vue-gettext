@@ -31,24 +31,22 @@ var webpackConfig = {
   },
 
   resolve: {
-    extensions: ['', '.js', '.vue'],
+    extensions: ['.js', '.vue'],
     alias: {
-      'vue$': 'vue/dist/vue.common.js',  // Use the Vue.js standalone build.
+      'vue$': 'vue/dist/vue.common.js', // Use the Vue.js standalone build.
     },
   },
 
   plugins: [
 
     // Enable hot reloading.
-    // https://github.com/glenjamin/webpack-hot-middleware/blob/04f953/README.md#installation--usage
-    new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
 
     // Generate an `index.html` entry point, and auto inject our Webpack bundles.
     // https://github.com/ampedandwired/html-webpack-plugin/blob/033207/README.md
     new HtmlWebpackPlugin({
-      filename: 'index.html',  // Use the same value as webpack-dev-middleware `index` default value (`index.html`).
+      filename: 'index.html', // Use the same value as webpack-dev-middleware `index` default value (`index.html`).
       template: 'dev/index.tpl.html',
       inject: 'body',
     }),
