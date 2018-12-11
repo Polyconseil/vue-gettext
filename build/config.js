@@ -2,7 +2,7 @@ var path = require('path')
 
 module.exports = {
   build: {
-    bundleRoot: path.resolve(__dirname, '../dist'),  // Where to emit the Webpack bundle.
+    bundleRoot: path.resolve(__dirname, '../dist'), // Where to emit the Webpack bundle.
   },
   dev: {
     bundlePublicPath: '/',
