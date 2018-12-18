@@ -130,7 +130,7 @@ Vue.use(GetTextPlugin, {
     },
   },
   translations: translations,
-  silent: True,
+  silent: true,
 })
 ```
 
