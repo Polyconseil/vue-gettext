@@ -13,6 +13,7 @@ const updateTranslation = (el, binding, vnode) => {
   let translatePlural = attrs['translate-plural']
   let isPlural = translateN !== undefined && translatePlural !== undefined
   let context = vnode.context
+  let disableHtmlEscaping = attrs['render-html'] === 'true'
 
   if (!isPlural && (translateN || translatePlural)) {
     throw new Error('`translate-n` and `translate-plural` attributes must be used together:' + msgid + '.')
@@ -34,7 +35,7 @@ const updateTranslation = (el, binding, vnode) => {
     el.dataset.currentLanguage
   )
 
-  let msg = interpolate(translation, context)
+  let msg = interpolate(translation, context, disableHtmlEscaping)
 
   el.innerHTML = msg
 

@@ -86,6 +86,32 @@ describe('translate directive tests', () => {
     expect(vm.$el.innerHTML).to.equal('Bonjour <strong>John Doe</strong>')
   })
 
+  it('escapes HTML in variables by default', () => {
+    Vue.config.language = 'fr_FR'
+    let vm = new Vue({
+      template: '<p v-translate>Hello %{ openingTag }%{ name }%{ closingTag }</p>',
+      data: {
+        name: 'John Doe',
+        openingTag: '<b>',
+        closingTag: '</b>',
+      },
+    }).$mount()
+    expect(vm.$el.innerHTML).to.equal('Bonjour &lt;b&gt;John Doe&lt;/b&gt;')
+  })
+
+  it('forces HTML rendering in variables (with the `render-html` attribute set to `true`)', () => {
+    Vue.config.language = 'fr_FR'
+    let vm = new Vue({
+      template: '<p v-translate render-html="true">Hello %{ openingTag }%{ name }%{ closingTag }</p>',
+      data: {
+        name: 'John Doe',
+        openingTag: '<b>',
+        closingTag: '</b>',
+      },
+    }).$mount()
+    expect(vm.$el.innerHTML).to.equal('Bonjour <b>John Doe</b>')
+  })
+
   it('allows interpolation with computed property', () => {
     Vue.config.language = 'fr_FR'
     let vm = new Vue({

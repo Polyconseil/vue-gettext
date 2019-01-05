@@ -279,6 +279,21 @@ Since [interpolation inside attributes are deprecated](https://vuejs.org/v2/guid
 <translate>Hello %{ name }</translate>
 ```
 
+### Directive, interpolation and raw HTML in data
+
+Raw HTML in data is interpreted as plain text, not HTML. In order to output real HTML, you will need to use the `render-html` attribute and set it to `true`.
+
+```html
+<p
+  v-translate
+  render-html="true"
+  >
+  Hello %{ openingTag }%{ name }%{ closingTag }
+</p>
+```
+
+Dynamically rendering arbitrary HTML on your website can be very dangerous because it can easily lead to XSS vulnerabilities. Only use HTML `render-html="true"` on trusted content and never on user-provided content.
+
 ### Caveats
 
 #### Caveat when using `v-translate` with interpolation

@@ -36,6 +36,14 @@ describe('Interpolate tests', () => {
     expect(interpolated).to.equal('Foo &lt;p&gt;bar&lt;/p&gt; baz')
   })
 
+  it('with HTML in var (should NOT be escaped)', () => {
+    let msgid = 'Foo %{ placeholder } baz'
+    let context = { placeholder: '<p>bar</p>' }
+    let disableHtmlEscaping = true
+    let interpolated = interpolate(msgid, context, disableHtmlEscaping)
+    expect(interpolated).to.equal('Foo <p>bar</p> baz')
+  })
+
   it('with multiple spaces in the placeholder', () => {
     let msgid = 'Foo %{              placeholder                              } baz'
     let context = { placeholder: 'bar' }

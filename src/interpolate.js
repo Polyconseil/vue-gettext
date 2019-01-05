@@ -33,7 +33,7 @@ const MUSTACHE_SYNTAX_RE = /\{\{((?:.|\n)+?)\}\}/g
  *
  * @return {String} The interpolated string
  */
-let interpolate = function (msgid, context = {}) {
+let interpolate = function (msgid, context = {}, disableHtmlEscaping = false) {
 
   if (!_Vue.config.getTextPluginSilent && MUSTACHE_SYNTAX_RE.test(msgid)) {
     console.warn(`Mustache syntax cannot be used with vue-gettext. Please use "%{}" instead of "{{}}" in: ${msgid}`)
@@ -76,10 +76,12 @@ let interpolate = function (msgid, context = {}) {
           evaluated = expression
         }
       }
-      return evaluated
-        .toString()
+      let result = evaluated.toString()
+      if (!disableHtmlEscaping) {
         // Escape HTML, see #78.
-        .replace(/[&<>"']/g, function (m) { return escapeHtmlMap[m] })
+        result = result.replace(/[&<>"']/g, function (m) { return escapeHtmlMap[m] })
+      }
+      return result
     }
 
     return evalInContext.call(context, expression)
