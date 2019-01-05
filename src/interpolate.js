@@ -77,11 +77,12 @@ let interpolate = function (msgid, context = {}, disableHtmlEscaping = false) {
         }
       }
       let result = evaluated.toString()
-      if (!disableHtmlEscaping) {
-        // Escape HTML, see #78.
-        result = result.replace(/[&<>"']/g, function (m) { return escapeHtmlMap[m] })
+      if (disableHtmlEscaping) {
+        // Do not escape HTML, see #78.
+        return result
       }
-      return result
+      // Escape HTML, see #78.
+      return result.replace(/[&<>"']/g, function (m) { return escapeHtmlMap[m] })
     }
 
     return evalInContext.call(context, expression)
