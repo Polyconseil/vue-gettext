@@ -1,6 +1,6 @@
 /**
- * vue-gettext v2.1.1
- * (c) 2018 Polyconseil
+ * vue-gettext v2.1.2
+ * (c) 2019 Polyconseil
  * @license MIT
  */
 (function (global, factory) {
@@ -518,8 +518,9 @@ var MUSTACHE_SYNTAX_RE = /\{\{((?:.|\n)+?)\}\}/g;
  *
  * @return {String} The interpolated string
  */
-var interpolate = function (msgid, context) {
+var interpolate = function (msgid, context, disableHtmlEscaping) {
   if ( context === void 0 ) context = {};
+  if ( disableHtmlEscaping === void 0 ) disableHtmlEscaping = false;
 
 
   if (!_Vue.config.getTextPluginSilent && MUSTACHE_SYNTAX_RE.test(msgid)) {
@@ -563,10 +564,12 @@ var interpolate = function (msgid, context) {
           evaluated = expression;
         }
       }
-      return evaluated
-        .toString()
+      var result = evaluated.toString();
+      if (!disableHtmlEscaping) {
         // Escape HTML, see #78.
-        .replace(/[&<>"']/g, function (m) { return escapeHtmlMap[m] })
+        result = result.replace(/[&<>"']/g, function (m) { return escapeHtmlMap[m] });
+      }
+      return result
     }
 
     return evalInContext.call(context, expression)
@@ -592,6 +595,7 @@ var updateTranslation = function (el, binding, vnode) {
   var translatePlural = attrs['translate-plural'];
   var isPlural = translateN !== undefined && translatePlural !== undefined;
   var context = vnode.context;
+  var disableHtmlEscaping = attrs['render-html'] === 'true';
 
   if (!isPlural && (translateN || translatePlural)) {
     throw new Error('`translate-n` and `translate-plural` attributes must be used together:' + msgid + '.')
@@ -613,7 +617,7 @@ var updateTranslation = function (el, binding, vnode) {
     el.dataset.currentLanguage
   );
 
-  var msg = interpolate(translation, context);
+  var msg = interpolate(translation, context, disableHtmlEscaping);
 
   el.innerHTML = msg;
 
