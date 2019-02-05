@@ -39,10 +39,14 @@ translations: ./$(OUTPUT_DIR)/translations.json
 # Generate .po files for each available language.
 	@for lang in $(LOCALES); do \
 		export PO_FILE=$(OUTPUT_DIR)/locale/$$lang/LC_MESSAGES/app.po; \
-		echo "msgmerge --update $$PO_FILE $@"; \
 		mkdir -p $$(dirname $$PO_FILE); \
-		[ -f $$PO_FILE ] && msgmerge --lang=$$lang --update $$PO_FILE $@ || msginit --no-translator --locale=$$lang --input=$@ --output-file=$$PO_FILE; \
-		msgattrib --no-wrap --no-obsolete -o $$PO_FILE $$PO_FILE; \
+		if [ -f $$PO_FILE ]; then  \
+			echo "msgmerge --update $$PO_FILE $@"; \
+			msgmerge --lang=$$lang --update $$PO_FILE $@ || break ;\
+		else \
+			msginit --no-translator --locale=$$lang --input=$@ --output-file=$$PO_FILE || break ; \
+			msgattrib --no-wrap --no-obsolete -o $$PO_FILE $$PO_FILE || break; \
+		fi; \
 	done;
 
 $(OUTPUT_DIR)/translations.json: clean /tmp/template.pot
