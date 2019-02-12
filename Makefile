@@ -2,6 +2,11 @@
 SHELL = /bin/bash
 NODE_BINDIR = ./node_modules/.bin
 export PATH := $(NODE_BINDIR):$(PATH)
+LOGNAME := $(shell logname)
+
+# adding the name of the user's login name to the template file, so that
+# on a multi-user system several users can run this without interference
+TEMPLATE_POT := /tmp/template-$(LOGNAME).pot
 
 # Where to find input files (it can be multiple paths).
 INPUT_FILES = ./dev
@@ -21,15 +26,15 @@ GETTEXT_SOURCES ?= $(shell find $(INPUT_FILES) -name '*.jade' -o -name '*.html' 
 .PHONY: clean makemessages translations
 
 clean:
-	rm -f /tmp/template.pot $(OUTPUT_DIR)/translations.json
+	rm -f $(TEMPLATE_POT) $(OUTPUT_DIR)/translations.json
 
-makemessages: /tmp/template.pot
+makemessages: $(TEMPLATE_POT)
 
 translations: ./$(OUTPUT_DIR)/translations.json
 
 # Create a main .pot template, then generate .po files for each available language.
 # Thanx to Systematic: https://github.com/Polyconseil/systematic/blob/866d5a/mk/main.mk#L167-L183
-/tmp/template.pot: $(GETTEXT_SOURCES)
+$(TEMPLATE_POT): $(GETTEXT_SOURCES)
 # `dir` is a Makefile built-in expansion function which extracts the directory-part of `$@`.
 # `$@` is a Makefile automatic variable: the file name of the target of the rule.
 # => `mkdir -p /tmp/`
@@ -49,6 +54,6 @@ translations: ./$(OUTPUT_DIR)/translations.json
 		fi; \
 	done;
 
-$(OUTPUT_DIR)/translations.json: clean /tmp/template.pot
+$(OUTPUT_DIR)/translations.json: clean $(TEMPLATE_POT)
 	mkdir -p $(OUTPUT_DIR)
 	gettext-compile --output $@ $(LOCALE_FILES)
