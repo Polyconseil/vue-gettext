@@ -49,6 +49,6 @@ translations: ./$(OUTPUT_DIR)/translations.json
 		fi; \
 	done;
 
-$(OUTPUT_DIR)/translations.json: clean /tmp/template.pot
+$(OUTPUT_DIR)/translations.json: $(LOCALE_FILES)
 	mkdir -p $(OUTPUT_DIR)
 	gettext-compile --output $@ $(LOCALE_FILES)
