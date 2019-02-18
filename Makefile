@@ -18,7 +18,10 @@ LOCALE_FILES ?= $(patsubst %,$(OUTPUT_DIR)/locale/%/LC_MESSAGES/app.po,$(LOCALES
 GETTEXT_SOURCES ?= $(shell find $(INPUT_FILES) -name '*.jade' -o -name '*.html' -o -name '*.js' -o -name '*.vue' 2> /dev/null)
 
 # Makefile Targets
-.PHONY: clean makemessages translations
+.PHONY: clean makemessages translations all
+
+all:
+	@echo choose a traget form: clean makemessages translations
 
 clean:
 	rm -f /tmp/template.pot $(OUTPUT_DIR)/translations.json
