@@ -445,17 +445,23 @@ var Component = {
       type: String,
       required: false,
     },
+    value: {
+      type: String,
+      required: false,
+    },
   },
 
   computed: {
     translation: function () {
       var translation = translate.getTranslation(
-        this.msgid,
+        this.value,
         this.translateN,
         this.translateContext,
         this.isPlural ? this.translatePlural : null,
         this.$language.current
       );
+
+      console.log(">>>>>> im recomputed", this.$language.current, translation)
 
       var context = this.$parent;
 
@@ -468,7 +474,6 @@ var Component = {
   },
 
   render: function (createElement) {
-
     // Fix the problem with v-if, see #29.
     // Vue re-uses DOM elements for efficiency if they don't have a key attribute, see:
     // https://vuejs.org/v2/guide/conditional.html#Controlling-Reusable-Elements-with-key
