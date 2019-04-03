@@ -1,5 +1,5 @@
 /**
- * vue-gettext v2.1.2
+ * vue-gettext v2.1.3
  * (c) 2019 Polyconseil
  * @license MIT
  */
@@ -286,14 +286,14 @@ var translate = {
       return untranslated
     }
 
-    if (typeof translated === 'string') {
-      translated = [translated];
-    }
-
     // Avoid a crash when a msgid exists with and without a context, see #32.
     if (!(translated instanceof Array) && translated.hasOwnProperty('')) {
       // As things currently stand, the void key means a void context for easygettext.
-      translated = [translated['']];
+      translated = translated[''];
+    }
+
+    if (typeof translated === 'string') {
+      translated = [translated];
     }
 
     var translationIndex = plurals.getTranslationIndex(language, n);
@@ -565,11 +565,12 @@ var interpolate = function (msgid, context, disableHtmlEscaping) {
         }
       }
       var result = evaluated.toString();
-      if (!disableHtmlEscaping) {
-        // Escape HTML, see #78.
-        result = result.replace(/[&<>"']/g, function (m) { return escapeHtmlMap[m] });
+      if (disableHtmlEscaping) {
+        // Do not escape HTML, see #78.
+        return result
       }
-      return result
+      // Escape HTML, see #78.
+      return result.replace(/[&<>"']/g, function (m) { return escapeHtmlMap[m] })
     }
 
     return evalInContext.call(context, expression)
