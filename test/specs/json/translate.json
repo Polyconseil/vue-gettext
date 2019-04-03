@@ -23,6 +23,16 @@
                 "%{ carCount } cars (verb)"
             ]
         },
+        "%{ carCount } car (multiple contexts)": {
+            "": [
+                "1 car",
+                "%{ carCount } cars"
+            ],
+            "Context": [
+                "1 car with context",
+                "%{ carCount } cars with context"
+            ]
+        },
         "Object": {
             "": "Object",
             "Context": "Object with context"
@@ -50,6 +60,16 @@
             "Verb": [
                 "%{ carCount } véhicule (verbe)",
                 "%{ carCount } véhicules (verbe)"
+            ]
+        },
+        "%{ carCount } car (multiple contexts)": {
+            "": [
+                "1 véhicule",
+                "%{ carCount } véhicules"
+            ],
+            "Context": [
+                "1 véhicule avec contexte",
+                "%{ carCount } véhicules avec contexte"
             ]
         },
         "Object": {

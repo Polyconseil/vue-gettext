@@ -79,14 +79,14 @@ export default {
       return untranslated
     }
 
-    if (typeof translated === 'string') {
-      translated = [translated]
-    }
-
     // Avoid a crash when a msgid exists with and without a context, see #32.
     if (!(translated instanceof Array) && translated.hasOwnProperty('')) {
       // As things currently stand, the void key means a void context for easygettext.
-      translated = [translated['']]
+      translated = translated['']
+    }
+
+    if (typeof translated === 'string') {
+      translated = [translated]
     }
 
     let translationIndex = plurals.getTranslationIndex(language, n)

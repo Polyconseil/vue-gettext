@@ -70,6 +70,16 @@ describe('Translate tests', () => {
     translated = translate.getTranslation('Untranslated %{ n } item', 2, null, 'Untranslated %{ n } items', 'en_US')
     expect(translated).to.equal('Untranslated %{ n } items')
 
+    // Test plural message with multiple contexts (default context and 'Context'')
+    translated = translate.getTranslation('%{ carCount } car (multiple contexts)', 1, null, null, 'en_US')
+    expect(translated).to.equal('1 car')
+    translated = translate.getTranslation('%{ carCount } car (multiple contexts)', 2, null, null, 'en_US')
+    expect(translated).to.equal('%{ carCount } cars')
+    translated = translate.getTranslation('%{ carCount } car (multiple contexts)', 1, 'Context', null, 'en_US')
+    expect(translated).to.equal('1 car with context')
+    translated = translate.getTranslation('%{ carCount } car (multiple contexts)', 2, 'Context', null, 'en_US')
+    expect(translated).to.equal('%{ carCount } cars with context')
+
   })
 
   it('tests the gettext() method', () => {
