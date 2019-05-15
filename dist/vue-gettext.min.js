@@ -1,5 +1,5 @@
 /**
- * vue-gettext v2.1.4
+ * vue-gettext v2.1.5
  * (c) 2019 Polyconseil
  * @license MIT
  */
