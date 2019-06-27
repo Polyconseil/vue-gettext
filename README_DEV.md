@@ -403,12 +403,11 @@ rollup
 buble
 rollup-plugin-buble
 rollup-plugin-commonjs
-rollup-watch
 uglify-js
 ```
 
 ```
-npm install --save-dev rollup buble rollup-plugin-buble rollup-plugin-commonjs rollup-watch
+npm install --save-dev rollup buble rollup-plugin-buble rollup-plugin-commonjs
 ```
 
 Using [Rollup](https://github.com/rollup/rollup) for packaging
@@ -419,4 +418,3 @@ behaviour of Rollup at key points in the bundling process.
 
 - [rollup-plugin-buble](https://gitlab.com/Rich-Harris/rollup-plugin-buble) for [buble](https://gitlab.com/Rich-Harris/buble)
 - [rollup-plugin-commonjs](https://github.com/rollup/rollup-plugin-commonjs)
-- [rollup-watch](https://github.com/rollup/rollup-watch)
