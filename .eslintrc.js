@@ -29,6 +29,9 @@ module.exports = {
 
   rules: {
 
+    // https://eslint.org/docs/user-guide/migrating-to-4.0.0#-the-no-multi-spaces-rule-is-more-strict-by-default
+    'no-multi-spaces': ['error', {'ignoreEOLComments': true}],
+
     // Require or disallow trailing commas http://eslint.org/docs/rules/comma-dangle
     'comma-dangle': ['error', 'always-multiline'],
 
