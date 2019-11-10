@@ -67,20 +67,6 @@ var webpackConfig = {
   },
 
   module: {
-    preLoaders: [
-      {
-        test: /\.vue$/,
-        loader: 'eslint',
-        include: root,
-        exclude: /node_modules/,
-      },
-      {
-        test: /\.js$/,
-        loader: 'eslint',
-        include: root,
-        exclude: /node_modules/,
-      },
-    ],
     loaders: [
       {
         test: /\.js$/,
