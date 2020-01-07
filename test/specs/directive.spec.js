@@ -256,4 +256,46 @@ describe('translate directive tests', () => {
     })
   })
 
+  it('does not trigger re-render of innerHTML when using expression with object and expression value was not changed', (done) => {
+    let vm = new Vue({
+      template: `
+      <div v-translate="{name: 'test'}">Hello %{ name }</div>
+      `,
+      data: {someCounter: 0},
+    }).$mount()
+    expect(vm.$el.innerHTML).to.equal('Hello test')
+
+    let spy = sinon.spy(vm.$el, 'innerHTML', ['set'])
+    vm.someCounter += 1
+    vm.$nextTick(function () {
+      vm.someCounter += 1
+      vm.$nextTick(function () {
+        expect(spy.set.callCount).to.equal(0)
+        done()
+      })
+    })
+  })
+
+  it('re-render innerHTML when using expression and only if translation data was changed', (done) => {
+    let vm = new Vue({
+      template: `
+      <div v-translate="{name: {first: varFromData}}">Hello %{ name.first }</div>
+      `,
+      data: {someCounter: 0, varFromData: 'name'},
+    }).$mount()
+    expect(vm.$el.innerHTML).to.equal('Hello name')
+
+    let spy = sinon.spy(vm.$el, 'innerHTML', ['set'])
+    vm.varFromData = 'name'
+    vm.someCounter += 1
+    vm.$nextTick(function () {
+      vm.varFromData = 'otherName'
+      vm.someCounter += 1
+      vm.$nextTick(function () {
+        expect(vm.$el.innerHTML).to.equal('Hello otherName')
+        expect(spy.set).calledOnce
+        done()
+      })
+    })
+  })
 })

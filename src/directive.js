@@ -1,5 +1,6 @@
 import interpolate from './interpolate'
 import translate from './translate'
+import looseEqual from './looseEqual'
 import uuid from './uuid'
 import { _Vue } from './localVue'
 
@@ -98,7 +99,7 @@ export default {
     }
 
     // Trigger an update if an optional bound expression has changed.
-    if (!doUpdate && binding.expression && (binding.value !== binding.oldValue)) {
+    if (!doUpdate && binding.expression && !looseEqual(binding.value, binding.oldValue)) {
       doUpdate = true
     }
 
