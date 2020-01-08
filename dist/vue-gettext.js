@@ -1,6 +1,6 @@
 /**
- * vue-gettext v2.1.6
- * (c) 2019 Polyconseil
+ * vue-gettext v2.1.7
+ * (c) 2020 Polyconseil
  * @license MIT
  */
 (function (global, factory) {
@@ -586,6 +586,43 @@
   interpolate.INTERPOLATION_RE = INTERPOLATION_RE;
   interpolate.INTERPOLATION_PREFIX = '%{';
 
+  // Check if two values are loosely equal - that is,
+  // if they are plain objects, do they have the same shape?
+  // https://github.com/vuejs/vue/blob/v2.6.11/src/shared/util.js#L285
+
+  function looseEqual (a, b) {
+    if (a === b) { return true }
+    var isObjectA = a !== null && typeof a === 'object';
+    var isObjectB = b !== null && typeof b === 'object';
+    if (isObjectA && isObjectB) {
+      try {
+        var isArrayA = Array.isArray(a);
+        var isArrayB = Array.isArray(b);
+        if (isArrayA && isArrayB) {
+          return a.length === b.length && a.every(function (e, i) {
+            return looseEqual(e, b[i])
+          })
+        } else if (a instanceof Date && b instanceof Date) {
+          return a.getTime() === b.getTime()
+        } else if (!isArrayA && !isArrayB) {
+          var keysA = Object.keys(a);
+          var keysB = Object.keys(b);
+          return keysA.length === keysB.length && keysA.every(function (key) {
+            return looseEqual(a[key], b[key])
+          })
+        } else {
+          return false
+        }
+      } catch (e) {
+        return false
+      }
+    } else if (!isObjectA && !isObjectB) {
+      return String(a) === String(b)
+    } else {
+      return false
+    }
+  }
+
   var updateTranslation = function (el, binding, vnode) {
 
     var attrs = vnode.data.attrs || {};
@@ -680,7 +717,7 @@
       }
 
       // Trigger an update if an optional bound expression has changed.
-      if (!doUpdate && binding.expression && (binding.value !== binding.oldValue)) {
+      if (!doUpdate && binding.expression && !looseEqual(binding.value, binding.oldValue)) {
         doUpdate = true;
       }
 
