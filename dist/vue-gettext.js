@@ -1,5 +1,5 @@
 /**
- * vue-gettext v2.1.7
+ * vue-gettext v2.1.8
  * (c) 2020 Polyconseil
  * @license MIT
  */
@@ -53,7 +53,7 @@
 
     getTranslationIndex: function (languageCode, n) {
 
-      n = parseInt(n);
+      n = Number(n);
       n = typeof n === 'number' && isNaN(n) ? 1 : n;  // Fallback to singular.
 
       // Extract the ISO 639 language code. The ISO 639 standard defines
