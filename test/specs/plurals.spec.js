@@ -11,6 +11,10 @@ describe('Translate plurals tests', () => {
     expect(plurals.getTranslationIndex('en', 2)).to.equal(1)
   })
 
+  it('plural form of Infinity in english is 1', function () {
+    expect(plurals.getTranslationIndex('en', Infinity)).to.equal(1)
+  })
+
   it('plural form of zero in english is 1', function () {
     expect(plurals.getTranslationIndex('en', 0)).to.equal(1)
   })
