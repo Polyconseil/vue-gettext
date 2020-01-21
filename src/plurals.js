@@ -11,7 +11,7 @@ export default {
 
   getTranslationIndex: function (languageCode, n) {
 
-    n = parseInt(n)
+    n = Number(n)
     n = typeof n === 'number' && isNaN(n) ? 1 : n  // Fallback to singular.
 
     // Extract the ISO 639 language code. The ISO 639 standard defines
