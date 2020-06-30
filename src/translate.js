@@ -1,7 +1,14 @@
 import plurals from './plurals'
-import { _Vue } from './localVue'
 
 const SPACING_RE = /\s{2,}/g
+// Default configuration if only the translation is passed.
+let _config = {
+  language: '',
+  getTextPluginSilent: false,
+  getTextPluginMuteLanguages: [],
+  silent: false,
+}
+let _translations = {}
 
 export default {
 
@@ -16,13 +23,13 @@ export default {
    *
    * @return {String} The translated string
   */
-  getTranslation: function (msgid, n = 1, context = null, defaultPlural = null, language = _Vue.config.language) {
+  getTranslation: function (msgid, n = 1, context = null, defaultPlural = null, language = _config.language) {
 
     if (!msgid) {
       return ''  // Allow empty strings.
     }
 
-    let silent = _Vue.config.getTextPluginSilent || (_Vue.config.getTextPluginMuteLanguages.indexOf(language) !== -1)
+    let silent = _config.getTextPluginSilent || (_config.getTextPluginMuteLanguages.indexOf(language) !== -1)
 
     // Default untranslated string, singular or plural.
     let untranslated = defaultPlural && plurals.getTranslationIndex(language, n) > 0 ? defaultPlural : msgid
@@ -33,7 +40,7 @@ export default {
     // See the `Language` section in https://www.gnu.org/software/gettext/manual/html_node/Header-Entry.html
     // So try `ll_CC` first, or the `ll` abbreviation which can be three-letter sometimes:
     // https://www.gnu.org/software/gettext/manual/html_node/Language-Codes.html#Language-Codes
-    let translations = _Vue.$translations[language] || _Vue.$translations[language.split('_')[0]]
+    let translations = _translations[language] || _translations[language.split('_')[0]]
 
     if (!translations) {
       if (!silent) {
@@ -157,4 +164,20 @@ export default {
     return this.getTranslation(msgid, n, context, plural)
   },
 
+  /*
+   * Initialize local state for translations and configuration
+   * so that it works without Vue.
+   *
+   * @param {Object} translations - translations.json
+   * @param {Object} config - Vue.config
+   *
+  */
+  initTranslations: function (translations, config) {
+    if (translations && typeof translations === 'object') {
+      _translations = translations
+    }
+    if (config && typeof config === 'object') {
+      _config = config
+    }
+  },
 }
