@@ -18,6 +18,7 @@ module.exports = {
     format: 'umd',
     globals,
     name: 'VueGettext',
+    exports: 'named',
   },
   external: Object.keys(globals),
   plugins: [

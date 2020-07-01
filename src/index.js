@@ -72,3 +72,4 @@ let GetTextPlugin = function (Vue, options = {}) {
 }
 
 export default GetTextPlugin
+export {translate}
