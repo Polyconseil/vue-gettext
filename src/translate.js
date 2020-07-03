@@ -1,6 +1,7 @@
 import plurals from './plurals'
 
 const SPACING_RE = /\s{2,}/g
+
 // Default configuration if only the translation is passed.
 let _config = {
   language: '',
@@ -180,4 +181,5 @@ export default {
       _config = config
     }
   },
+
 }

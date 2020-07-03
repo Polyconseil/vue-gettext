@@ -447,13 +447,25 @@ make translations
 
 Look at the included `Makefile` for an example.
 
-## Elsewhere
+# Usage of `translate` without Vue
 
-### Support for Pug templates
+For convenience `translate` can be imported directly in JavaScript files for cases where you need the translations from `translations.json` outside of `vue-gettext` (see [#113](https://github.com/Polyconseil/vue-gettext/pull/113)):
+
+```js
+import {translate} from 'vue-gettext';
+
+const {gettext: $gettext} = translate;
+
+let str = $gettext('Hello');
+```
+
+# Elsewhere
+
+## Support for Pug templates
 
 If you are using a template language, i.e. [Pug.js](https://pugjs.org/api/getting-started.html) in [Single File Component](https://vuejs.org/v2/guide/single-file-components.html) within a webpack setup (using vue-loader), have a look at [vue-webpack-gettext](https://github.com/kennyki/vue-webpack-gettext).
 
-## Credits
+# Credits
 
 This plugin was inspired by:
 
@@ -462,6 +474,6 @@ This plugin was inspired by:
 - [`angular-gettext`](https://angular-gettext.rocketeer.be)
 - [`vue-i18n`](https://github.com/kazupon/vue-i18n)
 
-## License
+# License
 
 [MIT](http://opensource.org/licenses/MIT)
