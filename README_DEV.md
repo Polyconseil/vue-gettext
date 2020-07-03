@@ -25,6 +25,8 @@
 
 ## Dev setup
 
+Node v10+ is required for development.
+
 ```shell
 # install deps
 npm install
