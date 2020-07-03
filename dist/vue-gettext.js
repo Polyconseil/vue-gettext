@@ -1,13 +1,13 @@
 /**
- * vue-gettext v2.1.8
+ * vue-gettext v2.1.9
  * (c) 2020 Polyconseil
  * @license MIT
  */
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
-  (global = global || self, global.VueGettext = factory());
-}(this, function () { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+  typeof define === 'function' && define.amd ? define(['exports'], factory) :
+  (global = global || self, factory(global.VueGettext = {}));
+}(this, function (exports) { 'use strict';
 
   // Polyfill Object.assign for legacy browsers.
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
@@ -184,25 +184,16 @@
 
   };
 
-  // Ensure to always use the same Vue instance throughout the plugin.
-  //
-  // This was previously done in `index.js` using both named and default exports.
-  // However, this currently must be kept in a separate file because we are using
-  // Rollup to build the dist files and it has a drawback when using named and
-  // default exports together, see:
-  // https://github.com/rollup/rollup/blob/fca14d/src/utils/getExportMode.js#L27
-  // https://github.com/rollup/rollup/wiki/JavaScript-API#exports
-  //
-  // If we had kept named and default exports in `index.js`, a user would have to
-  // do something like this to access the default export: GetTextPlugin['default']
-
-  var _Vue;
-
-  function shareVueInstance (Vue) {
-    _Vue = Vue;
-  }
-
   var SPACING_RE = /\s{2,}/g;
+
+  // Default configuration if only the translation is passed.
+  var _config = {
+    language: '',
+    getTextPluginSilent: false,
+    getTextPluginMuteLanguages: [],
+    silent: false,
+  };
+  var _translations = {};
 
   var translate = {
 
@@ -221,14 +212,14 @@
       if ( n === void 0 ) n = 1;
       if ( context === void 0 ) context = null;
       if ( defaultPlural === void 0 ) defaultPlural = null;
-      if ( language === void 0 ) language = _Vue.config.language;
+      if ( language === void 0 ) language = _config.language;
 
 
       if (!msgid) {
         return ''  // Allow empty strings.
       }
 
-      var silent = _Vue.config.getTextPluginSilent || (_Vue.config.getTextPluginMuteLanguages.indexOf(language) !== -1);
+      var silent = _config.getTextPluginSilent || (_config.getTextPluginMuteLanguages.indexOf(language) !== -1);
 
       // Default untranslated string, singular or plural.
       var untranslated = defaultPlural && plurals.getTranslationIndex(language, n) > 0 ? defaultPlural : msgid;
@@ -239,7 +230,7 @@
       // See the `Language` section in https://www.gnu.org/software/gettext/manual/html_node/Header-Entry.html
       // So try `ll_CC` first, or the `ll` abbreviation which can be three-letter sometimes:
       // https://www.gnu.org/software/gettext/manual/html_node/Language-Codes.html#Language-Codes
-      var translations = _Vue.$translations[language] || _Vue.$translations[language.split('_')[0]];
+      var translations = _translations[language] || _translations[language.split('_')[0]];
 
       if (!translations) {
         if (!silent) {
@@ -363,6 +354,23 @@
       return this.getTranslation(msgid, n, context, plural)
     },
 
+    /*
+     * Initialize local state for translations and configuration
+     * so that it works without Vue.
+     *
+     * @param {Object} translations - translations.json
+     * @param {Object} config - Vue.config
+     *
+    */
+    initTranslations: function (translations, config) {
+      if (translations && typeof translations === 'object') {
+        _translations = translations;
+      }
+      if (config && typeof config === 'object') {
+        _config = config;
+      }
+    },
+
   };
 
   // UUID v4 generator (RFC4122 compliant).
@@ -385,6 +393,24 @@
 
     return uuid
 
+  }
+
+  // Ensure to always use the same Vue instance throughout the plugin.
+  //
+  // This was previously done in `index.js` using both named and default exports.
+  // However, this currently must be kept in a separate file because we are using
+  // Rollup to build the dist files and it has a drawback when using named and
+  // default exports together, see:
+  // https://github.com/rollup/rollup/blob/fca14d/src/utils/getExportMode.js#L27
+  // https://github.com/rollup/rollup/wiki/JavaScript-API#exports
+  //
+  // If we had kept named and default exports in `index.js`, a user would have to
+  // do something like this to access the default export: GetTextPlugin['default']
+
+  var _Vue;
+
+  function shareVueInstance (Vue) {
+    _Vue = Vue;
   }
 
   /**
@@ -841,6 +867,8 @@
 
     Config(Vue, languageVm, options.silent, options.autoAddKeyAttributes, options.muteLanguages);
 
+    translate.initTranslations(options.translations, Vue.config);
+
     // Makes <translate> available as a global component.
     Vue.component('translate', Component);
 
@@ -858,6 +886,9 @@
 
   };
 
-  return GetTextPlugin;
+  exports.default = GetTextPlugin;
+  exports.translate = translate;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
 
 }));
