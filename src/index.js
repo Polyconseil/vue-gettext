@@ -52,6 +52,8 @@ let GetTextPlugin = function (Vue, options = {}) {
 
   Config(Vue, languageVm, options.silent, options.autoAddKeyAttributes, options.muteLanguages)
 
+  translate.initTranslations(options.translations, Vue.config)
+
   // Makes <translate> available as a global component.
   Vue.component('translate', Component)
 
@@ -70,3 +72,4 @@ let GetTextPlugin = function (Vue, options = {}) {
 }
 
 export default GetTextPlugin
+export {translate}
