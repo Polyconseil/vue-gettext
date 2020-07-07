@@ -1,5 +1,5 @@
 /**
- * vue-gettext v2.1.9
+ * vue-gettext v2.1.10
  * (c) 2020 Polyconseil
  * @license MIT
  */
@@ -307,7 +307,7 @@
      * @return {String} The translated string
     */
     'gettext': function (msgid) {
-      return this.getTranslation(msgid)
+      return translate.getTranslation(msgid)
     },
 
     /*
@@ -320,7 +320,7 @@
      * @return {String} The translated string
     */
     'pgettext': function (context, msgid) {
-      return this.getTranslation(msgid, 1, context)
+      return translate.getTranslation(msgid, 1, context)
     },
 
     /*
@@ -335,7 +335,7 @@
      * @return {String} The translated string
     */
     'ngettext': function (msgid, plural, n) {
-      return this.getTranslation(msgid, n, null, plural)
+      return translate.getTranslation(msgid, n, null, plural)
     },
 
     /*
@@ -351,7 +351,7 @@
      * @return {String} The translated string
     */
     'npgettext': function (context, msgid, plural, n) {
-      return this.getTranslation(msgid, n, context, plural)
+      return translate.getTranslation(msgid, n, context, plural)
     },
 
     /*
