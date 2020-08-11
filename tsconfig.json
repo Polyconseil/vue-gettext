@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "esnext",
+    "sourceMap": true,
+    "outDir": "dist",
+    "moduleResolution": "node"
+  },
+  "exclude": ["node_modules", "**/node_modules/*"],
+  "include": ["src/**/*"]
+}
