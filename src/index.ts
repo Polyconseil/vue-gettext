@@ -7,6 +7,7 @@ import interpolate from "./interpolate";
 import Override from "./override";
 import translate from "./translate";
 import { shareVueInstance } from "./localVue";
+import { reactive, ref, provide, inject, App } from "vue";
 
 let languageVm; // Singleton.
 
@@ -71,28 +72,31 @@ let languageVm; // Singleton.
 // export default GetTextPlugin
 
 interface GetTextOptions {
-  autoAddKeyAttributes: boolean;
-  availableLanguages: any; // TODO { en_US: 'English' },
+  availableLanguages: any;
   defaultLanguage: string;
-  languageVmMixin: object;
+  mixins: object;
   muteLanguages: Array<string>;
   silent: boolean;
   translations: null;
 }
 
 const defaultOptions: GetTextOptions = {
-  autoAddKeyAttributes: false,
   availableLanguages: { en_US: "English" },
   defaultLanguage: "en_US",
-  languageVmMixin: {},
+  mixins: {},
   muteLanguages: [],
   silent: false,
   translations: null,
 };
 
-export default function install(vue: any, options: Partial<GetTextOptions> = {}) {
-  console.log("create", vue, options);
+export const GetTextSymbol = Symbol("GETTEXT");
 
+export interface GetText {
+  options: GetTextOptions;
+  app: App;
+}
+
+export default function install(vue: App, options: Partial<GetTextOptions> = {}) {
   Object.keys(options).forEach((key) => {
     if (Object.keys(defaultOptions).indexOf(key) === -1) {
       throw new Error(`${key} is an invalid option for the translate plugin.`);
@@ -111,69 +115,33 @@ export default function install(vue: any, options: Partial<GetTextOptions> = {})
     app: vue,
   };
 
-  languageVm = new Vue({
-    created: function() {
-      // Non-reactive data.
-      this.available = options.availableLanguages;
-    },
-    data: {
-      current: options.defaultLanguage,
-    },
-    mixins: [options.languageVmMixin],
-  });
-
-  // shareVueInstance(vue);
-
-  Override(Vue, languageVm);
-
-  Config(Vue, languageVm, options.silent, options.autoAddKeyAttributes, options.muteLanguages);
-
-  translate.initTranslations(options.translations, Vue.config);
-
-  vue.directive("translate", Directive);
   const globalProperties = vue.config.globalProperties;
 
-  // Exposes global properties.
-  globalProperties.$translations = options.translations;
-  // Exposes instance methods.
-  globalProperties.$gettext = translate.gettext.bind(translate);
-  globalProperties.$pgettext = translate.pgettext.bind(translate);
-  globalProperties.$ngettext = translate.ngettext.bind(translate);
-  globalProperties.$npgettext = translate.npgettext.bind(translate);
-  globalProperties.$gettextInterpolate = interpolate.bind(interpolate);
+  let language = reactive({
+    available: options.availableLanguages,
+    current: options.defaultLanguage,
+  });
 
-  // vue.provide("gettext", app.$gettext);
+  Object.keys(options.mixins).map((key) => {
+    return (language[key] = options.mixins[key](language));
+  });
+  globalProperties.$language = language;
+
+  // Config(Vue, languageVm, options.silent, options.autoAddKeyAttributes, options.muteLanguages);
+
+  vue.directive("translate", Directive(plugin));
+  vue.component("translate", Component(plugin));
+
+  globalProperties.$translations = options.translations;
+  const translator = translate(plugin);
+  translator.initTranslations(options.translations);
+  const interpolator = interpolate(plugin);
+  globalProperties.$gettext = translator.gettext.bind(translator);
+  globalProperties.$pgettext = translator.pgettext.bind(translator);
+  globalProperties.$ngettext = translator.ngettext.bind(translator);
+  globalProperties.$npgettext = translator.npgettext.bind(translator);
+  globalProperties.$gettextInterpolate = interpolator.bind(interpolator);
+
+  vue.provide(GetTextSymbol, language);
   return plugin;
 }
-
-// class GetText {
-//   constructor(app: any, options: Partial<GetTextOptions> = {}) {
-//     console.log("ctor", app);
-//     // this.app = null;
-//     // this.options = {
-//     //   ...this.options,
-//     //   ...options,
-//     // };
-//   }
-
-//   static install: () => void;
-//   app: any;
-
-//   options: GetTextOptions = {
-//     autoAddKeyAttributes: false,
-//     availableLanguages: { en_US: "English" },
-//     defaultLanguage: "en_US",
-//     languageVmMixin: {},
-//     muteLanguages: [],
-//     silent: false,
-//     translations: null,
-//   };
-
-//   init(app: any /* vue component instance */) {
-//     this.app = app;
-//     console.log("init", app);
-//   }
-// }
-
-// export { translate };
-// export const directive = Directive;

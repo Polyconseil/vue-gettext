@@ -1,4 +1,4 @@
-import { _Vue } from "./localVue";
+import { GetText } from ".";
 
 const EVALUATION_RE = /[[\].]{1,2}/g;
 
@@ -33,63 +33,64 @@ const MUSTACHE_SYNTAX_RE = /\{\{((?:.|\n)+?)\}\}/g;
  *
  * @return {String} The interpolated string
  */
-let interpolate: any = function(msgid, context: any = {}, disableHtmlEscaping = false) {
-  if (!_Vue.config.getTextPluginSilent && MUSTACHE_SYNTAX_RE.test(msgid)) {
-    console.warn(`Mustache syntax cannot be used with vue-gettext. Please use "%{}" instead of "{{}}" in: ${msgid}`);
-  }
-
-  let result = msgid.replace(INTERPOLATION_RE, (match, token) => {
-    const expression = token.trim();
-    let evaluated;
-
-    let escapeHtmlMap = {
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#039;",
-    };
-
-    // Avoid eval() by splitting `expression` and looping through its different properties if any, see #55.
-    function getProps(obj, expression) {
-      const arr = expression.split(EVALUATION_RE).filter((x) => x);
-      while (arr.length) {
-        obj = obj[arr.shift()];
-      }
-      return obj;
+let interpolate: any = (plugin: GetText) =>
+  function(msgid, context: any = {}, disableHtmlEscaping = false) {
+    if (!plugin.options.silent && MUSTACHE_SYNTAX_RE.test(msgid)) {
+      console.warn(`Mustache syntax cannot be used with vue-gettext. Please use "%{}" instead of "{{}}" in: ${msgid}`);
     }
 
-    function evalInContext(expression) {
-      try {
-        evaluated = getProps(this, expression);
-      } catch (e) {
-        // Ignore errors, because this function may be called recursively later.
-      }
-      if (evaluated === undefined) {
-        if (this.$parent) {
-          // Recursively climb the $parent chain to allow evaluation inside nested components, see #23 and #24.
-          return evalInContext.call(this.$parent, expression);
-        } else {
-          console.warn(`Cannot evaluate expression: ${expression}`);
-          evaluated = expression;
+    let result = msgid.replace(INTERPOLATION_RE, (match, token) => {
+      const expression = token.trim();
+      let evaluated;
+
+      let escapeHtmlMap = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;",
+      };
+
+      // Avoid eval() by splitting `expression` and looping through its different properties if any, see #55.
+      function getProps(obj, expression) {
+        const arr = expression.split(EVALUATION_RE).filter((x) => x);
+        while (arr.length) {
+          obj = obj[arr.shift()];
         }
+        return obj;
       }
-      let result = evaluated.toString();
-      if (disableHtmlEscaping) {
-        // Do not escape HTML, see #78.
-        return result;
+
+      function evalInContext(expression) {
+        try {
+          evaluated = getProps(this, expression);
+        } catch (e) {
+          // Ignore errors, because this function may be called recursively later.
+        }
+        if (evaluated === undefined) {
+          if (this.$parent) {
+            // Recursively climb the $parent chain to allow evaluation inside nested components, see #23 and #24.
+            return evalInContext.call(this.$parent, expression);
+          } else {
+            console.warn(`Cannot evaluate expression: ${expression}`);
+            evaluated = expression;
+          }
+        }
+        let result = evaluated.toString();
+        if (disableHtmlEscaping) {
+          // Do not escape HTML, see #78.
+          return result;
+        }
+        // Escape HTML, see #78.
+        return result.replace(/[&<>"']/g, function(m) {
+          return escapeHtmlMap[m];
+        });
       }
-      // Escape HTML, see #78.
-      return result.replace(/[&<>"']/g, function(m) {
-        return escapeHtmlMap[m];
-      });
-    }
 
-    return evalInContext.call(context, expression);
-  });
+      return evalInContext.call(context, expression);
+    });
 
-  return result;
-};
+    return result;
+  };
 
 // Store this values as function attributes for easy access elsewhere to bypass a Rollup
 // weak point with `export`:
