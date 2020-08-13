@@ -3,7 +3,7 @@ import translate from "./translate";
 import looseEqual from "./looseEqual";
 import uuid from "./uuid";
 import { GetText } from ".";
-import { VNode } from "vue";
+import { VNode, DirectiveBinding } from "vue";
 
 const updateTranslation = (plugin: GetText, el, binding, vnode: VNode) => {
   let attrs = vnode.el.attributes || {};
@@ -60,47 +60,15 @@ const updateTranslation = (plugin: GetText, el, binding, vnode: VNode) => {
  * `<p v-translate="fullName + location">I am %{ fullName } and from %{ location }</p>`
  */
 export default function component(plugin: GetText) {
-  return {
-    beforeMount(el, binding, vnode) {
-      // Get the raw HTML and store it in the element's dataset (as advised in Vue's official guide).
-      let msgid = el.innerHTML;
-      el.dataset.msgid = msgid;
+  return (el: HTMLElement, binding: DirectiveBinding, vnode: VNode) => {
+    // Get the raw HTML and store it in the element's dataset (as advised in Vue's official guide).
+    const msgid = el.innerHTML;
+    el.dataset.msgid = msgid;
 
-      // Store the current language in the element's dataset.
-      el.dataset.currentLanguage = plugin.app.config.globalProperties.$language.current;
+    // Store the current language in the element's dataset.
+    el.dataset.currentLanguage = plugin.app.config.globalProperties.$language.current;
 
-      // Output an info in the console if an interpolation is required but no expression is provided.
-      if (!plugin.options.silent) {
-        let hasInterpolation = msgid.indexOf(interpolate.INTERPOLATION_PREFIX) !== -1;
-        if (hasInterpolation && !binding.expression) {
-          console.info(
-            `No expression is provided for change detection. The translation for this key will be static:\n${msgid}`
-          );
-        }
-      }
-
-      updateTranslation(plugin, el, binding, vnode);
-    },
-
-    // TODO: does updated have params?
-    updated(el, binding, vnode) {
-      let doUpdate = false;
-
-      // Trigger an update if the language has changed.
-      const language = plugin.app.config.globalProperties.$language.current;
-      if (el.dataset.currentLanguage !== language) {
-        el.dataset.currentLanguage = language;
-        doUpdate = true;
-      }
-
-      // Trigger an update if an optional bound expression has changed.
-      if (!doUpdate && binding.expression && !looseEqual(binding.value, binding.oldValue)) {
-        doUpdate = true;
-      }
-
-      if (doUpdate) {
-        updateTranslation(plugin, el, binding, vnode);
-      }
-    },
+    updateTranslation(plugin, el, binding, vnode);
+    return {};
   };
 }
