@@ -1,7 +1,7 @@
 import translate from "./translate";
 import uuid from "./uuid";
 import { GetText } from ".";
-import { Component, h, AppContext, computed, SetupContext, Text } from "vue";
+import { Component, h, AppContext, computed, SetupContext, Text, ref, onMounted, Ref, watchEffect } from "vue";
 
 /**
  * Translate content according to the current language.
@@ -46,18 +46,21 @@ export default function component(plugin: GetText) {
         throw new Error(`\`translate-n\` and \`translate-plural\` attributes must be used together: ${context.slots.default()[0]?.children}.`);
       }
 
+      const root = ref(null);
+
       const globalProps = plugin.app.config.globalProperties;
+      const msgid: Ref<string> = ref(null);
+
+      onMounted(() => {
+        if (!msgid.value) {
+          msgid.value = root.value.innerHTML;
+        }
+      });
 
       const translation = computed(() => {
         const translator = translate(plugin);
-        let msgid = "";
-        const slotItem = context.slots.default()[0];
-        if (slotItem?.type !== Text) {
-          throw new Error("The <translate> component expects a single string child");
-        }
-        msgid = context.slots.default()[0]?.children as string || msgid;
         let translation = translator.getTranslation(
-          msgid,
+          msgid.value,
           props.translateN,
           props.translateContext,
           isPlural ? props.translatePlural : null,
@@ -69,7 +72,14 @@ export default function component(plugin: GetText) {
 
       // The text must be wraped inside a root HTML element, so we use a <span> (by default).
       // https://github.com/vuejs/vue/blob/a4fcdb/src/compiler/parser/index.js#L209
-      return () => h(props.tag, translation.effect());
+      return () => {
+        if (!msgid.value) {
+          return h(props.tag, {ref: root}, context.slots.default())
+        }
+        return h(props.tag, {ref: root, 
+          innerHTML: translation.value
+        });
+      };
     },
   } as Component;
 }

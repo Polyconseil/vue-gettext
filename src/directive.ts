@@ -1,7 +1,5 @@
 import interpolate from "./interpolate";
 import translate from "./translate";
-import looseEqual from "./looseEqual";
-import uuid from "./uuid";
 import { GetText } from ".";
 import { VNode, DirectiveBinding } from "vue";
 
@@ -62,8 +60,10 @@ const updateTranslation = (plugin: GetText, el, binding, vnode: VNode) => {
 export default function component(plugin: GetText) {
   return (el: HTMLElement, binding: DirectiveBinding, vnode: VNode) => {
     // Get the raw HTML and store it in the element's dataset (as advised in Vue's official guide).
-    const msgid = el.innerHTML;
-    el.dataset.msgid = msgid;
+    if (!el.dataset.msgid) {
+      const msgid = el.innerHTML;
+      el.dataset.msgid = msgid;
+    }
 
     // Store the current language in the element's dataset.
     el.dataset.currentLanguage = plugin.app.config.globalProperties.$language.current;
