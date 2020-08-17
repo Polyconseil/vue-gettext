@@ -10,26 +10,6 @@ const mount = mountWithPlugin({
   translations: translations,
 });
 
-//  (componentOptions: ComponentOptionsWithoutProps) =>
-//   mount(componentOptions, {
-//     global: {
-//       plugins: [GetTextPlugin], // TODO: params
-//       // plugins: [
-//       //   [
-//       //     GetTextPlugin,
-//       //     {
-//       //       availableLanguages: {
-//       //         en_US: "American English",
-//       //         fr_FR: "Français",
-//       //       },
-//       //       defaultLanguage: "en_US",
-//       //       translations: translations,
-//       //     },
-//       //   ],
-//       // ],
-//     },
-//   });
-
 describe("translate component tests", () => {
   it("works on empty strings", async () => {
     const wrapper = mount({

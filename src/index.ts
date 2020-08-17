@@ -1,7 +1,7 @@
 import Component from "./component";
 import Directive from "./directive";
 import interpolate from "./interpolate";
-import translate from "./translate";
+import translateRaw from "./translate";
 import { reactive, App, inject } from "vue";
 
 export interface GetTextOptions {
@@ -76,13 +76,13 @@ export default function install(vue: App, options: Partial<GetTextOptions> = {})
   vue.component("translate", Component);
 
   globalProperties.$translations = plugin.options.translations;
-  const translator = translate;
-  translator.initTranslations(plugin.options.translations);
+  const translate = translateRaw(plugin);
+  translate.initTranslations(plugin.options.translations);
   const interpolator = interpolate;
-  globalProperties.$gettext = translator.gettext.bind(translator);
-  globalProperties.$pgettext = translator.pgettext.bind(translator);
-  globalProperties.$ngettext = translator.ngettext.bind(translator);
-  globalProperties.$npgettext = translator.npgettext.bind(translator);
+  globalProperties.$gettext = translate.gettext.bind(translate);
+  globalProperties.$pgettext = translate.pgettext.bind(translate);
+  globalProperties.$ngettext = translate.ngettext.bind(translate);
+  globalProperties.$npgettext = translate.npgettext.bind(translate);
   globalProperties.$gettextInterpolate = interpolator.bind(interpolator);
 
   vue.provide(GetTextSymbol, plugin);

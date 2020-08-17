@@ -28,9 +28,7 @@ const updateTranslation = (plugin: GetText, el, binding: DirectiveBinding, vnode
     context = Object.assign({}, vnode.appContext, binding.value);
   }
 
-  const translator = translate;
-
-  let translation = translator.getTranslation(
+  let translation = translate(plugin).getTranslation(
     msgid,
     translateN,
     translateContext,

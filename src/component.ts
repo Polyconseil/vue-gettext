@@ -57,7 +57,7 @@ export default {
       });
 
       const translation = computed(() => {
-        let translation = translate.getTranslation(
+        let translation = translate(plugin).getTranslation(
           msgid.value,
           props.translateN,
           props.translateContext,
