@@ -1,16 +1,17 @@
 import interpolate from "./interpolate";
 import translate from "./translate";
-import { GetText } from ".";
 import { VNode, DirectiveBinding } from "vue";
+import { getPlugin } from "./utils";
+import { useGettext, GetText } from ".";
 
-const updateTranslation = (plugin: GetText, el, binding, vnode: VNode) => {
-  let attrs = vnode.el.attributes || {};
+const updateTranslation = (plugin: GetText, el, binding: DirectiveBinding, vnode: VNode) => {
+  let attrs = vnode.props || {};
   let msgid = el.dataset.msgid;
   let translateContext = attrs["translate-context"];
   let translateN = attrs["translate-n"];
   let translatePlural = attrs["translate-plural"];
   let isPlural = translateN !== undefined && translatePlural !== undefined;
-  let context = vnode.appContext;
+  let context = binding.instance;
   let disableHtmlEscaping = attrs["render-html"] === "true";
 
   if (!isPlural && (translateN || translatePlural)) {
@@ -27,7 +28,7 @@ const updateTranslation = (plugin: GetText, el, binding, vnode: VNode) => {
     context = Object.assign({}, vnode.appContext, binding.value);
   }
 
-  const translator = translate(plugin);
+  const translator = translate;
 
   let translation = translator.getTranslation(
     msgid,
@@ -37,7 +38,7 @@ const updateTranslation = (plugin: GetText, el, binding, vnode: VNode) => {
     el.dataset.currentLanguage
   );
 
-  let msg = interpolate(plugin)(translation, context, disableHtmlEscaping);
+  let msg = interpolate(translation, context, disableHtmlEscaping);
 
   el.innerHTML = msg;
 };
@@ -57,7 +58,7 @@ const updateTranslation = (plugin: GetText, el, binding, vnode: VNode) => {
  * context variable:
  * `<p v-translate="fullName + location">I am %{ fullName } and from %{ location }</p>`
  */
-export default function component(plugin: GetText) {
+export default function directive(plugin: GetText) {
   return (el: HTMLElement, binding: DirectiveBinding, vnode: VNode) => {
     // Get the raw HTML and store it in the element's dataset (as advised in Vue's official guide).
     if (!el.dataset.msgid) {
@@ -66,7 +67,7 @@ export default function component(plugin: GetText) {
     }
 
     // Store the current language in the element's dataset.
-    el.dataset.currentLanguage = plugin.app.config.globalProperties.$language.current;
+    el.dataset.currentLanguage = plugin.current;
 
     updateTranslation(plugin, el, binding, vnode);
     return {};

@@ -1,12 +1,12 @@
 import translate from "./translate";
-import { GetText } from ".";
 import { Component, h, computed, SetupContext, ref, onMounted, Ref, getCurrentInstance } from "vue";
+import interpolate from "./interpolate";
+import { useGettext } from ".";
 
 /**
  * Translate content according to the current language.
  */
-export default function component(plugin: GetText) {
-  return {
+export default {
     name: "translate",
 
     props: {
@@ -47,7 +47,7 @@ export default function component(plugin: GetText) {
 
       const root = ref(null);
 
-      const globalProps = plugin.app.config.globalProperties;
+      const plugin = useGettext();
       const msgid: Ref<string> = ref(null);
 
       onMounted(() => {
@@ -57,16 +57,15 @@ export default function component(plugin: GetText) {
       });
 
       const translation = computed(() => {
-        const translator = translate(plugin);
-        let translation = translator.getTranslation(
+        let translation = translate.getTranslation(
           msgid.value,
           props.translateN,
           props.translateContext,
           isPlural ? props.translatePlural : null,
-          globalProps.$language.current
+          plugin.current
         );
 
-        return globalProps.$gettextInterpolate(translation, { ...(getCurrentInstance().parent as any).ctx, ...props.translateParams });
+        return interpolate(translation, { ...(getCurrentInstance().parent as any).ctx, ...props.translateParams });
       });
 
       // The text must be wraped inside a root HTML element, so we use a <span> (by default).
@@ -81,4 +80,4 @@ export default function component(plugin: GetText) {
       };
     },
   } as Component;
-}
+

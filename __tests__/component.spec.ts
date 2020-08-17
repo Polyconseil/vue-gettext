@@ -1,36 +1,38 @@
-/**
- * @jest-environment jsdom
- */
-
-import { ComponentOptionsWithoutProps } from "vue";
-import { mount } from "@vue/test-utils";
-
-import GetTextPlugin from "../src/";
 import translations from "./json/component.json";
+import { mountWithPlugin } from "./utils";
 
-const mountWithPlugin = (componentOptions: ComponentOptionsWithoutProps) =>
-  mount(componentOptions, {
-    global: {
-      plugins: [GetTextPlugin], // TODO: params
-      // plugins: [
-      //   [
-      //     GetTextPlugin,
-      //     {
-      //       availableLanguages: {
-      //         en_US: "American English",
-      //         fr_FR: "Français",
-      //       },
-      //       defaultLanguage: "en_US",
-      //       translations: translations,
-      //     },
-      //   ],
-      // ],
-    },
-  });
+const mount = mountWithPlugin({
+  availableLanguages: {
+    en_US: "American English",
+    fr_FR: "Français",
+  },
+  defaultLanguage: "en_US",
+  translations: translations,
+});
+
+//  (componentOptions: ComponentOptionsWithoutProps) =>
+//   mount(componentOptions, {
+//     global: {
+//       plugins: [GetTextPlugin], // TODO: params
+//       // plugins: [
+//       //   [
+//       //     GetTextPlugin,
+//       //     {
+//       //       availableLanguages: {
+//       //         en_US: "American English",
+//       //         fr_FR: "Français",
+//       //       },
+//       //       defaultLanguage: "en_US",
+//       //       translations: translations,
+//       //     },
+//       //   ],
+//       // ],
+//     },
+//   });
 
 describe("translate component tests", () => {
   it("works on empty strings", async () => {
-    const wrapper = mountWithPlugin({
+    const wrapper = mount({
       template: "<div><translate></translate></div>",
     });
     expect(wrapper.element.innerHTML.trim()).toBe("<span></span>");
@@ -38,7 +40,7 @@ describe("translate component tests", () => {
 
   it("returns an unchanged string when no translation is available for a language", async () => {
     const warnSpy = jest.spyOn(console, "warn");
-    const wrapper = mountWithPlugin({ template: "<div><translate>Unchanged string</translate></div>" });
+    const wrapper = mount({ template: "<div><translate>Unchanged string</translate></div>" });
     const vm = wrapper.vm as any;
     vm.$language.current = "fr_BE";
     await vm.$nextTick();
@@ -49,7 +51,7 @@ describe("translate component tests", () => {
 
   it("returns an unchanged string when no translation key is available", async () => {
     const warnSpy = jest.spyOn(console, "warn");
-    const wrapper = mountWithPlugin({ template: "<div><translate>Untranslated string</translate></div>" });
+    const wrapper = mount({ template: "<div><translate>Untranslated string</translate></div>" });
     const vm = wrapper.vm as any;
     await vm.$nextTick();
     expect(vm.$el.innerHTML.trim()).toEqual("<span>Untranslated string</span>");
@@ -58,14 +60,14 @@ describe("translate component tests", () => {
   });
 
   it("translates known strings", () => {
-    const wrapper = mountWithPlugin({ template: "<div><translate>Pending</translate></div>" });
+    const wrapper = mount({ template: "<div><translate>Pending</translate></div>" });
     const vm = wrapper.vm as any;
     vm.$language.current = "fr_FR";
     expect(vm.$el.innerHTML.trim()).toEqual("<span>En cours</span>");
   });
 
   it("translates multiline strings no matter the number of spaces", () => {
-    const wrapper = mountWithPlugin({
+    const wrapper = mount({
       template: `<div><translate tag="p">
 
                       A
@@ -84,24 +86,24 @@ describe("translate component tests", () => {
   });
 
   it("renders translation in custom html tag", () => {
-    const wrapper = mountWithPlugin({ template: '<div><translate tag="h1">Pending</translate></div>' });
+    const wrapper = mount({ template: '<div><translate tag="h1">Pending</translate></div>' });
     const vm = wrapper.vm as any;
     vm.$language.current = "fr_FR";
     expect(vm.$el.innerHTML.trim()).toEqual("<h1>En cours</h1>");
   });
 
   it("translates known strings according to a given translation context", () => {
-    let wrapper = mountWithPlugin({ template: '<div><translate translate-context="Verb">Answer</translate></div>' });
+    let wrapper = mount({ template: '<div><translate translate-context="Verb">Answer</translate></div>' });
     let vm = wrapper.vm as any;
     expect(vm.$el.innerHTML.trim()).toEqual("<span>Answer (verb)</span>");
-    wrapper = mountWithPlugin({ template: '<div><translate translate-context="Noun">Answer</translate></div>' });
+    wrapper = mount({ template: '<div><translate translate-context="Noun">Answer</translate></div>' });
     vm = wrapper.vm as any;
     vm.$language.current = "en_US";
     expect(vm.$el.innerHTML.trim()).toEqual("<span>Answer (noun)</span>");
   });
 
   it("allows interpolation", async () => {
-    const wrapper = mountWithPlugin({
+    const wrapper = mount({
       template: "<p><translate>Hello %{ name }</translate></p>",
       data() {
         return { name: "John Doe" };
@@ -114,7 +116,7 @@ describe("translate component tests", () => {
   });
 
   it("allows interpolation with computed property", async () => {
-    const wrapper = mountWithPlugin({
+    const wrapper = mount({
       template: "<p><translate>Hello %{ name }</translate></p>",
       computed: {
         name() {
@@ -129,7 +131,7 @@ describe("translate component tests", () => {
   });
 
   it("allows custom params for interpolation", async () => {
-    const wrapper = mountWithPlugin({
+    const wrapper = mount({
       template: '<p><translate :translate-params="{name: someNewNameVar}">Hello %{ name }</translate></p>',
       data() {
         return {
@@ -144,7 +146,7 @@ describe("translate component tests", () => {
   });
 
   it("allows interpolation within v-for with custom params", async () => {
-    const wrapper = mountWithPlugin({
+    const wrapper = mount({
       template: '<p><translate v-for="name in names" :translate-params="{name: name}">Hello %{ name }</translate></p>',
       data() {
         return {
@@ -159,7 +161,7 @@ describe("translate component tests", () => {
   });
 
   it("translates plurals", async () => {
-    const wrapper = mountWithPlugin({
+    const wrapper = mount({
       template: `<p>
             <translate :translate-n="count" translate-plural="%{ count } cars">%{ count } car</translate>
           </p>`,
@@ -174,7 +176,7 @@ describe("translate component tests", () => {
   });
 
   it("translates plurals with computed property", async () => {
-    const wrapper = mountWithPlugin({
+    const wrapper = mount({
       template: `<p>
             <translate :translate-n="count" translate-plural="%{ count } cars">%{ count } car</translate>
           </p>`,
@@ -191,7 +193,7 @@ describe("translate component tests", () => {
   });
 
   it("updates a plural translation after a data change", async (done) => {
-    const wrapper = mountWithPlugin({
+    const wrapper = mount({
       template: `<p>
             <translate :translate-n="count" translate-plural="%{ count } cars">%{ count } car</translate>
           </p>`,
@@ -212,7 +214,7 @@ describe("translate component tests", () => {
   });
 
   it("updates a translation after a language change", (done) => {
-    const wrapper = mountWithPlugin({ template: "<div><translate>Pending</translate></div>" });
+    const wrapper = mount({ template: "<div><translate>Pending</translate></div>" });
     const vm = wrapper.vm as any;
     vm.$language.current = "fr_FR";
     expect(vm.$el.innerHTML.trim()).toEqual("<span>En cours</span>");
@@ -247,7 +249,7 @@ describe("translate component tests", () => {
   });
 
   it("supports conditional rendering such as v-if, v-else-if, v-else", async (done) => {
-    const wrapper = mountWithPlugin({
+    const wrapper = mount({
       template: `
           <translate v-if="show">Pending</translate>
           <translate v-else>Hello %{ name }</translate>

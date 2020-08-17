@@ -21,7 +21,8 @@
     "lint": "eslint src test dev build",
     "test": "npm run lint && npm run test:unit",
     "test:unit": "karma start ./build/karma.conf.js --single-run",
-    "test:jest": "jest --coverage"
+    "test:jest": "jest",
+    "test:jest2": "jest -i directive.spec.ts -t 'forces HTML rendering in variables '"
   },
   "engines": {
     "npm": ">= 3.0.0"
@@ -70,6 +71,7 @@
     "postcss-cssnext": "^2.8.0",
     "postcss-import": "^12.0.1",
     "postcss-loader": "^1.1.0",
+    "prettier-eslint": "^11.0.0",
     "puppeteer": "^1.17.0",
     "rollup": "^1.16.2",
     "rollup-plugin-buble": "^0.19.6",
