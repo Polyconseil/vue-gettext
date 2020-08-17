@@ -35,7 +35,7 @@ const translate = (plugin: GetText) => ({
       return ""; // Allow empty strings.
     }
 
-    let silent = plugin.options.silent || _config.getTextPluginMuteLanguages.indexOf(language) !== -1;
+    let silent = plugin.options.silent || plugin.options.muteLanguages.indexOf(language) !== -1;
 
     // Default untranslated string, singular or plural.
     let untranslated = defaultPlural && plurals.getTranslationIndex(language, n) > 0 ? defaultPlural : msgid;

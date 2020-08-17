@@ -1,7 +1,6 @@
 import translate from "./translate";
-import uuid from "./uuid";
 import { GetText } from ".";
-import { Component, h, AppContext, computed, SetupContext, Text, ref, onMounted, Ref, watchEffect } from "vue";
+import { Component, h, computed, SetupContext, ref, onMounted, Ref, getCurrentInstance } from "vue";
 
 /**
  * Translate content according to the current language.
@@ -67,14 +66,14 @@ export default function component(plugin: GetText) {
           globalProps.$language.current
         );
 
-        return globalProps.$gettextInterpolate(translation, props.translateParams);
+        return globalProps.$gettextInterpolate(translation, { ...(getCurrentInstance().parent as any).ctx, ...props.translateParams });
       });
 
       // The text must be wraped inside a root HTML element, so we use a <span> (by default).
       // https://github.com/vuejs/vue/blob/a4fcdb/src/compiler/parser/index.js#L209
       return () => {
         if (!msgid.value) {
-          return h(props.tag, {ref: root}, context.slots.default())
+          return h(props.tag, {ref: root}, context.slots.default ? context.slots.default() : "")
         }
         return h(props.tag, {ref: root, 
           innerHTML: translation.value

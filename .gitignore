@@ -9,5 +9,6 @@ manifest.json
 .*.swp
 .*.pid
 *.mo
+./coverage
 
 .tm_properties
