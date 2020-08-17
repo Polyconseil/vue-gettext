@@ -1,5 +1,5 @@
 import { getCurrentInstance } from "vue";
-import { getPlugin } from "./utils";
+import { GetText } from ".";
 
 const EVALUATION_RE = /[[\].]{1,2}/g;
 
@@ -34,9 +34,8 @@ const MUSTACHE_SYNTAX_RE = /\{\{((?:.|\n)+?)\}\}/g;
  *
  * @return {String} The interpolated string
  */
-let interpolate: any =   function(msgid, context: any = {}, disableHtmlEscaping = false) {
-  const plugin = null;//getPlugin();
-  const silent = plugin ? plugin.options.silent : false;
+let interpolate: any = (plugin: GetText) => (msgid, context: any = {}, disableHtmlEscaping = false) => {
+  const silent = plugin.options.silent;
   if (!silent && MUSTACHE_SYNTAX_RE.test(msgid)) {
     console.warn(`Mustache syntax cannot be used with vue-gettext. Please use "%{}" instead of "{{}}" in: ${msgid}`);
   }

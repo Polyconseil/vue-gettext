@@ -2,7 +2,7 @@ import Component from "./component";
 import Directive from "./directive";
 import interpolate from "./interpolate";
 import translateRaw from "./translate";
-import { reactive, App, inject } from "vue";
+import { reactive, App, inject, getCurrentInstance } from "vue";
 
 export interface GetTextOptions {
   availableLanguages: { [key: string]: string };
@@ -19,7 +19,7 @@ const defaultOptions: GetTextOptions = {
   mixins: {},
   muteLanguages: [],
   silent: false,
-  translations: null,
+  translations: {},
 };
 
 export const GetTextSymbol = Symbol("GETTEXT");
@@ -30,32 +30,19 @@ export interface GetText {
   current: string;
 }
 
-export default function install(vue: App, options: Partial<GetTextOptions> = {}) {
+export default function install(app: App, options: Partial<GetTextOptions> = {}) {
   Object.keys(options).forEach((key) => {
     if (Object.keys(defaultOptions).indexOf(key) === -1) {
       throw new Error(`${key} is an invalid option for the translate plugin.`);
     }
   });
 
-  if (!options.translations) {
-    // throw new Error("No translations available.");
-    (options.translations as any) = {};
-  }
-
-  // const plugin = {
-  //   options: {
-  //     ...defaultOptions,
-  //     ...options,
-  //   },
-  //   app: vue,
-  // };
-
   const mergedOptions = {
     ...defaultOptions,
     ...options,
   };
 
-  const globalProperties = vue.config.globalProperties;
+  const globalProperties = app.config.globalProperties;
 
   let plugin: GetText = reactive({
     options: mergedOptions,
@@ -70,22 +57,18 @@ export default function install(vue: App, options: Partial<GetTextOptions> = {})
   }
   globalProperties.$language = plugin;
 
-  // Config(Vue, languageVm, options.silent, options.autoAddKeyAttributes, options.muteLanguages);
-
-  vue.directive("translate", Directive(plugin));
-  vue.component("translate", Component);
+  app.directive("translate", Directive(plugin));
+  app.component("translate", Component);
 
   globalProperties.$translations = plugin.options.translations;
   const translate = translateRaw(plugin);
-  translate.initTranslations(plugin.options.translations);
-  const interpolator = interpolate;
-  globalProperties.$gettext = translate.gettext.bind(translate);
-  globalProperties.$pgettext = translate.pgettext.bind(translate);
-  globalProperties.$ngettext = translate.ngettext.bind(translate);
-  globalProperties.$npgettext = translate.npgettext.bind(translate);
-  globalProperties.$gettextInterpolate = interpolator.bind(interpolator);
+  globalProperties.$gettext = translate.gettext;
+  globalProperties.$pgettext = translate.pgettext;
+  globalProperties.$ngettext = translate.ngettext;
+  globalProperties.$npgettext = translate.npgettext;
+  globalProperties.$gettextInterpolate = interpolate(plugin);
 
-  vue.provide(GetTextSymbol, plugin);
+  app.provide(GetTextSymbol, plugin);
   return plugin;
 }
 

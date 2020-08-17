@@ -1,6 +1,6 @@
 import Vue from "vue";
 
-import GetTextPlugin from "../src/";
+import GetTextPlugin, { GetText } from "../src/";
 import translateRaw from "../src/translate";
 import translations from "./json/translate.json";
 import { mountWithPlugin } from "./utils";
@@ -14,8 +14,8 @@ const mount = mountWithPlugin({
   translations: translations,
 });
 
-const wrapper = mount({});
-const plugin = wrapper.vm.$.appContext.config.globalProperties.$language;
+const wrapper = mount({ template: "<div></div>" });
+const plugin = wrapper.vm.$.appContext.config.globalProperties.$language as GetText;
 const setLanguage = (lang: string) => (plugin.current = lang);
 
 const translate = translateRaw(plugin);
@@ -166,33 +166,30 @@ describe("Translate tests", () => {
     ).toEqual("Untranslated %{ n } items (noun)");
   });
 
-  // it("works when a msgid exists with and without a context, but the one with the context has not been translated", () => {
-  //   expect(Vue.config.silent).toEqual(false);
-  //   console.warn = sinon.spy(console, "warn");
+  it("works when a msgid exists with and without a context, but the one with the context has not been translated", () => {
+    expect(plugin.options.silent).toEqual(false);
+    const warnSpy = jest.spyOn(console, "warn");
 
-  //   translated = translate.getTranslation("May", null, null, null, "fr_FR");
-  //   expect(translated).toEqual("Pourrait");
+    translated = translate.getTranslation("May", null, null, null, "fr_FR");
+    expect(translated).toEqual("Pourrait");
 
-  //   translated = translate.getTranslation("May", null, "Month name", null, "fr_FR");
-  //   expect(translated).toEqual("May");
+    translated = translate.getTranslation("May", null, "Month name", null, "fr_FR");
+    expect(translated).toEqual("May");
 
-  //   expect(console.warn).calledOnce;
-  //   expect(console.warn).calledWith("Untranslated fr_FR key found: May (with context: Month name)");
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy).toHaveBeenCalledWith("Untranslated fr_FR key found: May (with context: Month name)");
 
-  //   (console.warn as any).restore();
-  // });
+    warnSpy.mockRestore();
+  });
 });
 
 describe("Translate tests without Vue", () => {
-  let config;
-
   beforeEach(() => {
     plugin.options = {
       ...plugin.options,
       silent: false,
     };
     setLanguage("en_US");
-    translate.initTranslations(translations);
   });
 
   let translated;
@@ -333,19 +330,19 @@ describe("Translate tests without Vue", () => {
     ).toEqual("Untranslated %{ n } items (noun)");
   });
 
-  // it("works when a msgid exists with and without a context, but the one with the context has not been translated", () => {
-  //   expect(config.silent).toEqual(false);
-  //   console.warn = sinon.spy(console, "warn");
+  it("works when a msgid exists with and without a context, but the one with the context has not been translated", () => {
+    expect(plugin.options.silent).toEqual(false);
+    const warnSpy = jest.spyOn(console, "warn");
 
-  //   translated = translate.getTranslation("May", null, null, null, "fr_FR");
-  //   expect(translated).toEqual("Pourrait");
+    translated = translate.getTranslation("May", null, null, null, "fr_FR");
+    expect(translated).toEqual("Pourrait");
 
-  //   translated = translate.getTranslation("May", null, "Month name", null, "fr_FR");
-  //   expect(translated).toEqual("May");
+    translated = translate.getTranslation("May", null, "Month name", null, "fr_FR");
+    expect(translated).toEqual("May");
 
-  //   expect(console.warn).calledOnce;
-  //   expect(console.warn).calledWith("Untranslated fr_FR key found: May (with context: Month name)");
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy).toHaveBeenCalledWith("Untranslated fr_FR key found: May (with context: Month name)");
 
-  //   (console.warn as any).restore();
-  // });
+    warnSpy.mockRestore();
+  });
 });

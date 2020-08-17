@@ -1,7 +1,6 @@
 import interpolate from "./interpolate";
 import translate from "./translate";
 import { VNode, DirectiveBinding } from "vue";
-import { getPlugin } from "./utils";
 import { useGettext, GetText } from ".";
 
 const updateTranslation = (plugin: GetText, el, binding: DirectiveBinding, vnode: VNode) => {
@@ -36,7 +35,7 @@ const updateTranslation = (plugin: GetText, el, binding: DirectiveBinding, vnode
     el.dataset.currentLanguage
   );
 
-  let msg = interpolate(translation, context, disableHtmlEscaping);
+  let msg = interpolate(plugin)(translation, context, disableHtmlEscaping);
 
   el.innerHTML = msg;
 };

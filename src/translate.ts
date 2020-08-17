@@ -1,18 +1,7 @@
 import plurals from "./plurals";
-import { getPlugin } from "./utils";
-import { getCurrentInstance } from "vue";
 import { GetText } from ".";
 
 const SPACING_RE = /\s{2,}/g;
-
-// Default configuration if only the translation is passed.
-let _config = {
-  language: "",
-  getTextPluginSilent: false,
-  getTextPluginMuteLanguages: [],
-  silent: false,
-};
-let _translations = {};
 
 const translate = (plugin: GetText) => ({
   /*
@@ -26,8 +15,7 @@ const translate = (plugin: GetText) => ({
    *
    * @return {String} The translated string
    */
-  // TODO: get current language, silent options
-  getTranslation: function(msgid, n = 1, context = null, defaultPlural = null, language?: string) {
+  getTranslation: function(msgid: string, n: number = 1, context = null, defaultPlural = null, language?: string) {
     if (language === undefined) {
       language = plugin.current;
     }
@@ -47,7 +35,8 @@ const translate = (plugin: GetText) => ({
     // See the `Language` section in https://www.gnu.org/software/gettext/manual/html_node/Header-Entry.html
     // So try `ll_CC` first, or the `ll` abbreviation which can be three-letter sometimes:
     // https://www.gnu.org/software/gettext/manual/html_node/Language-Codes.html#Language-Codes
-    let translations = _translations[language] || _translations[language.split("_")[0]];
+    const pluginTranslations = plugin.options.translations;
+    let translations = pluginTranslations[language] || pluginTranslations[language.split("_")[0]];
 
     if (!translations) {
       if (!silent) {
@@ -168,20 +157,6 @@ const translate = (plugin: GetText) => ({
    */
   npgettext: function(context, msgid, plural, n) {
     return this.getTranslation(msgid, n, context, plural);
-  },
-
-  /*
-   * Initialize local state for translations and configuration
-   * so that it works without Vue.
-   *
-   * @param {Object} translations - translations.json
-   * @param {Object} config - Vue.config
-   *
-   */
-  initTranslations: function(translations) {
-    if (translations && typeof translations === "object") {
-      _translations = translations;
-    }
   },
 });
 

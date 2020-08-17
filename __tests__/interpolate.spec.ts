@@ -1,14 +1,17 @@
-import interpolate from "../src/interpolate";
+import rawInterpolate from "../src/interpolate";
 import translations from "./json/translate.json";
 import { mountWithPlugin } from "./utils";
+import { GetText } from "../src";
 
 const mount = mountWithPlugin({
   translations: translations,
   silent: true,
 });
 
-// const wrapper = mount({});
-// const plugin = wrapper.vm.$.appContext.config.globalProperties.$language;
+const wrapper = mount({ template: "<div></div>" });
+const plugin = wrapper.vm.$.appContext.config.globalProperties.$language as GetText;
+
+const interpolate = rawInterpolate(plugin);
 
 describe("Interpolate tests", () => {
   it("without placeholders", () => {
@@ -123,7 +126,7 @@ describe("Interpolate tests", () => {
     const warnSpy = jest.spyOn(console, "warn");
     interpolate(msgid, context);
     expect(warnSpy).not.toHaveBeenCalled;
-    // TODO Vue.config.getTextPluginSilent = false;
+    plugin.options.silent = false;
     interpolate(msgid, context);
     expect(warnSpy).toHaveBeenCalledTimes(1);
     warnSpy.mockRestore();
