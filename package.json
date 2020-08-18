@@ -12,16 +12,14 @@
     "registry": "https://registry.npmjs.org"
   },
   "scripts": {
-    "build": "rollup -c build/rollup.config.js && uglifyjs dist/vue-gettext.js -cm --comments -o dist/vue-gettext.min.js",
-    "build2": "npm run build:esm && npm run build:commonjs",
+    "build": "npm run build:esm && npm run build:commonjs",
     "build:esm": "tsc -m es2015 -d --lib \"DOM\",\"ES5\",\"es2020.symbol.wellknown\" --outDir dist/esm",
     "build:commonjs": "tsc -m commonjs --lib \"DOM\",\"ES5\",\"es2020.symbol.wellknown\" --outDir dist/commonjs",
     "dev": "cd ./dev && vite",
     "dev:dist": "rollup -w -c build/rollup.config.js",
     "lint": "eslint src test dev build",
     "test": "npm run lint && npm run test:unit",
-    "test:unit": "karma start ./build/karma.conf.js --single-run",
-    "test:jest": "jest",
+    "test:unit": "jest",
     "test:jest2": "jest -i directive.spec.ts -t 'returns an unchanged string when no translation is available for a language'"
   },
   "engines": {
