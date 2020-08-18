@@ -15,27 +15,29 @@
 </template>
 
 <script>
+import { useGettext } from "/@gettext/";
+
 export default {
   data: () => ({
     n: 2,
   }),
   methods: {
-    alert () {
-      const msg = this.$gettext('Good bye!')
-      return window.alert(msg)
+    alert() {
+      const msg = this.$gettext("Good bye!");
+      return window.alert(msg);
     },
-    decrease () {
-      if (this.n === 0) return
-      this.n -= 1
+    decrease() {
+      if (this.n === 0) return;
+      this.n -= 1;
     },
-    increase () {
-      this.n += 1
+    increase() {
+      this.n += 1;
     },
-    alertPlural (n) {
-      let msg = this.$ngettext('%{ n } car', '%{ n } cars', n)
-      msg = this.$gettextInterpolate(msg, {n: n})
-      return window.alert(msg)
+    alertPlural(n) {
+      let msg = this.$ngettext("%{ n } car", "%{ n } cars", n);
+      msg = this.$gettextInterpolate(msg, { n: n });
+      return window.alert(msg);
     },
   },
-}
+};
 </script>

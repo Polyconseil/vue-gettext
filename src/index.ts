@@ -62,10 +62,10 @@ export default function install(app: App, options: Partial<GetTextOptions> = {})
 
   globalProperties.$translations = plugin.options.translations;
   const translate = translateRaw(plugin);
-  globalProperties.$gettext = translate.gettext;
-  globalProperties.$pgettext = translate.pgettext;
-  globalProperties.$ngettext = translate.ngettext;
-  globalProperties.$npgettext = translate.npgettext;
+  globalProperties.$gettext = translate.gettext.bind(translate);
+  globalProperties.$pgettext = translate.pgettext.bind(translate);
+  globalProperties.$ngettext = translate.ngettext.bind(translate);
+  globalProperties.$npgettext = translate.npgettext.bind(translate);
   globalProperties.$gettextInterpolate = interpolate(plugin);
 
   app.provide(GetTextSymbol, plugin);

@@ -95,8 +95,8 @@ msgid "Use default singular or plural form when there is no translation. This is
 msgstr ""
 
 #: dev/components/if/template.html:5
-msgid "Welcome %{ firstname }"
-msgstr "Welcome %{ firstname }"
+msgid "Welcome %{ obj.name }"
+msgstr "Welcome %{ obj.name }"
 
 #: dev/components/alert.vue:24
 msgid "Good bye!"

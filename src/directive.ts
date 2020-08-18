@@ -1,7 +1,7 @@
 import interpolate from "./interpolate";
 import translate from "./translate";
-import { VNode, DirectiveBinding } from "vue";
-import { useGettext, GetText } from ".";
+import { VNode, DirectiveBinding, Directive, watch } from "vue";
+import { GetText } from ".";
 
 const updateTranslation = (plugin: GetText, el, binding: DirectiveBinding, vnode: VNode) => {
   const attrs = vnode.props || {};
@@ -51,18 +51,28 @@ const updateTranslation = (plugin: GetText, el, binding: DirectiveBinding, vnode
  * context variable:
  * `<p v-translate="fullName + location">I am %{ fullName } and from %{ location }</p>`
  */
-export default function directive(plugin: GetText) {
-  return (el: HTMLElement, binding: DirectiveBinding, vnode: VNode) => {
-    // Get the raw HTML and store it in the element's dataset (as advised in Vue's official guide).
-    if (!el.dataset.msgid) {
-      const msgid = el.innerHTML;
-      el.dataset.msgid = msgid;
-    }
-
+export default function directive(plugin: GetText): Directive {
+  const update = (el: HTMLElement, binding: DirectiveBinding, vnode: VNode) => {
     // Store the current language in the element's dataset.
     el.dataset.currentLanguage = plugin.current;
-
     updateTranslation(plugin, el, binding, vnode);
-    return {};
+  };
+  return {
+    beforeMount(el: HTMLElement, binding: DirectiveBinding, vnode: VNode) {
+      // Get the raw HTML and store it in the element's dataset (as advised in Vue's official guide).
+      if (!el.dataset.msgid) {
+        const msgid = el.innerHTML;
+        el.dataset.msgid = msgid;
+      }
+
+      watch(plugin, () => {
+        update(el, binding, vnode);
+      });
+
+      update(el, binding, vnode);
+    },
+    updated(el: HTMLElement, binding: DirectiveBinding, vnode: VNode) {
+      update(el, binding, vnode);
+    },
   };
 }

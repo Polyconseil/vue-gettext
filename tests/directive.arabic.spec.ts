@@ -1,5 +1,3 @@
-import Vue from "vue";
-
 import translations from "./json/directive.arabic.json";
 import { mountWithPlugin } from "./utils";
 
