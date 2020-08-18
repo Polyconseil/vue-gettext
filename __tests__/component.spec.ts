@@ -249,3 +249,90 @@ describe("translate component tests", () => {
     });
   });
 });
+
+describe("translate component tests for interpolation", () => {
+  it("goes up the parent chain of a nested component to evaluate `name`", (done) => {
+    const wrapper = mount({
+      template: `<div><inner-component><translate>Hello %{ name }</translate></inner-component></div>`,
+      data() {
+        return {
+          name: "John Doe",
+        };
+      },
+      components: {
+        "inner-component": {
+          template: `<p><slot /></p>`,
+        },
+      },
+    });
+    const vm = wrapper.vm as any;
+    vm.$language.current = "fr_FR";
+    vm.$nextTick(function() {
+      expect(vm.$el.innerHTML.trim()).toEqual("<p><span>Bonjour John Doe</span></p>");
+      done();
+    });
+  });
+
+  it("goes up the parent chain of a nested component to evaluate `user.details.name`", (done) => {
+    const warnSpy = jest.spyOn(console, "warn");
+    const wrapper = mount({
+      template: `<div><inner-component><translate>Hello %{ user.details.name }</translate></inner-component></div>`,
+      data() {
+        return {
+          user: {
+            details: {
+              name: "Jane Doe",
+            },
+          },
+        };
+      },
+      components: {
+        "inner-component": {
+          template: `<p><slot /></p>`,
+        },
+      },
+    });
+    const vm = wrapper.vm as any;
+    vm.$language.current = "fr_FR";
+    vm.$nextTick(function() {
+      expect(vm.$el.innerHTML.trim()).toEqual("<p><span>Bonjour Jane Doe</span></p>");
+      expect(warnSpy).not.toHaveBeenCalled;
+      warnSpy.mockRestore();
+      done();
+    });
+  });
+
+  it("goes up the parent chain of 2 nested components to evaluate `user.details.name`", (done) => {
+    const warnSpy = jest.spyOn(console, "warn");
+    const wrapper = mount({
+      template: `<div><first-component><translate>Hello %{ user.details.name }</translate></first-component></div>`,
+      data() {
+        return {
+          user: {
+            details: {
+              name: "Jane Doe",
+            },
+          },
+        };
+      },
+      components: {
+        "first-component": {
+          template: `<p><second-component><slot /></second-component></p>`,
+          components: {
+            "second-component": {
+              template: `<b><slot /></b>`,
+            },
+          },
+        },
+      },
+    });
+    const vm = wrapper.vm as any;
+    vm.$language.current = "fr_FR";
+    vm.$nextTick(function() {
+      expect(vm.$el.innerHTML.trim()).toEqual("<p><b><span>Bonjour Jane Doe</span></b></p>");
+      expect(console.warn).not.toHaveBeenCalled;
+      warnSpy.mockRestore();
+      done();
+    });
+  });
+});

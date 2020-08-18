@@ -4,14 +4,13 @@ import { VNode, DirectiveBinding } from "vue";
 import { useGettext, GetText } from ".";
 
 const updateTranslation = (plugin: GetText, el, binding: DirectiveBinding, vnode: VNode) => {
-  let attrs = vnode.props || {};
-  let msgid = el.dataset.msgid;
-  let translateContext = attrs["translate-context"];
-  let translateN = attrs["translate-n"];
-  let translatePlural = attrs["translate-plural"];
-  let isPlural = translateN !== undefined && translatePlural !== undefined;
-  let context = binding.instance;
-  let disableHtmlEscaping = attrs["render-html"] === "true";
+  const attrs = vnode.props || {};
+  const msgid = el.dataset.msgid;
+  const translateContext = attrs["translate-context"];
+  const translateN = attrs["translate-n"];
+  const translatePlural = attrs["translate-plural"];
+  const isPlural = translateN !== undefined && translatePlural !== undefined;
+  const disableHtmlEscaping = attrs["render-html"] === "true";
 
   if (!isPlural && (translateN || translatePlural)) {
     throw new Error("`translate-n` and `translate-plural` attributes must be used together:" + msgid + ".");
@@ -23,10 +22,6 @@ const updateTranslation = (plugin: GetText, el, binding: DirectiveBinding, vnode
     );
   }
 
-  if (binding.value && typeof binding.value === "object") {
-    context = Object.assign({}, vnode.appContext, binding.value);
-  }
-
   let translation = translate(plugin).getTranslation(
     msgid,
     translateN,
@@ -35,7 +30,8 @@ const updateTranslation = (plugin: GetText, el, binding: DirectiveBinding, vnode
     el.dataset.currentLanguage
   );
 
-  let msg = interpolate(plugin)(translation, context, disableHtmlEscaping);
+  const context = Object.assign(binding.instance, binding.value);
+  let msg = interpolate(plugin)(translation, context, null, disableHtmlEscaping);
 
   el.innerHTML = msg;
 };

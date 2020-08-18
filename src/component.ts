@@ -65,7 +65,7 @@ export default {
           plugin.current
         );
 
-        return interpolate(plugin)(translation, { ...(getCurrentInstance().parent as any).ctx, ...props.translateParams });
+        return interpolate(plugin)(translation, props.translateParams, getCurrentInstance()?.parent);
       });
 
       // The text must be wraped inside a root HTML element, so we use a <span> (by default).

@@ -1,5 +1,5 @@
-import { getCurrentInstance } from "vue";
 import { GetText } from ".";
+import { ComponentInternalInstance } from "vue";
 
 const EVALUATION_RE = /[[\].]{1,2}/g;
 
@@ -34,7 +34,12 @@ const MUSTACHE_SYNTAX_RE = /\{\{((?:.|\n)+?)\}\}/g;
  *
  * @return {String} The interpolated string
  */
-let interpolate: any = (plugin: GetText) => (msgid, context: any = {}, disableHtmlEscaping = false) => {
+let interpolate: any = (plugin: GetText) => (
+  msgid,
+  context: any = {},
+  parent: ComponentInternalInstance | any,
+  disableHtmlEscaping = false
+) => {
   const silent = plugin.options.silent;
   if (!silent && MUSTACHE_SYNTAX_RE.test(msgid)) {
     console.warn(`Mustache syntax cannot be used with vue-gettext. Please use "%{}" instead of "{{}}" in: ${msgid}`);
@@ -61,18 +66,16 @@ let interpolate: any = (plugin: GetText) => (msgid, context: any = {}, disableHt
       return obj;
     }
 
-    function evalInContext(expression) {
+    function evalInContext(context, expression, parent) {
       try {
-        evaluated = getProps(this, expression);
+        evaluated = getProps(context, expression);
       } catch (e) {
         // Ignore errors, because this function may be called recursively later.
       }
       if (evaluated === undefined) {
-
-        const parentCtx = (getCurrentInstance()?.parent as any)?.ctx;
-        if (parentCtx) {
-          // Recursively climb the $parent chain to allow evaluation inside nested components, see #23 and #24.
-          return evalInContext.call(parentCtx, expression);
+        if (parent) {
+          // Recursively climb the parent chain to allow evaluation inside nested components, see #23 and #24.
+          return evalInContext(parent.ctx, expression, parent.parent);
         } else {
           console.warn(`Cannot evaluate expression: ${expression}`);
           evaluated = expression;
@@ -89,7 +92,7 @@ let interpolate: any = (plugin: GetText) => (msgid, context: any = {}, disableHt
       });
     }
 
-    return evalInContext.call(context, expression);
+    return evalInContext(context, expression, parent);
   });
 
   return result;
