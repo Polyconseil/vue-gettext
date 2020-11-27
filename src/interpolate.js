@@ -35,7 +35,7 @@ const MUSTACHE_SYNTAX_RE = /\{\{((?:.|\n)+?)\}\}/g
  */
 let interpolate = function (msgid, context = {}, disableHtmlEscaping = false) {
 
-  if (!_Vue.config.getTextPluginSilent && MUSTACHE_SYNTAX_RE.test(msgid)) {
+  if (_Vue && !_Vue.config.getTextPluginSilent && MUSTACHE_SYNTAX_RE.test(msgid)) {
     console.warn(`Mustache syntax cannot be used with vue-gettext. Please use "%{}" instead of "{{}}" in: ${msgid}`)
   }
 
