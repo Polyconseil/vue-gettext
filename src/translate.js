@@ -1,4 +1,5 @@
 import plurals from './plurals'
+import interpolate from './interpolate'
 
 const SPACING_RE = /\s{2,}/g
 
@@ -181,6 +182,19 @@ const translate = {
       _config = config
     }
   },
+
+  /**
+   * Allows to use interpolation outside the Vue
+   *
+   * @example
+   *  import {translate} from 'vue-gettext';
+   *
+   *  const {gettext, gettextInterpolate} = translate;
+   *
+   *  let translated = gettext('%{ n } foos', n)
+   *  let interpolated = gettextInterpolate(translated, {n: 5})
+   */
+  gettextInterpolate: interpolate.bind(interpolate),
 
 }
 

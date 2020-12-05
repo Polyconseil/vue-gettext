@@ -454,9 +454,10 @@ For convenience `translate` can be imported directly in JavaScript files for cas
 ```js
 import {translate} from 'vue-gettext';
 
-const {gettext: $gettext} = translate;
+const {gettext: $gettext, gettextInterpolate} = translate;
 
-let str = $gettext('Hello');
+const str = $gettext('Hello, %{name}');
+const interpolated = gettextInterpolate(str, { name: 'Jerom' })
 ```
 
 # Elsewhere
