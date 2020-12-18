@@ -115,11 +115,12 @@ const translate = {
    * Also makes the string discoverable by gettext-extract.
    *
    * @param {String} msgid - The translation key
+   * @param {String} language - The language ID (e.g. 'fr_FR' or 'en_US')
    *
    * @return {String} The translated string
   */
-  'gettext': function (msgid) {
-    return translate.getTranslation(msgid)
+  'gettext': function (msgid, language = _config.language) {
+    return translate.getTranslation(msgid, 1, null, null, language)
   },
 
   /*
@@ -128,11 +129,12 @@ const translate = {
    *
    * @param {String} context - The context of the string to translate
    * @param {String} msgid - The translation key
+   * @param {String} language - The language ID (e.g. 'fr_FR' or 'en_US')
    *
    * @return {String} The translated string
   */
-  'pgettext': function (context, msgid) {
-    return translate.getTranslation(msgid, 1, context)
+  'pgettext': function (context, msgid, language = _config.language) {
+    return translate.getTranslation(msgid, 1, context, null, language)
   },
 
   /*
@@ -143,11 +145,12 @@ const translate = {
    * @param {String} msgid - The translation key
    * @param {String} plural - The plural form of the translation key
    * @param {Number} n - The number to switch between singular and plural
+   * @param {String} language - The language ID (e.g. 'fr_FR' or 'en_US')
    *
    * @return {String} The translated string
   */
-  'ngettext': function (msgid, plural, n) {
-    return translate.getTranslation(msgid, n, null, plural)
+  'ngettext': function (msgid, plural, n, language = _config.language) {
+    return translate.getTranslation(msgid, n, null, plural, language)
   },
 
   /*
@@ -159,11 +162,12 @@ const translate = {
    * @param {String} msgid - The translation key
    * @param {String} plural - The plural form of the translation key
    * @param {Number} n - The number to switch between singular and plural
+   * @param {String} language - The language ID (e.g. 'fr_FR' or 'en_US')
    *
    * @return {String} The translated string
   */
-  'npgettext': function (context, msgid, plural, n) {
-    return translate.getTranslation(msgid, n, context, plural)
+  'npgettext': function (context, msgid, plural, n, language = _config.language) {
+    return translate.getTranslation(msgid, n, context, plural, language)
   },
 
   /*

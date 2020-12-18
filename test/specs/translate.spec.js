@@ -92,6 +92,7 @@ describe('Translate tests', () => {
     Vue.config.language = 'en_US'
     expect(undetectableGettext('Pending')).to.equal('Pending')
 
+    expect(undetectableGettext('Pending', 'fr_FR')).to.equal('En cours')
   })
 
   it('tests the pgettext() method', () => {
@@ -104,6 +105,7 @@ describe('Translate tests', () => {
     Vue.config.language = 'en_US'
     expect(undetectablePgettext('Noun', 'Answer')).to.equal('Answer (noun)')
 
+    expect(undetectablePgettext('Noun', 'Answer', 'fr_FR')).to.equal('Réponse (nom)')
   })
 
   it('tests the ngettext() method', () => {
@@ -115,6 +117,8 @@ describe('Translate tests', () => {
 
     Vue.config.language = 'en_US'
     expect(undetectableNgettext('%{ carCount } car', '%{ carCount } cars', 2)).to.equal('%{ carCount } cars')
+
+    expect(undetectableNgettext('%{ carCount } car', '%{ carCount } cars', 2, 'fr_FR')).to.equal('%{ carCount } véhicules')
 
     // If no translation exists, display the default singular form (if n < 2).
     Vue.config.language = 'fr_FR'
@@ -147,6 +151,9 @@ describe('Translate tests', () => {
     Vue.config.language = 'en_US'
     expect(undetectableNpgettext('Verb', '%{ carCount } car (verb)', '%{ carCount } cars (verb)', 1))
       .to.equal('%{ carCount } car (verb)')
+
+    expect(undetectableNpgettext('Noun', '%{ carCount } car (noun)', '%{ carCount } cars (noun)', 2, 'fr_FR'))
+      .to.equal('%{ carCount } véhicules (nom)')
 
     // If no translation exists, display the default singular form (if n < 2).
     Vue.config.language = 'fr_FR'
@@ -265,6 +272,7 @@ describe('Translate tests without Vue', () => {
     config.language = 'en_US'
     expect(undetectableGettext('Pending')).to.equal('Pending')
 
+    expect(undetectableGettext('Pending', 'fr_FR')).to.equal('En cours')
   })
 
   it('tests the pgettext() method', () => {
@@ -277,6 +285,7 @@ describe('Translate tests without Vue', () => {
     config.language = 'en_US'
     expect(undetectablePgettext('Noun', 'Answer')).to.equal('Answer (noun)')
 
+    expect(undetectablePgettext('Noun', 'Answer', 'fr_FR')).to.equal('Réponse (nom)')
   })
 
   it('tests the ngettext() method', () => {
@@ -288,6 +297,8 @@ describe('Translate tests without Vue', () => {
 
     config.language = 'en_US'
     expect(undetectableNgettext('%{ carCount } car', '%{ carCount } cars', 2)).to.equal('%{ carCount } cars')
+
+    expect(undetectableNgettext('%{ carCount } car', '%{ carCount } cars', 2, 'fr_FR')).to.equal('%{ carCount } véhicules')
 
     // If no translation exists, display the default singular form (if n < 2).
     config.language = 'fr_FR'
@@ -320,6 +331,9 @@ describe('Translate tests without Vue', () => {
     config.language = 'en_US'
     expect(undetectableNpgettext('Verb', '%{ carCount } car (verb)', '%{ carCount } cars (verb)', 1))
       .to.equal('%{ carCount } car (verb)')
+
+    expect(undetectableNpgettext('Noun', '%{ carCount } car (noun)', '%{ carCount } cars (noun)', 1, 'fr_FR'))
+      .to.equal('%{ carCount } véhicule (nom)')
 
     // If no translation exists, display the default singular form (if n < 2).
     config.language = 'fr_FR'
