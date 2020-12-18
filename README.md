@@ -457,6 +457,7 @@ import {translate} from 'vue-gettext';
 const {gettext: $gettext, gettextInterpolate} = translate;
 
 const str = $gettext('Hello, %{name}');
+const strFR = $gettext('Hello, %{name}', 'fr');
 const interpolated = gettextInterpolate(str, { name: 'Jerom' })
 ```
 
