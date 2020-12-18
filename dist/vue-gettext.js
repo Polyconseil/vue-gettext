@@ -1,5 +1,5 @@
 /**
- * vue-gettext v2.1.11
+ * vue-gettext v2.1.12
  * (c) 2020 Polyconseil
  * @license MIT
  */
@@ -423,11 +423,14 @@
      * Also makes the string discoverable by gettext-extract.
      *
      * @param {String} msgid - The translation key
+     * @param {String} language - The language ID (e.g. 'fr_FR' or 'en_US')
      *
      * @return {String} The translated string
     */
-    'gettext': function (msgid) {
-      return translate.getTranslation(msgid)
+    'gettext': function (msgid, language) {
+      if ( language === void 0 ) language = _config.language;
+
+      return translate.getTranslation(msgid, 1, null, null, language)
     },
 
     /*
@@ -436,11 +439,14 @@
      *
      * @param {String} context - The context of the string to translate
      * @param {String} msgid - The translation key
+     * @param {String} language - The language ID (e.g. 'fr_FR' or 'en_US')
      *
      * @return {String} The translated string
     */
-    'pgettext': function (context, msgid) {
-      return translate.getTranslation(msgid, 1, context)
+    'pgettext': function (context, msgid, language) {
+      if ( language === void 0 ) language = _config.language;
+
+      return translate.getTranslation(msgid, 1, context, null, language)
     },
 
     /*
@@ -451,11 +457,14 @@
      * @param {String} msgid - The translation key
      * @param {String} plural - The plural form of the translation key
      * @param {Number} n - The number to switch between singular and plural
+     * @param {String} language - The language ID (e.g. 'fr_FR' or 'en_US')
      *
      * @return {String} The translated string
     */
-    'ngettext': function (msgid, plural, n) {
-      return translate.getTranslation(msgid, n, null, plural)
+    'ngettext': function (msgid, plural, n, language) {
+      if ( language === void 0 ) language = _config.language;
+
+      return translate.getTranslation(msgid, n, null, plural, language)
     },
 
     /*
@@ -467,11 +476,14 @@
      * @param {String} msgid - The translation key
      * @param {String} plural - The plural form of the translation key
      * @param {Number} n - The number to switch between singular and plural
+     * @param {String} language - The language ID (e.g. 'fr_FR' or 'en_US')
      *
      * @return {String} The translated string
     */
-    'npgettext': function (context, msgid, plural, n) {
-      return translate.getTranslation(msgid, n, context, plural)
+    'npgettext': function (context, msgid, plural, n, language) {
+      if ( language === void 0 ) language = _config.language;
+
+      return translate.getTranslation(msgid, n, context, plural, language)
     },
 
     /*
