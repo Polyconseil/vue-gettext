@@ -4,11 +4,15 @@ Translate [Vue.js](http://vuejs.org) applications with [gettext](https://en.wiki
 
 [Live demo](https://polyconseil.github.io/vue-gettext/).
 
-# Contribution
+## No Vue 3 support
+
+This project **does not** support Vue 3. Please, have a look at [vue3-gettext](https://github.com/jshmrtn/vue3-gettext) for Vue 3 support.
+
+## Contribution
 
 Please make sure to read the [Pull request guidelines](https://github.com/Polyconseil/vue-gettext/blob/master/README_DEV.md#pull-request-guidelines) before making a pull request.
 
-# Known issues
+## Known issues
 
 Any help is greatly appreciated:
 
