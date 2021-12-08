@@ -128,6 +128,17 @@ describe('translate component tests', () => {
     expect(vm.$el.innerHTML.trim()).to.equal('<span>Bonjour John Doe</span><span>Bonjour Chester</span>')
   })
 
+  it('does not double escape in interpolation', () => {
+    Vue.config.language = 'fr_FR'
+    let vm = new Vue({
+      template: '<p><translate>%{ text }</translate></p>',
+      data: {
+        text: '<script>"</script>',
+      },
+    }).$mount()
+    expect(vm.$el.innerHTML.trim()).to.equal('<span>&lt;script&gt;"&lt;/script&gt;</span>')
+  })
+
   it('translates plurals', () => {
     Vue.config.language = 'fr_FR'
     let vm = new Vue({

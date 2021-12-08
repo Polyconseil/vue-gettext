@@ -78,7 +78,7 @@ export default {
         context = Object.assign({}, this.$parent, this.translateParams)
       }
 
-      return this.$gettextInterpolate(translation, context)
+      return this.$gettextInterpolate(translation, context, true)
     },
   },
 
